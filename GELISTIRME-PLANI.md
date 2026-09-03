@@ -100,7 +100,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [ ] Harfi Bul: (c) büyük/küçük eşle
   - [ ] Sesi Eşleştir: (a) ses→resim, (b) "hangisi farklı sesle başlıyor", (c) son ses
   - [ ] Hece Kur: (a) hece tanı, (b) hece→resim (heceyle başlayan), (c) eksik harfi bul
-- [ ] **E2.5** Zorluk uyarlaması: son 5 turdaki doğruluk >%85 → seçenek sayısı/çeldirici artır; <%50 → azalt, ipucu süresini uzat.
+- [x] **E2.5** Zorluk uyarlaması: `recentRounds` (son 5 tur, ilk denemede doğru mu) + `difficultyLevel()` (`kolay`/`normal`/`zor`, eşik <%50 / >%85). `roundBul()`/`roundSes()`/`roundHece()` seçenek sayısını buna göre ayarlıyor (Harfi Bul 3/4/5, Sesi Eşleştir/Hece Kur 2/3/4). `choose()` her tur sonunda `recordRoundResult()` çağırıyor. "İpucu süresini uzat" kısmı uygulanmadı — mevcut tasarımda ipucu (2. yanlıştan sonraki `.hint` vurgusu) zaten süreli değil, çocuk hazır olana kadar ekranda kalıyor. — 2026-09-03
 - [x] **E2.6** Oturum ritmi: `sessionMinutes` oturum boyunca birikir (`trackTime()`), yaş moduna göre eşik (Keşif 8 dk, Çözümleme 15 dk — aralığın orta noktası) aşılınca ders bitişinde (`finishLesson()`) nazik "mola ver" mesajı + düğmesi (`doneBreakMsg`/`doneBreakBtn`) bir kez gösterilir; `acceptBreak()` başlangıç ekranına döner ve sayacı sıfırlar. — 2026-09-03
 - [x] **E2.7** Kâşif'in tepki çeşitliliği: merkezi `PRAISE` (15), `RETRY_MSGS` (6), `HINT_MSGS` (5) dizileri — `choose()`, `checkWord()`, `checkTrace()`, `award()` ödül ekranı artık bunlardan rastgele seçiyor; çabayı öven cümleler eklendi ("Çok iyi denedin!", "Emeğinin karşılığını aldın!"). — 2026-09-03
 
@@ -207,6 +207,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.4 kısmi (rutin, Hafta 1 kilometre taşı): Harfi Bul'a ikinci varyant eklendi — (a) resim→harf (mevcut) ve (b) "duyduğun ses hangi harf?" arasında `roundBul()` rastgele seçiyor. Sesi Eşleştir/Hece Kur varyantları ve Harfi Bul (c) sonraki çalışmaya bırakıldı. Smoke test'e 3 yeni kontrol.
 - 2026-09-03 — E6.2 (rutin, Hafta 1 kilometre taşı): Harf Çiz'e 5 kademeli kılavuz sistemi eklendi — `setupTrace(letter,level)` seviyeye göre tam/nokralı/soluk/yalnız-başlangıç-noktası/hiç kılavuz göstermiyor; her başarılı çizimde `state.soundStats[s].cizLevel` bir artıyor (üst sınır 5). Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E3.2 (rutin, Hafta 1 kilometre taşı): "Kâşif Gösterisi" (ders 12) artık puansız/kutlama odaklı — değerlendirme soruları kaldırıldı, özel bitiş ekranı eklendi; `openLesson()` her derste `assessResults`'ı sıfırlayarak önceki dersten sonuç sızmasını önlüyor. Smoke test'e 4 yeni kontrol.
+- 2026-09-03 — E2.5 (rutin, Hafta 1 kilometre taşı): zorluk uyarlaması — son 5 turun doğruluğuna göre (`difficultyLevel()`) Harfi Bul/Sesi Eşleştir/Hece Kur seçenek sayısı otomatik artıp azalıyor (`kolay`/`normal`/`zor`). Hafta 1 kilometre taşındaki E2 (hata kurtarma + çeşitlilik + aralıklı tekrar) böylece tamamlandı. Smoke test'e 7 yeni kontrol.
 
 ---
 

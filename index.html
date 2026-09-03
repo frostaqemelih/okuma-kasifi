@@ -792,12 +792,26 @@ function pickTargets(pool){
   const st = play ? play.steps[play.i] : null;
   return pool;
 }
+/* E2.5: Zorluk uyarlaması — son 5 turun sonucuna (ilk denemede doğru mu) göre seçenek sayısını ayarla. */
+let recentRounds=[];
+function recordRoundResult(ok){
+  recentRounds.push(ok);
+  if(recentRounds.length>5) recentRounds.shift();
+}
+function difficultyLevel(){
+  if(recentRounds.length<3) return 'normal';
+  const acc=recentRounds.filter(Boolean).length/recentRounds.length;
+  if(acc>0.85) return 'zor';
+  if(acc<0.5) return 'kolay';
+  return 'normal';
+}
 function roundBul(pool){
   // E2.4: en az 2 varyant — (a) resim→harf, (b) ses duy→harf. Rastgele seçilir.
   locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
-  const same=shuffle(pool.filter(x=>x!==t)).slice(0,1);
-  const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,2);
+  const lvl=difficultyLevel(), total=lvl==='zor'?5:lvl==='kolay'?3:4, need=total-1;
+  const same=shuffle(pool.filter(x=>x!==t)).slice(0,Math.min(1,need));
+  const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,need-same.length);
   const opts=shuffle([t,...same,...distr]);
   if(Math.random()<0.5){
     qtext.textContent=`«${WORDS[t].word}» hangi harfle başlar?`;
@@ -813,9 +827,10 @@ function roundBul(pool){
 function roundSes(pool){
   locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
   let dist=shuffle(pool.filter(x=>x!==t));
-  if(dist.length<2) dist=dist.concat(shuffle(Object.keys(WORDS).filter(x=>x!==t&&!dist.includes(x))));
-  const opts=shuffle([t,...dist.slice(0,2)]);
+  if(dist.length<need) dist=dist.concat(shuffle(Object.keys(WORDS).filter(x=>x!==t&&!dist.includes(x))));
+  const opts=shuffle([t,...dist.slice(0,need)]);
   qtext.textContent=`Hangisi «${t}» sesiyle başlıyor?`;
   playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
   paint(opts.map(l=>({emoji:WORDS[l].emoji,cap:WORDS[l].word,key:l})),'c3',o=>o.key===t);
@@ -826,7 +841,8 @@ function roundHece(pool){
   const sy=syllablesFor(pool);
   if(sy.length<3){ roundSes(pool); return; }
   const t=rnd(sy); curTargets=t.split('');
-  const opts=shuffle([t,...shuffle(sy.filter(x=>x!==t)).slice(0,2)]);
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const opts=shuffle([t,...shuffle(sy.filter(x=>x!==t)).slice(0,need)]);
   qtext.textContent='Duyduğun heceyi seç';
   playArea.innerHTML=stageHTML(`<span>🧩</span>`);
   paint(opts.map(s=>({glyph:s,key:s})),'c3',o=>o.key===t);
@@ -836,6 +852,7 @@ function choose(el,right){
   if(locked) return;
   if(right){
     locked=true; el.classList.add('right'); state.correct++; creditSounds(true);
+    recordRoundResult(curWrongCount===0); // E2.5
     if(curIsReview) consumeReview();
     if(curIsAssess) assessResults.push(true);
     save();
@@ -848,6 +865,7 @@ function choose(el,right){
   if(curWrongCount>=3){
     // 3. yanlış: modelle + birlikte — doğruyu göster, birlikte söyle, doğruyla bitir, tekrar kuyruğuna al
     locked=true; queueForReview();
+    recordRoundResult(false); // E2.5
     if(curIsAssess) assessResults.push(false);
     if(correctEl) correctEl.classList.add('right');
     say('Doğrusu bu. Birlikte söyleyelim: '+roundPrompt, ()=>{ say(roundPrompt, award); });

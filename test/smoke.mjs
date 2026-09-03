@@ -269,6 +269,37 @@ const testDriver = `
     check('Kâşif Gösterisi (E3.2) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 15) E2.5 Zorluk uyarlaması: doğruluğa göre seçenek sayısı değişiyor mu? ---
+  try {
+    state = fresh();
+    recentRounds = [];
+    check('difficultyLevel() az veri varken normal döner', difficultyLevel() === 'normal');
+
+    recentRounds = [true, true, true, true, true]; // %100 doğruluk -> zor
+    check('difficultyLevel() yüksek doğrulukta "zor" döner', difficultyLevel() === 'zor');
+    roundBul(['a', 'n', 'e', 't', 'i', 'l']);
+    check('roundBul() "zor" seviyede 5 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 5);
+
+    recentRounds = [false, false, false, true, false]; // %20 doğruluk -> kolay
+    check('difficultyLevel() düşük doğrulukta "kolay" döner', difficultyLevel() === 'kolay');
+    roundBul(['a', 'n', 'e', 't', 'i', 'l']);
+    check('roundBul() "kolay" seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
+
+    recentRounds = [true, true, false, true, true]; // %80 -> normal
+    roundSes(['a', 'n', 'e', 't']);
+    check('roundSes() "normal" seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
+
+    recentRounds = [];
+    curWrongCount = 0;
+    const before = recentRounds.length;
+    roundBul(['a', 'n', 'e', 't']);
+    const rightBtn = document.querySelector('#choices .choice[data-right="1"]');
+    choose(rightBtn, true);
+    check('choose() doğru cevapta recentRounds dizisine sonuç ekliyor', recentRounds.length === before + 1 && recentRounds[recentRounds.length - 1] === true);
+  } catch (e) {
+    check('Zorluk uyarlaması (E2.5) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
