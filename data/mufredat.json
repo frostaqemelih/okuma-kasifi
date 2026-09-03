@@ -1,0 +1,172 @@
+{
+  "surum": "0.1",
+  "kaynak": "arastirma/pedagoji.md — MEB TYMM (2024) Türkçe Dersi Öğretim Programı, Ses Temelli Cümle Yöntemi",
+  "not": "Ses grubu SIRAYA gömülü değil, veri olarak tutulur. Ürün varsayılanı 'tymm'. İçerik derslerinin harf listeleri seçilen gruba göre yeniden eşlenebilir.",
+
+  "sesGruplari": {
+    "tymm": {
+      "ad": "Türkiye Yüzyılı Maarif Modeli (2024) — varsayılan",
+      "gruplar": [
+        ["a", "n", "e", "t", "i", "l"],
+        ["o", "k", "u", "r", "ı", "m"],
+        ["ü", "s", "ö", "y", "d", "z"],
+        ["ç", "b", "g", "c", "ş"],
+        ["p", "h", "v", "ğ", "f", "j"]
+      ]
+    },
+    "elakin": {
+      "ad": "2017–2023 (ELAKİN)",
+      "gruplar": [
+        ["e", "l", "a", "k", "i", "n"],
+        ["o", "m", "u", "t", "ü", "y"],
+        ["ö", "r", "ı", "d", "s", "b"],
+        ["z", "ç", "g", "ş", "c", "p"],
+        ["h", "v", "ğ", "f", "j"]
+      ]
+    },
+    "klasik": {
+      "ad": "Klasik STCY (2005)",
+      "gruplar": [
+        ["e", "l", "a", "t"],
+        ["i", "n", "o", "r", "m"],
+        ["u", "k", "ı", "y", "s", "d"],
+        ["ö", "b", "ü", "ş", "z", "ç"],
+        ["g", "c", "p", "h"],
+        ["ğ", "v", "f", "j"]
+      ]
+    }
+  },
+
+  "sesler": {
+    "a": { "tur": "unlu", "uzatilabilir": true,  "ornek": ["at", "araba", "ay", "ağaç"], "sesletim": "aaa", "cizimVurus": 2 },
+    "n": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["nar", "nine", "nokta"], "sesletim": "nnn", "cizimVurus": 3 },
+    "e": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ev", "ekmek", "el"], "sesletim": "eee", "cizimVurus": 2, "karisir": ["a"] },
+    "t": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["top", "tren", "at", "et"], "sesletim": "t", "cizimVurus": 2 },
+    "i": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ip", "iğne", "ilik"], "sesletim": "iii", "cizimVurus": 2, "karisir": ["ı"] },
+    "l": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["lale", "limon", "el", "al"], "sesletim": "lll", "cizimVurus": 1 },
+    "o": { "tur": "unlu", "uzatilabilir": true, "ornek": ["orman", "okul", "ok"], "sesletim": "ooo", "cizimVurus": 1, "karisir": ["a", "u"] },
+    "k": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["kalem", "kitap", "ok"], "sesletim": "k", "cizimVurus": 3 },
+    "u": { "tur": "unlu", "uzatilabilir": true, "ornek": ["uçak", "un", "uyku"], "sesletim": "uuu", "cizimVurus": 2, "karisir": ["o", "ü"] },
+    "r": { "tur": "akici-unsuz", "uzatilabilir": true, "ornek": ["radyo", "resim", "kar", "nar"], "sesletim": "rrr", "cizimVurus": 2 },
+    "ı": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ılık", "ırmak", "ışık"], "sesletim": "ııı", "cizimVurus": 1, "karisir": ["i"] },
+    "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 }
+  },
+
+  "ortakIskelet": [
+    "Isınma (1–2 dk): önceki seslerin hızlı yoklaması (aralıklı tekrar)",
+    "Yeni ses — işitsel tanıtım (2–3 dk): dinle, ilk-ses avı, tekrarla",
+    "Ses–harf eşleme + parmakla çizme (3–4 dk)",
+    "Hece/kelime — çözümleme modu (3–5 dk): birleştirme, okuma",
+    "Uygulama oyunu (2–3 dk)",
+    "Kapanış (1 dk): başarı haritası + kutlama"
+  ],
+
+  "modlar": {
+    "kesif": { "yas": "4–5", "sureDk": [6, 10], "aciklama": "Yalnız fonolojik farkındalık + ses tanıma + çizgi/harf ön-formu + sözcük dağarcığı. Hece birleştirme ve okuma YOK." },
+    "cozumleme": { "yas": "6–7", "sureDk": [12, 18], "aciklama": "Tam içerik: ses → hece → kelime → kısa cümle." }
+  },
+
+  "dersler": [
+    {
+      "id": 0, "ad": "Hazırlık — Kulaklarımız ve Ellerimiz Hazır",
+      "yeniSesler": [], "yeniHarfler": [],
+      "beceriler": ["çevre sesi ayırt etme", "cümlede sözcük sayma", "adını heceleme (alkış)", "yeşil noktadan çizmeye başlama"],
+      "oyunlar": ["dinle-ayirt", "hece-treni", "serbest-cizim"],
+      "basariOlcutu": "2 sözcüklü ifadede sözcükleri ayırır; 2 heceli adını alkışla heceler; başlangıç noktasından çizmeye başlar"
+    },
+    {
+      "id": 1, "ad": "Ses a", "yeniSesler": ["a"], "yeniHarfler": ["a"],
+      "beceriler": ["/a/ ilk-ses avı", "/a/ uzatma", "a harfini çizme", "büyük/küçük a eşleme", "sözcük içinde /a/ konumu"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "buyuk-kucuk-esle"],
+      "basariOlcutu": "5 resimden /a/ ile başlayan 4'ünü seçer; a harfini doğru yön ve toleransla tamamlar",
+      "kelimeler": [], "heceler": [], "cumleler": []
+    },
+    {
+      "id": 2, "ad": "Ses n", "yeniSesler": ["n"], "yeniHarfler": ["n"],
+      "beceriler": ["/n/ ilk-ses avı", "/nnn/ uzatma", "n harfini çizme", "ilk hece birleştirme (çözümleme)"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur"],
+      "basariOlcutu": "/n/ ile başlayan sözcükleri %80 tanır; n harfini çizer; (çözümleme) 'an', 'na' hecelerini sesletir",
+      "kelimeler": [], "heceler": ["an", "na"], "cumleler": []
+    },
+    {
+      "id": 3, "ad": "Ses e", "yeniSesler": ["e"], "yeniHarfler": ["e"],
+      "beceriler": ["/e/ ilk-ses avı", "/a/–/e/ ayırt etme", "e harfini çizme", "heceler", "ilk kelime: en / an"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/a/ ve /e/'yi ikili ayırt görevinde %80 ayırır; e harfini çizer; 'ne/en/na/an' hecelerini akıcı okur",
+      "kelimeler": ["en", "an"], "heceler": ["en", "ne", "na", "an"], "cumleler": []
+    },
+    {
+      "id": 4, "ad": "Ses t", "yeniSesler": ["t"], "yeniHarfler": ["t"],
+      "beceriler": ["/t/ ilk ve son ses avı", "t harfini çizme (dik + yatay vuruş)", "heceler", "kelime kurma: at"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-kur", "kelime-esle"],
+      "basariOlcutu": "/t/ sesini başta ve sonda tanır; t harfini iki vuruşla doğru sırada çizer; 'at, et, ata' kelimelerini resimle eşleştirerek okur",
+      "kelimeler": ["at", "et", "ata"], "heceler": ["ta", "te", "at", "et"], "cumleler": []
+    },
+    {
+      "id": 5, "ad": "Ses i", "yeniSesler": ["i"], "yeniHarfler": ["i"],
+      "beceriler": ["/i/ ilk-ses avı", "i harfini çizme (nokta dâhil)", "heceler", "2 heceli kelime birleştirme"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur", "kelime-kur"],
+      "basariOlcutu": "/i/ ile başlayan sözcükleri tanır; i harfini (nokta dâhil) çizer; 2 heceli bir sözcüğü ('e-ti') birleştirerek okur",
+      "kelimeler": ["it", "in", "ne", "ten", "eti"], "heceler": ["ti", "it", "ni", "in"], "cumleler": []
+    },
+    {
+      "id": 6, "ad": "Ses l + 1. Grup Pekiştirme", "yeniSesler": ["l"], "yeniHarfler": ["l"],
+      "beceriler": ["/l/ ilk ve son ses avı", "l harfini çizme", "heceler", "kelimeler", "ilk cümle"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-esle", "cumle-kur"],
+      "basariOlcutu": "1. grubun 6 sesini (a,n,e,t,i,l) %90 tanır ve çizer; 3–4 kelimeyi akıcı okur; 2–3 sözcüklü cümleyi anlayarak okur",
+      "kelimeler": ["el", "al", "lale", "elit", "temel"], "heceler": ["la", "le", "li", "al", "el", "il"],
+      "cumleler": ["El ele.", "Ela at al."],
+      "rozet": "1. Grup Kâşif Rozeti"
+    },
+    {
+      "id": 7, "ad": "Ses o", "yeniSesler": ["o"], "yeniHarfler": ["o"],
+      "beceriler": ["/o/ ilk-ses avı", "/o/–/a/ ayırt", "o harfini çizme (tek çember)", "heceler", "kelimeler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/o/–/a/ ayırt %80; o harfini çizer; 'ot, on, not' okur",
+      "kelimeler": ["ot", "on", "not"], "heceler": ["no", "ol", "on", "to", "ot"], "cumleler": ["O el ele."]
+    },
+    {
+      "id": 8, "ad": "Ses k", "yeniSesler": ["k"], "yeniHarfler": ["k"],
+      "beceriler": ["/k/ ilk ve son ses avı", "k harfini çizme (dik + iki eğik vuruş)", "heceler", "kelimeler", "cümle"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-esle", "cumle-kur"],
+      "basariOlcutu": "/k/ sesini baş ve sonda tanır; k harfini çizer; 3–4 kelimeyi ve kısa bir cümleyi akıcı okur",
+      "kelimeler": ["ok", "kel", "kola", "kale"], "heceler": ["ka", "ke", "ki", "ko", "ak", "ek", "ik", "ok"],
+      "cumleler": ["Ela kola al.", "O tek at."]
+    },
+    {
+      "id": 9, "ad": "Ses u", "yeniSesler": ["u"], "yeniHarfler": ["u"],
+      "beceriler": ["/u/ ilk-ses avı", "/o/–/u/ ayırt", "u harfini çizme", "heceler", "2 heceli kelimeler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-kur"],
+      "basariOlcutu": "/u/ tanır, /o/–/u/ %80 ayırır; u harfini çizer; 'kutu, unut' gibi 2 heceli sözcükleri okur",
+      "kelimeler": ["un", "kutu", "kula", "unut"], "heceler": ["tu", "ku", "nu", "lu", "un", "ut"], "cumleler": ["Kutu al.", "O un al."]
+    },
+    {
+      "id": 10, "ad": "Ses r", "yeniSesler": ["r"], "yeniHarfler": ["r"],
+      "beceriler": ["/r/ ilk/orta/son ses avı", "r harfini çizme", "heceler", "kelimeler", "cümleler"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-esle", "cumle-kur"],
+      "basariOlcutu": "/r/ sesini baş/orta/sonda tanır; r harfini çizer; /r/ içeren 4 kelime + kısa cümle okur; hece birleştirme hızı belirgin artar",
+      "kelimeler": ["kar", "nar", "kural", "karar", "oran"], "heceler": ["ra", "re", "ri", "ro", "ru", "ar", "er", "ir", "or", "ur"],
+      "cumleler": ["Kar var.", "Ela nar al.", "O kara at."]
+    },
+    {
+      "id": 11, "ad": "Ses ı + m", "yeniSesler": ["ı", "m"], "yeniHarfler": ["ı", "m"],
+      "beceriler": ["/ı/–/i/ ayırt (kritik)", "/m/ ilk ve son ses avı", "ı ve m harflerini çizme", "heceler", "2–3 heceli kelimeler", "cümle"],
+      "oyunlar": ["ses-ayirt", "ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-kur", "cumle-kur"],
+      "basariOlcutu": "/ı/ ve /i/'yi ikili ayırt görevinde %80 ayırır; ı ve m harflerini çizer; 'elma, kalem, makara' ve 3 sözcüklü cümleyi anlayarak okur",
+      "kelimeler": ["elma", "kalem", "makara", "ılık", "ırmak"], "heceler": ["mı", "mi", "ma", "me", "am", "im", "ım"],
+      "cumleler": ["Elma al.", "Anne elma al."]
+    },
+    {
+      "id": 12, "ad": "Kısa Metin + Kâşif Gösterisi", "yeniSesler": [], "yeniHarfler": [],
+      "beceriler": ["kümülatif ses/harf yoklaması", "kısa metin okuma (çözümleme)", "anlama soruları", "serbest yazma/çizme", "ebeveyn raporu"],
+      "oyunlar": ["hizli-yoklama", "kisa-metin", "anlama-sorusu", "serbest-cizim"],
+      "metin": "Ela nar aldı. Anne kola aldı. Onlar ata baktı.",
+      "anlamaSorulari": [
+        { "soru": "Ela ne aldı?", "secenekler": ["nar", "kola", "elma"], "dogru": "nar" },
+        { "soru": "Anne ne aldı?", "secenekler": ["nar", "kola", "kalem"], "dogru": "kola" }
+      ],
+      "basariOlcutuKesif": "12 sesin en az 8'ini işitsel tanır; ilk-ses eşlemede %70+; 6+ harfin ön-formunu doğru yönle çizer",
+      "basariOlcutuCozumleme": "12 sesi %90 tanır/çizer; CV ve CVC heceleri akıcı birleştirir; 15+ sözcüğü akıcı okur; tanıdık metni okuyup 2 anlama sorusundan 1'ini yanıtlar"
+    }
+  ]
+}
