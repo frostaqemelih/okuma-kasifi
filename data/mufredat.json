@@ -54,7 +54,8 @@
     "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 },
     "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] },
     "y": { "tur": "surekli-unsuz", "uzatilabilir": false, "ornek": ["yol", "yumurta", "yıldız"], "sesletim": "y", "cizimVurus": 2 },
-    "d": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["davul", "duman", "domates"], "sesletim": "d", "cizimVurus": 2 }
+    "d": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["davul", "duman", "domates"], "sesletim": "d", "cizimVurus": 2 },
+    "z": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["zil", "kazan", "yazı"], "sesletim": "zzz", "cizimVurus": 1, "karisir": ["s"] }
   },
 
   "ortakIskelet": [
@@ -212,6 +213,21 @@
       "basariOlcutu": "/d/ ile başlayan sözcükleri %80 tanır; d harfini doğru sırayla çizer; 'domates, duman' kelimelerini okur",
       "kelimeler": ["domates", "duman"], "heceler": ["da", "de", "dı", "do", "du", "ad", "ed"], "cumleler": [],
       "not": "3. grubun (ü,s,ö,y,d,z) 5. sesi. Son ses (z) ders 18'de eklenecek + 3. grup rozeti."
+    },
+    {
+      "id": 18, "ad": "Ses z", "yeniSesler": ["z"], "yeniHarfler": ["z"],
+      "beceriler": ["/z/ ilk ve son ses avı", "/s/–/z/ ayırt etme (kritik, sessiz/sesli)", "z harfini çizme (tek zikzak vuruş)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/s/ ve /z/'yi ikili ayırt görevinde %80 ayırır; z harfini tek vuruşla çizer; 'zil, kazan' kelimelerini okur",
+      "kelimeler": ["zil", "kazan"], "heceler": ["za", "ze", "zı", "zo", "zu", "az", "ez"], "cumleler": [],
+      "not": "3. grubun (ü,s,ö,y,d,z) son sesi. 3. grup tamamlandı — ders 19'da 'Kâşif Gösterisi 2' ile rozet kazanılacak."
+    },
+    {
+      "id": 19, "ad": "Kâşif Gösterisi 2", "yeniSesler": [], "yeniHarfler": [],
+      "beceriler": ["kümülatif ses/harf yoklaması (1.–3. grup, 18 ses)", "kelime/hece pratiği", "serbest çizim", "ebeveyn raporu"],
+      "oyunlar": ["hizli-yoklama", "serbest-cizim"],
+      "basariOlcutu": "1.–3. grup seslerinin (18 ses) çoğunu güvenle tanır, çizer ve okur",
+      "rozet": "3. Grup Kâşif Rozeti"
     }
   ]
 }

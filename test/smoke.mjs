@@ -537,6 +537,25 @@ const testDriver = `
     check('3. grup d sesi (E4.2 e) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 29) E4.2 (f) 3. grup tamamlandı: z sesi + "Kâşif Gösterisi 2" rozet dersi ---
+  try {
+    check('WORDS.z tanımlı ve z ile başlıyor', !!WORDS.z && WORDS.z.word[0] === 'z');
+    check('STROKES.z tanımlı (tek zikzak vuruş)', Array.isArray(STROKES.z) && STROKES.z.length === 1 && STROKES.z[0].length === 4);
+    const L18 = LESSONS.find(x => x.id === 18);
+    check('LESSONS içinde ders 18 "Ses z" olarak tanımlı', !!L18 && L18.yeni.includes('z'));
+    const L19 = LESSONS.find(x => x.id === 19);
+    check('LESSONS içinde ders 19 "Kâşif Gösterisi 2" gosteri tipinde ve rozetli', !!L19 && L19.tip === 'gosteri' && !!L19.rozet);
+    const poolWithZ = poolUpTo(18);
+    check('poolUpTo(18) 3. grubun tüm seslerini (ü,s,ö,y,d,z) içeriyor',
+      ['ü', 's', 'ö', 'y', 'd', 'z'].every(c => poolWithZ.includes(c)));
+    const reachableZ = WORDBANK.filter(it => it.w.split('').every(c => poolWithZ.includes(c)));
+    check('"zil" z ogrenilince WORDBANK icinde erisilebilir', reachableZ.some(it => it.w === 'zil'));
+    check('"kazan" z ogrenilince WORDBANK icinde erisilebilir', reachableZ.some(it => it.w === 'kazan'));
+    check('"üzüm" artık z öğrenilince WORDBANK icinde erisilebilir (E4.2 a gated idi)', reachableZ.some(it => it.w === 'üzüm'));
+  } catch (e) {
+    check('3. grup z sesi + Kâşif Gösterisi 2 (E4.2 f) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

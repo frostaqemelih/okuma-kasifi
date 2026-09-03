@@ -116,13 +116,13 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 ### E4 — İçerik Genişletme  → uzman: pedagoji + `data/mufredat.json`
 
 - [x] **E4.1** 2. ses grubu tam oyunlaştırma: `o,k,u,r,ı,m` için `WORDS` + `STROKES` + `WORDBANK` + `SENTENCES` zaten kısmen var — eksikleri tamamla, ders 7–11 içeriğini `mufredat.json` ile hizala. — 2026-09-03
-- [ ] **E4.2** 3. grup `ü,s,ö,y,d,z`: `WORDS` (ör. ü→üzüm, s→su, ö→ördek, y→yıldız, d→davul, z→zil), `STROKES` yaz, ders 13–18 ekle.
+- [x] **E4.2** 3. grup `ü,s,ö,y,d,z`: `WORDS` (ör. ü→üzüm, s→su, ö→ördek, y→yıldız, d→davul, z→zil), `STROKES` yaz, ders 13–19 ekle. **Tamamlandı.** — 2026-09-03
   - [x] (a) **ü** tam donanımlı eklendi: `mufredat.json` sesler+ders13, `WORDS.ü`, `STROKES.ü` (4 vuruş: nokta+nokta+gövde+kuyruk), `LESSONS` id13, `WORDBANK`'a kül/üzüm/üç (pool'a göre kademeli açılır). — 2026-09-03
   - [x] (b) **s** tam donanımlı eklendi: `mufredat.json` sesler.s+ders14, `WORDS.s` (su), `STROKES.s` (tek vuruşlu S eğrisi), `LESSONS` id14, `WORDBANK`'a su/kes. — 2026-09-03
   - [x] (c) **ö** tam donanımlı eklendi: `mufredat.json` sesler.ö+ders15, `WORDS.ö` (ördek), `STROKES.ö` (nokta+nokta+o gövdesi), `LESSONS` id15, `WORDBANK`'a körük. — 2026-09-03
   - [x] (d) **y** tam donanımlı eklendi: `mufredat.json` sesler.y+ders16, `WORDS.y` (yol), `STROKES.y` (iki eğik vuruş+kuyruk), `LESSONS` id16, `WORDBANK`'a yol/yumurta. — 2026-09-03
   - [x] (e) **d** tam donanımlı eklendi: `mufredat.json` sesler.d+ders17, `WORDS.d` (davul), `STROKES.d` (gövde+dik vuruş), `LESSONS` id17, `WORDBANK`'a domates/duman. — 2026-09-03
-  - [ ] (f) **z** ekle (ders 18) + 3. grup rozeti/Kâşif Gösterisi 2 (ders 19)
+  - [x] (f) **z** tam donanımlı eklendi + 3. grup rozeti: `mufredat.json` sesler.z+ders18+ders19, `WORDS.z` (zil), `STROKES.z` (tek zikzak vuruş), `LESSONS` id18 ("Ses z") + id19 ("Kâşif Gösterisi 2", `tip:'gosteri'`, rozet "3. Grup Kâşifi 🏆"), `WORDBANK`'a zil/kazan (ve daha önce gated olan "üzüm" artık erişilebilir). **E4.2 tamamlandı.** — 2026-09-03
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
 - [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
@@ -228,6 +228,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E4.2 (c) (rutin, Hafta 2 kilometre taşı): "ö" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.ö` (o ile karışır) + ders 15; `index.html`'e `WORDS.ö` (ördek🦆), `STROKES.ö` (iki nokta + o gövdesi, `ü` deseninin aynısı ama u yerine o gövdesi), `LESSONS` id15 ("Ses ö"). `WORDBANK`'a körük🔥 eklendi (ö+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: y (ders 16). Smoke test'e 5 yeni kontrol.
 - 2026-09-03 — E4.2 (d) (rutin, Hafta 2 kilometre taşı): "y" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.y` (sürekli ünsüz/yarı ünlü) + ders 16; `index.html`'e `WORDS.y` (yol🛣️), `STROKES.y` (iki eğik vuruş bir noktada birleşip ikincisi kuyruk olarak devam eder), `LESSONS` id16 ("Ses y"). `WORDBANK`'a yol🛣️/yumurta🥚 eklendi (ikisi de y+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: d (ders 17). Smoke test'e 6 yeni kontrol.
 - 2026-09-03 — E4.2 (e) (rutin, Hafta 2 kilometre taşı): "d" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.d` (patlayıcı ünsüz) + ders 17; `index.html`'e `WORDS.d` (davul🥁), `STROKES.d` (kapalı ilmek gövde + sağdan yukarı çıkan dik vuruş), `LESSONS` id17 ("Ses d"). `WORDBANK`'a domates🍅/duman💨 eklendi (ikisi de d+önceki gruplardan, hemen erişilebilir). Son ses (z, ders 18) + 3. grup rozeti kaldı — E4.2 sıradaki çalışmada tamamlanacak. Smoke test'e 6 yeni kontrol.
+- 2026-09-03 — E4.2 (f) (rutin, Hafta 2 kilometre taşı — **E4.2 tamamlandı**): "z" sesi tam donanımlı eklendi ve 3. grup kapandı — `mufredat.json`'a `sesler.z` (sürtünmeli ünsüz, s ile karışır) + ders 18 ("Ses z") + ders 19 ("Kâşif Gösterisi 2", kümülatif kutlama, rozet); `index.html`'e `WORDS.z` (zil🔔), `STROKES.z` (tek zikzak vuruş: üst yatay+çapraz+alt yatay), `LESSONS` id18 + id19 (`tip:'gosteri'`, `rozet:'3. Grup Kâşifi 🏆'` — mevcut jenerik `buildSteps`/`finishLesson` gösteri mantığı ders12 ile aynı şekilde ders19'u da otomatik kapsıyor, kod değişikliği gerekmedi). `WORDBANK`'a zil🔔/kazan🍲 eklendi; ayrıca E4.2(a)'da eklenen "üzüm" (z gerektirdiği için o zaman gated'ti) artık erişilebilir hale geldi. **3. ses grubu (ü,s,ö,y,d,z, 6 ses, ders 13–19) tamamen oynanabilir.** Sıradaki öncelik: E4.3 (4. grup ç,b,g,c,ş). Smoke test'e 8 yeni kontrol (138 test toplamda).
 
 ---
 

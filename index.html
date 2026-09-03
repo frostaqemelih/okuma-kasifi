@@ -445,7 +445,7 @@ const WORDS={
   r:{word:'radyo', emoji:'📻'}, 'ı':{word:'ışık',emoji:'💡'}, m:{word:'mum',  emoji:'🕯️'},
   /* E4.2: 3. grup (ü,s,ö,y,d,z) — sırayla ekleniyor. */
   'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}, y:{word:'yol', emoji:'🛣️'},
-  d:{word:'davul', emoji:'🥁'}
+  d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -465,7 +465,9 @@ const LESSONS=[
   {id:14, ad:'Ses s', yeni:['s']},
   {id:15, ad:'Ses ö', yeni:['ö']},
   {id:16, ad:'Ses y', yeni:['y']},
-  {id:17, ad:'Ses d', yeni:['d']}
+  {id:17, ad:'Ses d', yeni:['d']},
+  {id:18, ad:'Ses z', yeni:['z']},
+  {id:19, ad:'Kâşif Gösterisi 2', alt:'Kısa metin', yeni:[], rozet:'3. Grup Kâşifi 🏆', tip:'gosteri'}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -488,7 +490,9 @@ const WORDBANK=[
   /* E4.2 (d): y sesi eklendi — 'yol'/'yumurta' y+önceki gruplardan, hemen erişilebilir. */
   {w:'yol',e:'🛣️'},{w:'yumurta',e:'🥚'},
   /* E4.2 (e): d sesi eklendi — 'domates'/'duman' d+önceki gruplardan, hemen erişilebilir. */
-  {w:'domates',e:'🍅'},{w:'duman',e:'💨'}
+  {w:'domates',e:'🍅'},{w:'duman',e:'💨'},
+  /* E4.2 (f): z sesi eklendi — 3. grup tamam. 'zil'/'kazan' hemen erişilebilir; 'üzüm' de artık açık. */
+  {w:'zil',e:'🔔'},{w:'kazan',e:'🍲'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -565,7 +569,9 @@ const STROKES={
   /* E4.2 (d): y — iki eğik vuruş bir noktada birleşir, ikinci vuruş kuyruk olarak devam eder. */
   y:[ [[.35,.38],[.42,.48],[.50,.58]], [[.65,.38],[.58,.48],[.50,.58],[.45,.68],[.38,.76]] ],
   /* E4.2 (e): d — gövde (o gibi kapalı ilmek) + sağdan yukarı çıkan dik vuruş. */
-  d:[ [[.60,.44],[.50,.41],[.40,.46],[.35,.56],[.39,.66],[.50,.71],[.60,.66],[.64,.56]], [[.64,.56],[.64,.27]] ]
+  d:[ [[.60,.44],[.50,.41],[.40,.46],[.35,.56],[.39,.66],[.50,.71],[.60,.66],[.64,.56]], [[.64,.56],[.64,.27]] ],
+  /* E4.2 (f): z — tek zikzak vuruş (üst yatay + çapraz + alt yatay), 3. grup tamamlandı. */
+  z:[ [[.34,.36],[.66,.36],[.35,.70],[.67,.70]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
