@@ -1,0 +1,12 @@
+{
+  "name": "okuma-kasifi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "4–7 yaş çocuklara okuma-yazmanın temellerini yapay zekâ destekli bir rehber (\"Kâşif\") eşliğinde, oyunlaştırılmış ve sese dayalı bir şekilde öğreten uygulama.",
+  "scripts": {
+    "test": "node test/smoke.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^30.0.1"
+  }
+}

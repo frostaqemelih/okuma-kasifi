@@ -187,9 +187,12 @@
 
   /* ebeveyn izleme sayfası */
   #s-parent{gap:14px}
-  .ptabs{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; width:min(460px,94vw)}
+  .ptabs{display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; justify-content:flex-start; width:min(460px,94vw); padding:2px 2px 6px}
+  .ptabs::-webkit-scrollbar{display:none}
   .ptab{font-family:var(--font-display); font-weight:700; font-size:13px; border:2px solid var(--line);
-    background:var(--surface); color:var(--ink-soft); border-radius:999px; padding:7px 13px; cursor:pointer}
+    background:var(--surface); color:var(--ink-soft); border-radius:999px; padding:7px 13px; cursor:pointer;
+    flex:0 0 auto; white-space:nowrap; scroll-snap-align:start}
   .ptab.active{background:var(--primary); border-color:var(--primary); color:#fff}
   .pbody{width:min(460px,94vw); text-align:left}
   .ph{font-family:var(--font-display); font-weight:800; font-size:15px; margin:16px 0 6px; color:var(--primary-d)}
@@ -991,7 +994,10 @@ function openGate(){
 }
 function openParent(){ trackTime(); go('s-parent'); parentTab('genel'); }
 function parentTab(name){
-  document.querySelectorAll('#ptabs .ptab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('#ptabs .ptab').forEach(b=>{
+    const on=b.dataset.tab===name; b.classList.toggle('active', on);
+    if(on) b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth', inline:'center', block:'nearest'});
+  });
   const body=document.getElementById('pbody');
   body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar})[name]();
   if(name==='ayar') wireParentSettings();
@@ -1033,23 +1039,23 @@ function dailyChartHTML(){
   const days=[]; const d=new Date();
   for(let i=13;i>=0;i--){ const x=new Date(d); x.setDate(d.getDate()-i); days.push(x.toISOString().slice(0,10)); }
   const vals=days.map(k=>Math.round((state.daily[k]||0)/60));
-  const max=Math.max(10, ...vals);
-  const W=300, H=90, bw=W/14;
   const goal=state.settings.dailyGoalMin||15;
-  const gy=H-(Math.min(goal,max)/max)*H;
+  const max=Math.max(10, goal, ...vals);
+  const W=300, H=90, TOPPAD=6, CH=H-TOPPAD, bw=W/14;
+  const gy=TOPPAD+(1-goal/max)*CH;
   const bars=vals.map((v,i)=>{
-    const h=(v/max)*H, x=i*bw+2, y=H-h;
+    const h=(v/max)*CH, x=i*bw+2, y=H-h;
     const col=v>=goal?'var(--ok)':v>0?'var(--primary)':'var(--line)';
-    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${Math.max(h,2).toFixed(1)}" rx="2" fill="${col}"/>`;
+    const dt=new Date(days[i]); const etiket=`${dt.getDate()} ${dt.toLocaleDateString('tr-TR',{month:'short'})}`;
+    return `<g><rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${Math.max(h,2).toFixed(1)}" rx="2" fill="${col}"><title>${etiket}: ${v} dk</title></rect>
+    ${i%2?`<text x="${(x+(bw-4)/2).toFixed(1)}" y="${H+12}" font-size="7" fill="var(--ink-soft)" text-anchor="middle">${dt.getDate()}</text>`:''}</g>`;
   }).join('');
   const active=vals.filter(v=>v>0).length;
-  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H+16}" width="100%" role="img" aria-label="Son 14 günün günlük çalışma süresi">
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H+16}" width="100%" role="img" aria-label="Son 14 günün günlük çalışma süresi, sarı çizgi ${goal} dakikalık günlük hedefi gösterir">
     <line x1="0" y1="${gy.toFixed(1)}" x2="${W}" y2="${gy.toFixed(1)}" stroke="var(--sun)" stroke-width="1.5" stroke-dasharray="4 3"/>
     ${bars}
-    <text x="0" y="${H+12}" font-size="9" fill="var(--ink-soft)">14 gün önce</text>
-    <text x="${W}" y="${H+12}" font-size="9" fill="var(--ink-soft)" text-anchor="end">bugün</text>
   </svg></div>
-  <p class="mini">Son 14 günde <b>${active} gün</b> çalışıldı · sarı çizgi = günlük hedef (${goal} dk)</p>`;
+  <p class="mini">Son 14 günde <b>${active} gün</b> çalışıldı · sarı çizgi = günlük hedef (${goal} dk) · çubuğa dokun/gel, günü gör</p>`;
 }
 function streakDays(){
   let s=0; const d=new Date();
