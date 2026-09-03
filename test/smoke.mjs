@@ -292,7 +292,12 @@ const testDriver = `
     check('roundBul() "kolay" seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
 
     recentRounds = [true, true, false, true, true]; // %80 -> normal
-    roundSes(['a', 'n', 'e', 't']);
+    {
+      const origRandom = Math.random;
+      Math.random = () => 0; // (a) ses→resim
+      roundSes(['a', 'n', 'e', 't']);
+      Math.random = origRandom;
+    }
     check('roundSes() "normal" seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
 
     recentRounds = [];
@@ -304,6 +309,28 @@ const testDriver = `
     check('choose() doğru cevapta recentRounds dizisine sonuç ekliyor', recentRounds.length === before + 1 && recentRounds[recentRounds.length - 1] === true);
   } catch (e) {
     check('Zorluk uyarlaması (E2.5) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- 16) E2.4 Sesi Eşleştir çeşitliliği: (b) farklı sesle başlayan, (c) son ses ---
+  try {
+    const origRandom = Math.random;
+    const fullPool = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    state = fresh();
+    recentRounds = [];
+
+    Math.random = () => 0.5; // (b) hangisi farklı sesle başlıyor
+    roundSes(fullPool);
+    check('roundSes (b) varyantı doğru soru metnini gösteriyor', qtext.textContent === 'Hangisi farklı sesle başlıyor?');
+    check('roundSes (b) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = () => 0.99; // (c) son ses
+    roundSes(fullPool);
+    check('roundSes (c) varyantı "bitiyor" soru metnini gösteriyor', qtext.textContent.includes('bitiyor'));
+    check('roundSes (c) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = origRandom;
+  } catch (e) {
+    check('Sesi Eşleştir çeşitliliği (E2.4 b/c) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
   return results;
