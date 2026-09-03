@@ -163,6 +163,31 @@ const testDriver = `
     check('Zayıf seslere otomatik dönüş akışı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 10) E3.1 Ders sonu mini-değerlendirme: 3 hızlı soru, geçemezse haritada işaret ---
+  try {
+    state = fresh();
+    state.done = [0];
+    const L1 = LESSONS.find(x => x.id === 1);
+    const steps = buildSteps(L1);
+    check('buildSteps ders sonuna 3 değerlendirme adımı ekliyor', steps.length >= 3 && steps.slice(-3).every(s => s.assess === true));
+
+    play = { lessonId: 1, steps, i: steps.length };
+    assessResults = [true, false, false]; // 1/3 doğru -> geçemedi
+    finishLesson();
+    check('1/3 doğru değerlendirme "tekrar önerilir" bırakıyor', state.lessonLog[1].needsReview === true);
+    renderMap();
+    const node1 = document.querySelectorAll('#path .node')[1];
+    check('harita düğümü tekrar önerilir işareti (flag) taşıyor', node1 && node1.classList.contains('flag'));
+
+    state.done = [0];
+    play = { lessonId: 1, steps, i: steps.length };
+    assessResults = [true, true, false]; // 2/3 doğru -> geçti
+    finishLesson();
+    check('2/3 doğru değerlendirme "tekrar önerilir" işaretini kaldırıyor', state.lessonLog[1].needsReview === false);
+  } catch (e) {
+    check('Ders sonu mini-değerlendirme hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

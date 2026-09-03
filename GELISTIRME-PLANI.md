@@ -105,7 +105,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 ### E3 — Pratik & Değerlendirme  → uzman: pedagoji raporu (§ Başarı ölçütü, § 12 ders)
 
-- [ ] **E3.1** Ders sonu mini-değerlendirme: her dersin son adımı, o dersin `basariOlcutu`'na göre 3 hızlı soru; geçemezse ders "tamam" olur ama haritada "tekrar önerilir" işareti + Ses Karnesi'ne yansır.
+- [x] **E3.1** Ders sonu mini-değerlendirme: `buildSteps()` her dersin sonuna `assessSteps()` ile 3 hızlı soru ekler (Sesi Eşleştir/Harfi Bul dönüşümlü, dersin yeni ses(ler)i hedefli). `finishLesson()` 2/3+ doğruysa geçti sayar; değilse ders yine "tamam" olur ama `state.lessonLog[id].needsReview=true` ile haritada düğüme `🔁` işareti (`node.flag`) eklenir; sorular normal round mekanizmasını kullandığından Ses Karnesi zaten otomatik güncellenir. — 2026-09-03
 - [ ] **E3.2** Grup sonu "Kâşif Gösterisi" (ders 6 ve 12): puansız, kümülatif, kutlama odaklı ara sınav — mevcut `gosteri` tipini genişlet.
 - [x] **E3.3** "Zayıf seslere otomatik dönüş": `soundBuckets().review` (<%50 doğruluk, n≥3) doluysa harita üstünde `#reviewBtn` ("🔁 Tekrar turu: ...") belirir; `startReviewRound()` o seslerle 4–5 turluk (`reviewRoundSteps()`, Harfi Bul/Sesi Eşleştir dönüşümlü) hedefli oturum başlatır; bitişte `finishReviewRound()` özel "Tekrar turu tamam!" ekranı gösterir, `state.done`/rozetlere dokunmaz. — 2026-09-03
 - [ ] **E3.4** Okuma Kulübü oyunu (`roundOkuma`): `data/mufredat.json` ders 12'deki `metin` + `anlamaSorulari`. Kâşif metni sesli okur → çocuk metni görür (bilinen seslerle) → 2 anlama sorusu (resimli seçenek). Çözümleme modu.
@@ -201,6 +201,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.6 (rutin, Hafta 1 kilometre taşı): oturum ritmi — yaş moduna göre eşik dakika (Keşif 8, Çözümleme 15) aşılınca ders bitiş ekranında nazik "mola ver, yarın devam" önerisi bir kez gösteriliyor. Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E2.7 (rutin, Hafta 1 kilometre taşı): Kâşif'in övgü/ipucu cümleleri merkezi `PRAISE`/`RETRY_MSGS`/`HINT_MSGS` dizilerine taşındı ve 5'ten 15/6/5'e çıkarıldı; çabayı öven cümleler eklendi. Smoke test'e 3 yeni kontrol.
 - 2026-09-03 — E3.3 (rutin, Hafta 1 kilometre taşı): Ses Karnesi'nde <%50 doğrulukta ses varsa harita üstünde "🔁 Tekrar turu" düğmesi beliriyor; tıklanınca o seslerle 4–5 turluk hedefli oturum (`startReviewRound`) başlıyor, bitişte harita ilerlemesine dokunmayan ayrı bir bitiş ekranı gösteriliyor. Smoke test'e 6 yeni kontrol.
+- 2026-09-03 — E3.1 (rutin, Hafta 1 kilometre taşı): her ders sonuna 3 soruluk hızlı değerlendirme eklendi (`assessSteps`); 2/3+ doğru geçti sayılır, değilse ders yine tamamlanır ama harita düğümünde `🔁 tekrar önerilir` işareti (`state.lessonLog[id].needsReview`) beliriyor. Smoke test'e 4 yeni kontrol.
 
 ---
 

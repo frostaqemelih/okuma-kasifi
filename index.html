@@ -112,6 +112,8 @@
   .node.done{background:var(--ok); border-color:var(--ok); color:#fff}
   .node.now{background:var(--primary); border-color:var(--primary); color:#fff; animation:pulse 1.8s ease-in-out infinite}
   .node.locked{opacity:.55}
+  .node.flag::after{content:'🔁'; position:absolute; top:-8px; right:-8px; font-size:15px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 55%, transparent)}50%{box-shadow:0 0 0 12px transparent}}
   .node-lbl{font-family:var(--font-display); font-weight:600; font-size:14px; max-width:150px; color:var(--ink-soft)}
   .connector{width:4px; height:20px; background:var(--line); border-radius:2px}
@@ -543,10 +545,12 @@ function renderMap(){
     row.className='node-row'+(idx%2? ' r':'');
     const done=state.done.includes(L.id);
     const now=!done && available(L.id);
+    const needsReview=!!(state.lessonLog[L.id] && state.lessonLog[L.id].needsReview);
     const n=document.createElement('button');
-    n.className='node '+(done?'done':now?'now':'locked');
+    n.className='node '+(done?'done':now?'now':'locked')+(needsReview?' flag':'');
     n.textContent = done?'✓' : (L.id===0?'★':L.id);
     n.disabled = !done && !now;
+    if(needsReview) n.setAttribute('aria-label', L.ad+' — tekrar önerilir');
     n.onclick=()=>openLesson(L.id);
     const lbl=document.createElement('span');
     lbl.className='node-lbl'; lbl.textContent=L.ad;
@@ -557,6 +561,11 @@ function renderMap(){
 
 /* ================= DERS AKIŞI ================= */
 let play=null; // {lessonId, steps, i, dots} ya da null
+function assessSteps(sounds){
+  // E3.1: ders sonu mini-değerlendirme — 3 hızlı soru (Sesi Eşleştir/Harfi Bul dönüşümlü).
+  // Geçemezse (2/3'ten az doğru) finishLesson() haritada "tekrar önerilir" işareti bırakır.
+  return [0,1,2].map(i=>({game:i%2?'bul':'ses', sounds, assess:true}));
+}
 function buildSteps(L){
   if(L.tip==='hazirlik') return [{game:'hazirlik'}];
   const pool=poolUpTo(L.id);
@@ -566,7 +575,7 @@ function buildSteps(L){
     if(state.mode==='cozumleme' && syllablesFor(pool).length>=3) steps.push({game:'hece',sounds:pool});
     steps.push({game:'ses',sounds:pool});
     steps.push({game:'ciz',sounds:pool.slice(-3)});
-    return steps;
+    return [...steps, ...assessSteps(pool)];
   }
   L.yeni.forEach(s=>steps.push({game:'ciz',sounds:[s]}));
   steps.push({game:'ses',sounds:pool});
@@ -574,7 +583,7 @@ function buildSteps(L){
   if(state.mode==='cozumleme' && syllablesFor(pool).length>=3) steps.push({game:'hece',sounds:pool});
   if(state.mode==='cozumleme' && WORDBANK.some(x=>x.w.split('').every(c=>pool.includes(c)))) steps.push({game:'kelime',sounds:pool});
   if(state.mode==='cozumleme' && SENTENCES.some(x=>x.w.every(w=>w.split('').every(c=>pool.includes(c))))) steps.push({game:'cumle',sounds:pool});
-  return steps;
+  return [...steps, ...assessSteps(L.yeni.length?L.yeni:pool)];
 }
 function reviewSteps(){
   // E2.2: bir turda takılınan sesler state.reviewQueue'da birikir; ders başında
@@ -615,6 +624,8 @@ function openLesson(id){
 function runStep(){
   const st=play.steps[play.i];
   curIsReview=!!st.review;
+  curIsAssess=!!st.assess;
+  if(curIsAssess && (play.i===0 || !play.steps[play.i-1].assess)) assessResults=[];
   renderDots();
   ({hazirlik:stepHazirlik, bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle})[st.game](st.sounds||unlockedPool());
 }
@@ -633,6 +644,13 @@ function finishLesson(){
   const id=play.lessonId, L=LESSONS.find(x=>x.id===id);
   if(!state.done.includes(id)) state.done.push(id);
   if(L.rozet && !state.badges.includes(L.rozet)) state.badges.push(L.rozet);
+  if(assessResults.length){
+    // E3.1: 3 sorudan 2+'si doğruysa geçti; değilse ders "tamam" sayılır ama haritada işaretlenir
+    const passed=assessResults.filter(Boolean).length>=2;
+    const lg=state.lessonLog[id]||(state.lessonLog[id]={attempts:0,seconds:0,first:today(),last:today()});
+    lg.needsReview=!passed;
+    assessResults=[];
+  }
   trackTime(); save(); burst();
   document.getElementById('doneMascot').textContent = L.rozet?'🏆':'🌟';
   document.getElementById('doneTitle').textContent = L.rozet?'Rozet kazandın!':'Ders tamam!';
@@ -687,6 +705,7 @@ let locked=false, sessionStart=0;
 let curTargets=[];   // bu turda çalışılan ses(ler)
 let curWrongCount=0; // bu turdaki yanlış deneme sayısı (E2.1 kademeli hata protokolü)
 let curIsReview=false; // bu tur reviewSteps() tarafından mı eklendi (E2.2)
+let curIsAssess=false, assessResults=[]; // E3.1 ders sonu mini-değerlendirme
 let sessionMinutes=0, breakShown=false; // E2.6 oturum ritmi
 const qtext=document.getElementById('qtext');
 const playArea=document.getElementById('playArea');
@@ -779,6 +798,7 @@ function choose(el,right){
   if(right){
     locked=true; el.classList.add('right'); state.correct++; creditSounds(true);
     if(curIsReview) consumeReview();
+    if(curIsAssess) assessResults.push(true);
     save();
     say(rnd(PRAISE), award);
     return;
@@ -789,6 +809,7 @@ function choose(el,right){
   if(curWrongCount>=3){
     // 3. yanlış: modelle + birlikte — doğruyu göster, birlikte söyle, doğruyla bitir, tekrar kuyruğuna al
     locked=true; queueForReview();
+    if(curIsAssess) assessResults.push(false);
     if(correctEl) correctEl.classList.add('right');
     say('Doğrusu bu. Birlikte söyleyelim: '+roundPrompt, ()=>{ say(roundPrompt, award); });
   }else if(curWrongCount===2){
