@@ -507,6 +507,21 @@ const testDriver = `
     check('3. grup ö sesi (E4.2 c) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 27) E4.2 (d) 3. grup: y sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.y tanımlı ve y ile başlıyor', !!WORDS.y && WORDS.y.word[0] === 'y');
+    check('STROKES.y tanımlı (çok vuruşlu: iki eğik vuruş + kuyruk)', Array.isArray(STROKES.y) && STROKES.y.length === 2);
+    const L16 = LESSONS.find(x => x.id === 16);
+    check('LESSONS içinde ders 16 "Ses y" olarak tanımlı', !!L16 && L16.yeni.includes('y'));
+    const poolWithY = poolUpTo(16);
+    check('poolUpTo(16) ü, s, ö ve y seslerinin hepsini içeriyor', ['ü', 's', 'ö', 'y'].every(c => poolWithY.includes(c)));
+    const reachableY = WORDBANK.filter(it => it.w.split('').every(c => poolWithY.includes(c)));
+    check('"yol" y ogrenilince WORDBANK icinde erisilebilir', reachableY.some(it => it.w === 'yol'));
+    check('"yumurta" y ogrenilince WORDBANK icinde erisilebilir', reachableY.some(it => it.w === 'yumurta'));
+  } catch (e) {
+    check('3. grup y sesi (E4.2 d) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

@@ -52,7 +52,8 @@
     "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 },
     "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] },
     "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 },
-    "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] }
+    "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] },
+    "y": { "tur": "surekli-unsuz", "uzatilabilir": false, "ornek": ["yol", "yumurta", "yıldız"], "sesletim": "y", "cizimVurus": 2 }
   },
 
   "ortakIskelet": [
@@ -194,6 +195,14 @@
       "basariOlcutu": "/o/ ve /ö/'yü ikili ayırt görevinde %80 ayırır; ö harfini (iki nokta dâhil) çizer; 'kö, ör, sö' hecelerini sesletir",
       "kelimeler": ["körük"], "heceler": ["kö", "ör", "sö", "ötü"], "cumleler": [],
       "not": "3. grubun (ü,s,ö,y,d,z) 3. sesi. Kalan 3 ses ders 16–18'de eklenecek."
+    },
+    {
+      "id": 16, "ad": "Ses y", "yeniSesler": ["y"], "yeniHarfler": ["y"],
+      "beceriler": ["/y/ ilk-ses avı", "y harfini çizme (iki eğik vuruş + kuyruk)", "heceler", "kelimeler"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/y/ ile başlayan sözcükleri %80 tanır; y harfini doğru sırayla çizer; 'yol, yumurta' kelimelerini okur",
+      "kelimeler": ["yol", "yumurta"], "heceler": ["ya", "ye", "yı", "yo", "yu", "ay", "ey"], "cumleler": [],
+      "not": "3. grubun (ü,s,ö,y,d,z) 4. sesi. Kalan 2 ses ders 17–18'de eklenecek."
     }
   ]
 }

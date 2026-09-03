@@ -444,7 +444,7 @@ const WORDS={
   o:{word:'orman', emoji:'🌲'}, k:{word:'kedi', emoji:'🐈'}, u:{word:'uçak', emoji:'✈️'},
   r:{word:'radyo', emoji:'📻'}, 'ı':{word:'ışık',emoji:'💡'}, m:{word:'mum',  emoji:'🕯️'},
   /* E4.2: 3. grup (ü,s,ö,y,d,z) — sırayla ekleniyor. */
-  'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}
+  'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}, y:{word:'yol', emoji:'🛣️'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -462,7 +462,8 @@ const LESSONS=[
   {id:12, ad:'Kâşif Gösterisi', alt:'Kısa metin', yeni:[], rozet:'2. Grup Kâşifi 🏆', tip:'gosteri'},
   {id:13, ad:'Ses ü', yeni:['ü']},
   {id:14, ad:'Ses s', yeni:['s']},
-  {id:15, ad:'Ses ö', yeni:['ö']}
+  {id:15, ad:'Ses ö', yeni:['ö']},
+  {id:16, ad:'Ses y', yeni:['y']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -481,7 +482,9 @@ const WORDBANK=[
   /* E4.2 (b): s sesi eklendi — 'su'/'kes' s+önceki gruplardan, hemen erişilebilir. */
   {w:'su',e:'💧'},{w:'kes',e:'✂️'},
   /* E4.2 (c): ö sesi eklendi — 'körük' ö+önceki gruplardan, hemen erişilebilir. */
-  {w:'körük',e:'🔥'}
+  {w:'körük',e:'🔥'},
+  /* E4.2 (d): y sesi eklendi — 'yol'/'yumurta' y+önceki gruplardan, hemen erişilebilir. */
+  {w:'yol',e:'🛣️'},{w:'yumurta',e:'🥚'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -554,7 +557,9 @@ const STROKES={
   /* E4.2 (b): s — tek vuruşlu S eğrisi, sağ üstten başlayıp aşağı kıvrılır. */
   s:[ [[.60,.35],[.48,.32],[.37,.36],[.34,.44],[.40,.50],[.50,.52],[.60,.55],[.66,.62],[.63,.70],[.51,.74],[.39,.71],[.34,.64]] ],
   /* E4.2 (c): ö — o'nun gövdesi, üstünde iki nokta (ü'deki nokta deseniyle aynı). */
-  'ö':[ [[.40,.26],[.41,.27]], [[.58,.26],[.59,.27]], [[.50,.33],[.37,.42],[.33,.55],[.40,.68],[.53,.72],[.65,.63],[.67,.49],[.60,.37],[.50,.33]] ]
+  'ö':[ [[.40,.26],[.41,.27]], [[.58,.26],[.59,.27]], [[.50,.33],[.37,.42],[.33,.55],[.40,.68],[.53,.72],[.65,.63],[.67,.49],[.60,.37],[.50,.33]] ],
+  /* E4.2 (d): y — iki eğik vuruş bir noktada birleşir, ikinci vuruş kuyruk olarak devam eder. */
+  y:[ [[.35,.38],[.42,.48],[.50,.58]], [[.65,.38],[.58,.48],[.50,.58],[.45,.68],[.38,.76]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
