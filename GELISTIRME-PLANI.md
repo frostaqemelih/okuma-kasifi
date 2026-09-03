@@ -85,8 +85,8 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 - [x] **E1.6** "Bu hafta" özet paragrafı (şablon + slot). — 2026-09-03
 - [x] **E1.7** Ayarlar: yaş modu, günlük hedef, disleksi-dostu, sessiz mod. — 2026-09-03
 - [x] **E1.8** İlerleme JSON dışa/içe aktarma. — 2026-09-03
-- [ ] **E1.9** İYİLEŞTİRME: grafik hedef çizgisi max'tan büyükse görünmüyor — ölçeklemeyi düzelt; grafiğe gün etiketleri/hover.
-- [ ] **E1.10** İYİLEŞTİRME: `.ptabs` dar ekranda taşıyor — yatay kaydırılır şerit yap.
+- [x] **E1.9** İYİLEŞTİRME: grafik hedef çizgisi max'tan büyükse görünmüyor — ölçeklemeyi düzelt; grafiğe gün etiketleri/hover. — 2026-09-03
+- [x] **E1.10** İYİLEŞTİRME: `.ptabs` dar ekranda taşıyor — yatay kaydırılır şerit yap. — 2026-09-03
 - [ ] **E1.11** Çocuğun adını onboarding'de sor (opsiyonel, cihazda), ebeveyn özetinde "Kâşif" yerine kullan.
 - [ ] **E1.12** Ebeveyne "yazdır / PDF" (tarayıcı print CSS) haftalık rapor.
 
@@ -188,7 +188,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-03 — Repo oluşturuldu, GELISTIRME-PLANI.md eklendi. v0 durumu: 6 oyun + harita + Ses Karnesi.
 - 2026-09-03 — E1 (Ebeveyn İzleme Sayfası) tamamlandı: `s-parent` 5 sekme, 14 günlük grafik, ders logları, evde-etkinlik önerileri, ayarlar (disleksi/sessiz/hedef), JSON dışa/içe aktarma. `state` şeması genişledi (daily, lessonLog, settings) — hâlâ `v2` (geriye uyumlu merge).
-- 2026-09-03 — Plan yeniden düzenlendi: **~1 ay halka sunum hedefi** + § 1.5 haftalık yol haritası + **E8 (Freemium & Premium)** + **E9 (Yayın & Dağıtım)** epikleri eklendi. Rutin sıklığı artırıldı (birkaç saatte bir).
+- 2026-09-03 — E1.9 + E1.10 (rutin): 14 günlük grafikte hedef çizgisi görünürlüğü düzeltildi, çubuklara gün etiketi + hover, `.ptabs` yatay kaydırılan şerit oldu. İlk test altyapısı: `npm i -D jsdom` + `test/smoke.mjs` (16 kontrol), `npm test`.
+- 2026-09-03 — Plan yeniden düzenlendi: **~1 ay halka sunum hedefi** + § 1.5 haftalık yol haritası + **E8 (Freemium & Premium)** + **E9 (Yayın & Dağıtım)** epikleri eklendi. Rutin sıklığı artırıldı (3 saatte bir).
 
 ---
 
