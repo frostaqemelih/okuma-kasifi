@@ -140,6 +140,29 @@ const testDriver = `
     check('Tepki çeşitliliği listeleri hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 9) E3.3 Zayıf seslere otomatik dönüş: haritada "Tekrar turu" düğmesi ve hedefli tur ---
+  try {
+    state = fresh();
+    state.mode = 'kesif';
+    state.soundStats = { a: { c: 1, w: 3 } }; // %25 doğruluk, n=4 >= 3 -> "review" kovası
+    play = null;
+    renderMap();
+    const rb = document.getElementById('reviewBtn');
+    check('zayıf ses varken Tekrar turu düğmesi görünür', rb.hidden === false && rb.textContent.includes('a'));
+    startReviewRound();
+    check('Tekrar turu 4-5 adımdan oluşuyor', play && play.steps.length >= 4 && play.steps.length <= 5);
+    check('Tekrar turu adımları zayıf sesi hedefliyor', play.steps.every(s => s.sounds.includes('a')));
+    play.i = play.steps.length; // turu bitmiş varsay
+    finishLesson();
+    check('Tekrar turu bitince ders haritasına dokunulmadı', state.done.length === 0);
+    check('Tekrar turu bitiş ekranı doğru başlık gösteriyor', document.getElementById('doneTitle').textContent === 'Tekrar turu tamam!');
+    state.soundStats = {};
+    renderMap();
+    check('zayıf ses yokken Tekrar turu düğmesi gizli', document.getElementById('reviewBtn').hidden === true);
+  } catch (e) {
+    check('Zayıf seslere otomatik dönüş akışı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

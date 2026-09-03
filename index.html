@@ -278,6 +278,7 @@
     <h1 style="font-size:clamp(22px,5vw,30px); margin-bottom:2px">Keşif Haritası</h1>
     <span class="group-chip" style="margin-bottom:6px">Mod: <b id="modeChip">—</b> · <a href="#" onclick="event.preventDefault();go('s-mode')" style="color:var(--primary-d)">değiştir</a></span>
     <div class="badges" id="badges" style="margin-bottom:10px"></div>
+    <button class="btn tiny" id="reviewBtn" style="margin-bottom:12px; background:var(--nope)" onclick="startReviewRound()" hidden></button>
     <div class="path" id="path"></div>
     <button class="btn grape tiny" style="margin-top:20px" onclick="openFreeMenu()">🎲 Serbest oyun</button>
   </section>
@@ -530,6 +531,11 @@ function renderMap(){
   document.getElementById('modeChip').textContent = state.mode==='kesif'?'Keşif (4–5)':'Çözümleme (6–7)';
   const bx=document.getElementById('badges');
   bx.innerHTML = state.badges.map(b=>`<span class="badge">${b}</span>`).join('');
+  // E3.3: Ses Karnesi'nde <%50 doğrulukta ses varsa hedefli "Tekrar turu" düğmesi göster
+  const weak=soundBuckets().review;
+  const rb=document.getElementById('reviewBtn');
+  if(weak.length){ rb.hidden=false; rb.textContent=`🔁 Tekrar turu: ${weak.join(', ')}`; }
+  else rb.hidden=true;
   const path=document.getElementById('path'); path.innerHTML='';
   LESSONS.forEach((L,idx)=>{
     if(idx>0){ const c=document.createElement('div'); c.className='connector'; path.appendChild(c); }
@@ -576,6 +582,23 @@ function reviewSteps(){
   if(!state.reviewQueue.length) return [];
   return state.reviewQueue.slice(0,3).map(s=>({game:'ses', sounds:[s], review:true}));
 }
+function reviewRoundSteps(sounds){
+  // E3.3: zayıf seslerle 4-5 turluk hedefli çalışma, Harfi Bul/Sesi Eşleştir dönüşümlü
+  const n=Math.min(5, Math.max(4, sounds.length+1));
+  const steps=[];
+  for(let i=0;i<n;i++) steps.push({game:i%2?'bul':'ses', sounds});
+  return steps;
+}
+function startReviewRound(){
+  const weak=soundBuckets().review;
+  if(!weak.length) return;
+  play={lessonId:'review', reviewRound:true, steps:reviewRoundSteps(weak), i:0};
+  state.last=new Date().toISOString();
+  save();
+  sessionStart=Date.now();
+  go('s-game');
+  runStep();
+}
 function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
@@ -606,6 +629,7 @@ function stepAdvance(){
   setTimeout(runStep, 450);
 }
 function finishLesson(){
+  if(play && play.reviewRound){ finishReviewRound(); return; }
   const id=play.lessonId, L=LESSONS.find(x=>x.id===id);
   if(!state.done.includes(id)) state.done.push(id);
   if(L.rozet && !state.badges.includes(L.rozet)) state.badges.push(L.rozet);
@@ -622,6 +646,20 @@ function finishLesson(){
   play=null;
   go('s-done');
   say(L.rozet?'Tebrikler, yeni bir rozet kazandın!':'Aferin, dersi bitirdin!');
+}
+function finishReviewRound(){
+  // E3.3: hedefli tekrar turu bitişi — ders sayılmaz, harita ilerlemesine dokunmaz
+  trackTime(); save(); burst();
+  document.getElementById('doneMascot').textContent='💪';
+  document.getElementById('doneTitle').textContent='Tekrar turu tamam!';
+  document.getElementById('doneText').textContent='Zorlandığın seslerde harika pratik yaptın.';
+  document.getElementById('doneBadge').hidden=true;
+  const suggestBreak=maybeSuggestBreak();
+  document.getElementById('doneBreakMsg').hidden=!suggestBreak;
+  document.getElementById('doneBreakBtn').hidden=!suggestBreak;
+  play=null;
+  go('s-done');
+  say('Harika, tekrar turunu bitirdin!');
 }
 function quitPlay(){
   play=null; freeGame=null; trackTime();
