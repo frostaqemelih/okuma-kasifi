@@ -401,6 +401,17 @@ const testDriver = `
     check('Okuma Kulübü (E3.4) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 20) E4.5 WORDBANK genişletme: 40+ kelime, hepsi 1.+2. grup seslerinden ---
+  try {
+    check('WORDBANK en az 40 kelime içeriyor', WORDBANK.length >= 40);
+    const pool12 = 'anetilokurım'.split('');
+    const bad = WORDBANK.filter(it => !it.w.split('').every(c => pool12.includes(c)));
+    check('WORDBANK kelimeleri yalnız 1.+2. grup seslerinden kurulu', bad.length === 0);
+    check('WORDBANK her kelimede emoji taşıyor', WORDBANK.every(it => it.e && it.e.length));
+  } catch (e) {
+    check('WORDBANK (E4.5) hatasız kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

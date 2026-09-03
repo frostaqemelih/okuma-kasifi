@@ -119,7 +119,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 - [ ] **E4.2** 3. grup `ü,s,ö,y,d,z`: `WORDS` (ör. ü→üzüm, s→su, ö→ördek, y→yıldız, d→davul, z→zil), `STROKES` yaz, ders 13–18 ekle.
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
-- [ ] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel.
+- [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
 - [ ] **E4.6** Büyük harf / küçük harf farkındalığı modülü (cümle başı, özel ad).
 - [ ] **E4.7** Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik.
 
@@ -213,6 +213,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.4 Hece Kur (b)+(c) (rutin, Hafta 1 kilometre taşı): `roundHece()` artık 3 varyant arasında rastgele seçiyor — (a) hece tanı (mevcut, `roundHeceListen`), (b) "hece→resim" (`roundHecePic`, bu heceyle başlayan kelimenin resmini bul), (c) "eksik harfi bul" (`roundHeceMissing`, heceyi tamamlayan harfi seç). **E2.4 (tüm mini oyunlarda ≥2 varyant çeşitliliği) tamamlandı.** Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E6.1 (rutin, Hafta 1 kilometre taşı): Harf Çiz'e vuruş vuruş kılavuz eklendi — çok vuruşlu harflerde (t,n,k,u,r,m,a,i) aktif vuruş kılavuzda turuncu/sarı çizgiyle vurgulanıyor (`drawActiveHighlight`), başlangıç noktası da o vuruşa göre kayıyor. Çocuk bir vuruşu bitirince (`end()`) çizim `strokeMatchRatio()` ile hedef vuruşa yakınlık oranına göre değerlendiriliyor: yeterince örtüşürse sıradaki vuruşa geçilip nazik teşvik mesajı gösteriliyor, örtüşmüyorsa çizim silinmeden nazik bir uyarı mesajı gösteriliyor (engellemiyor). Tek vuruşlu harflerde ve kademe 5'te (bellekten) devre dışı. Smoke test'e 7 yeni kontrol (saf fonksiyonlar `multiStrokeGuideOn`/`strokeMatchRatio` üzerinden, canvas'a ihtiyaç duymadan).
 - 2026-09-03 — E3.4 (rutin, Hafta 1 kilometre taşı — **son madde, Hafta 1 tamamlandı**): "Okuma Kulübü" oyunu eklendi (`roundOkuma`) — `READING` sabiti (mufredat.json ders 12 metni + 2 anlama sorusu), Kâşif metni okur → "sorulara geç" → sıralı 2 soru (`askOkuma`/`answerOkuma`) → bitişte `award()`. Serbest Oyun menüsüne yalnız Çözümleme modunda görünen "📖 Okuma Kulübü" kartı eklendi. Böylece **Hafta 1 kilometre taşı (öğrenme çekirdeği: E2 hata kurtarma+çeşitlilik+aralıklı tekrar, E3.1–E3.4 değerlendirme+Okuma Kulübü, E6.1–E6.2 Harf Çiz kılavuz+kademeler) tamamlandı.** Sıradaki odak Hafta 2: E4.1–E4.3 (2.–4. ses grupları), E3.5 (metin bankası), E4.5 (40+ kelime), E5.1 (ses klip altyapısı iskeleti). Smoke test'e 7 yeni kontrol.
+- 2026-09-03 — E4.5 (rutin, Hafta 2 kilometre taşı başlangıcı): `WORDBANK` 12'den 40 kelimeye çıkarıldı — hepsi yalnızca 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m) kurulu, her biri net emoji ile (elma🍎, kartal🦅, roket🚀, market🏪, ırmak🌊, vb.). Kelimeler zaten `pool`'a göre filtrelendiğinden (Kelime Kur/Kelime Eşle) yeni sözcükler öğrenilen seslere göre otomatik açılıyor. Smoke test'e 3 yeni kontrol (kelime sayısı, ses kapsamı, emoji varlığı).
 
 ---
 
