@@ -188,6 +188,31 @@ const testDriver = `
     check('Ders sonu mini-değerlendirme hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 11) E2.3 Aralıklı tekrar: strength/lastSeen izleniyor mu, ısınma turu düşük/eski sesi seçiyor mu? ---
+  try {
+    state = fresh();
+    curTargets = ['a'];
+    creditSounds(true);
+    check('creditSounds() strength ve lastSeen günceller', state.soundStats.a.strength === 3 && state.soundStats.a.lastSeen === today());
+
+    state = fresh();
+    state.done = [0, 1]; // pool = ['a']
+    state.soundStats = { a: { c: 2, w: 5, strength: 1, lastSeen: '2020-01-01' } };
+    check('warmupSounds() düşük strength/eski sesi seçiyor', warmupSounds().includes('a'));
+
+    state.soundStats = { a: { c: 5, w: 1, strength: 5, lastSeen: today() } };
+    check('warmupSounds() güçlü ve güncel sesi seçmiyor', !warmupSounds().includes('a'));
+
+    state = fresh();
+    state.done = [0, 1];
+    state.soundStats = { a: { c: 1, w: 4, strength: 1, lastSeen: '2020-01-01' } };
+    play = null;
+    openLesson(2);
+    check('warmupSteps() ders başına eklendi', play.steps[0].warmup === true && play.steps[0].sounds[0] === 'a');
+  } catch (e) {
+    check('Aralıklı tekrar (ısınma turu) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

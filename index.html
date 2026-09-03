@@ -611,7 +611,7 @@ function startReviewRound(){
 function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
-  play={lessonId:id, steps:[...reviewSteps(), ...buildSteps(L)], i:0};
+  play={lessonId:id, steps:[...warmupSteps(), ...reviewSteps(), ...buildSteps(L)], i:0};
   state.last=new Date().toISOString();
   const t=today();
   const lg=state.lessonLog[id]||(state.lessonLog[id]={attempts:0,seconds:0,first:t,last:t});
@@ -715,8 +715,31 @@ function creditSounds(ok){
     if(!/^[a-zçğıöşü]$/.test(s)) return;
     const st=state.soundStats[s]||(state.soundStats[s]={c:0,w:0});
     st[ok?'c':'w']++;
+    // E2.3: basit Leitner kutusu — doğru cevap "strength"i artırır, yanlış azaltır (0-5)
+    st.strength=Math.max(0,Math.min(5,(typeof st.strength==='number'?st.strength:2)+(ok?1:-1)));
+    st.lastSeen=today();
   });
   save();
+}
+/* E2.3: Aralıklı tekrar — düşük "strength" veya uzun süredir görülmemiş, öğrenilmiş sesleri seç. */
+function daysSince(dateStr){
+  if(!dateStr) return 99;
+  const d=(Date.now()-new Date(dateStr).getTime())/86400000;
+  return isNaN(d) ? 99 : d;
+}
+function warmupSounds(){
+  const pool=unlockedPool();
+  const cands=pool
+    .filter(s=>state.soundStats[s] && typeof state.soundStats[s].strength==='number')
+    .map(s=>{ const st=state.soundStats[s]; return {s, strength:st.strength, stale:daysSince(st.lastSeen)}; })
+    .filter(x=>x.strength<=2 || x.stale>=2);
+  cands.sort((a,b)=> a.strength-b.strength || b.stale-a.stale);
+  return cands.slice(0,2).map(x=>x.s);
+}
+function warmupSteps(){
+  const w=warmupSounds();
+  if(!w.length) return [];
+  return w.map(s=>({game:'ses', sounds:[s], warmup:true}));
 }
 function queueForReview(){
   curTargets.forEach(s=>{

@@ -94,7 +94,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 - [x] **E2.1** Kademeli hata protokolü: 1. yanlış → nötr "tekrar dinle"; 2. yanlış → **hedefli ipucu** (yanlış şık soluklaşır+kilitlenir, doğru şıkka `.hint` nabız vurgusu); 3. yanlış → **modelle + birlikte** (doğru gösterilir, "birlikte söyleyelim" + tur doğruyla biter), hedef ses `state.reviewQueue`'ya eklenir (E2.2 bunu tüketecek). Şimdilik Harfi Bul/Sesi Eşleştir/Hece Kur (`choose()`) kapsıyor; Kelime Kur/Cümle Bahçesi (`checkWord()`) ayrı madde olarak bırakıldı. — 2026-09-03
 - [x] **E2.2** "Tekrar kuyruğu": `reviewSteps()` ders başında `state.reviewQueue`'daki en fazla 3 sesi kısa "ses" turu olarak normal adımların önüne ekler (`review:true`). İlk denemede yardımsız doğru cevaplanırsa `consumeReview()` ile kuyruktan çıkar; 3 yanlıştan sonra modellenen turlar (choose() "right" dalından geçmez) kuyrukta kalır. — 2026-09-03
-- [ ] **E2.3** Aralıklı tekrar (spaced repetition): her sesin `lastSeen` + `strength` (0–5). Ders başı "ısınma" turu, `strength` düşük + `lastSeen` eski sesleri seçer. Basit Leitner mantığı.
+- [x] **E2.3** Aralıklı tekrar (spaced repetition): `creditSounds()` artık her sesin `strength` (0–5, doğru +1/yanlış −1) ve `lastSeen` (gün) alanlarını güncelliyor. `warmupSounds()` öğrenilmiş sesler arasından `strength≤2` veya `lastSeen` ≥2 gün eskiyse en fazla 2 tanesini seçer; `warmupSteps()` bunları `openLesson()`'da ders adımlarının en başına (reviewSteps'ten de önce) kısa "ses" turu olarak ekler. Basit Leitner mantığı. — 2026-09-03
 - [ ] **E2.4** Aynı hedef için çeşitli alıştırma tipleri — her mini oyunda en az 2 varyant:
   - Harfi Bul: (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle
   - Sesi Eşleştir: (a) ses→resim, (b) "hangisi farklı sesle başlıyor", (c) son ses
@@ -202,6 +202,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.7 (rutin, Hafta 1 kilometre taşı): Kâşif'in övgü/ipucu cümleleri merkezi `PRAISE`/`RETRY_MSGS`/`HINT_MSGS` dizilerine taşındı ve 5'ten 15/6/5'e çıkarıldı; çabayı öven cümleler eklendi. Smoke test'e 3 yeni kontrol.
 - 2026-09-03 — E3.3 (rutin, Hafta 1 kilometre taşı): Ses Karnesi'nde <%50 doğrulukta ses varsa harita üstünde "🔁 Tekrar turu" düğmesi beliriyor; tıklanınca o seslerle 4–5 turluk hedefli oturum (`startReviewRound`) başlıyor, bitişte harita ilerlemesine dokunmayan ayrı bir bitiş ekranı gösteriliyor. Smoke test'e 6 yeni kontrol.
 - 2026-09-03 — E3.1 (rutin, Hafta 1 kilometre taşı): her ders sonuna 3 soruluk hızlı değerlendirme eklendi (`assessSteps`); 2/3+ doğru geçti sayılır, değilse ders yine tamamlanır ama harita düğümünde `🔁 tekrar önerilir` işareti (`state.lessonLog[id].needsReview`) beliriyor. Smoke test'e 4 yeni kontrol.
+- 2026-09-03 — E2.3 (rutin, Hafta 1 kilometre taşı): aralıklı tekrar (basit Leitner) — her ses için `strength` (0–5) ve `lastSeen` izleniyor, ders başında düşük/eski sesler için 1-2 turluk "ısınma" adımları ekleniyor (`warmupSteps`, `reviewSteps`'ten de önce). Smoke test'e 4 yeni kontrol.
 
 ---
 
