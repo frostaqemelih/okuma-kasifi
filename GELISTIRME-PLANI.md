@@ -93,7 +93,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 ### E2 — Hata Kurtarma & Çeşitlilik  → uzman: pedagoji raporu (§ Hata protokolü, § Oyunlaştırma)
 
 - [x] **E2.1** Kademeli hata protokolü: 1. yanlış → nötr "tekrar dinle"; 2. yanlış → **hedefli ipucu** (yanlış şık soluklaşır+kilitlenir, doğru şıkka `.hint` nabız vurgusu); 3. yanlış → **modelle + birlikte** (doğru gösterilir, "birlikte söyleyelim" + tur doğruyla biter), hedef ses `state.reviewQueue`'ya eklenir (E2.2 bunu tüketecek). Şimdilik Harfi Bul/Sesi Eşleştir/Hece Kur (`choose()`) kapsıyor; Kelime Kur/Cümle Bahçesi (`checkWord()`) ayrı madde olarak bırakıldı. — 2026-09-03
-- [ ] **E2.2** "Tekrar kuyruğu": bir turda takılınan ses/hece `state.reviewQueue`'ya eklenir; sonraki oturumların başında 2–3 kısa tekrar turu.
+- [x] **E2.2** "Tekrar kuyruğu": `reviewSteps()` ders başında `state.reviewQueue`'daki en fazla 3 sesi kısa "ses" turu olarak normal adımların önüne ekler (`review:true`). İlk denemede yardımsız doğru cevaplanırsa `consumeReview()` ile kuyruktan çıkar; 3 yanlıştan sonra modellenen turlar (choose() "right" dalından geçmez) kuyrukta kalır. — 2026-09-03
 - [ ] **E2.3** Aralıklı tekrar (spaced repetition): her sesin `lastSeen` + `strength` (0–5). Ders başı "ısınma" turu, `strength` düşük + `lastSeen` eski sesleri seçer. Basit Leitner mantığı.
 - [ ] **E2.4** Aynı hedef için çeşitli alıştırma tipleri — her mini oyunda en az 2 varyant:
   - Harfi Bul: (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle
@@ -197,6 +197,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E1.9 + E1.10 (rutin): 14 günlük grafikte hedef çizgisi görünürlüğü düzeltildi, çubuklara gün etiketi + hover, `.ptabs` yatay kaydırılan şerit oldu. İlk test altyapısı: `npm i -D jsdom` + `test/smoke.mjs` (16 kontrol), `npm test`.
 - 2026-09-03 — Plan yeniden düzenlendi: **~1 ay halka sunum hedefi** + § 1.5 haftalık yol haritası + **E8 (Freemium & Premium)** + **E9 (Yayın & Dağıtım)** epikleri eklendi. Rutin sıklığı artırıldı (3 saatte bir).
 - 2026-09-03 — E2.1 (rutin, Hafta 1 kilometre taşı): çoktan seçmeli turlarda (Harfi Bul/Sesi Eşleştir/Hece Kur) kademeli hata protokolü eklendi — 1. yanlışta nötr tekrar, 2.'de doğru şıkka görsel ipucu, 3.'te doğru modellenip tur biter ve ses `state.reviewQueue`'ya alınır. `okuma-kasifi-v2` şemasına `reviewQueue` alanı eklendi (geriye uyumlu). Smoke test'e 4 yeni kontrol.
+- 2026-09-03 — E2.2 (rutin, Hafta 1 kilometre taşı): tekrar kuyruğu artık tüketiliyor — ders başında `reviewSteps()` kuyruktaki en fazla 3 sesi kısa tur olarak ekliyor, yardımsız doğru cevapta `consumeReview()` ile kuyruktan çıkarıyor. Smoke test'e 3 yeni kontrol.
 
 ---
 

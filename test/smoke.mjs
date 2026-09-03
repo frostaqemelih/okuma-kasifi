@@ -101,6 +101,22 @@ const testDriver = `
     check('Kademeli hata protokolü hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 6) E2.2 Tekrar kuyruğu: ders başında reviewQueue'daki sesler ilk turlara ekleniyor mu? ---
+  try {
+    state = fresh();
+    state.done = [0];
+    state.reviewQueue = ['a', 'n'];
+    play = null;
+    openLesson(1);
+    check('reviewSteps ders adımlarının başına eklendi', play.steps[0].review === true && play.steps[0].sounds[0] === 'a');
+    check('normal ders adımları reviewSteps sonrasında duruyor', play.steps.some(s => !s.review));
+    curTargets = ['a'];
+    consumeReview();
+    check("doğru cevaplanan ses tekrar kuyruğundan çıktı", !state.reviewQueue.includes('a') && state.reviewQueue.includes('n'));
+  } catch (e) {
+    check('Tekrar kuyruğu akışı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

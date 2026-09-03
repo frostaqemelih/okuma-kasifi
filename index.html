@@ -558,10 +558,16 @@ function buildSteps(L){
   if(state.mode==='cozumleme' && SENTENCES.some(x=>x.w.every(w=>w.split('').every(c=>pool.includes(c))))) steps.push({game:'cumle',sounds:pool});
   return steps;
 }
+function reviewSteps(){
+  // E2.2: bir turda takılınan sesler state.reviewQueue'da birikir; ders başında
+  // en fazla 3 kısa tekrar turu ile hızlıca tazelenir.
+  if(!state.reviewQueue.length) return [];
+  return state.reviewQueue.slice(0,3).map(s=>({game:'ses', sounds:[s], review:true}));
+}
 function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
-  play={lessonId:id, steps:buildSteps(L), i:0};
+  play={lessonId:id, steps:[...reviewSteps(), ...buildSteps(L)], i:0};
   state.last=new Date().toISOString();
   const t=today();
   const lg=state.lessonLog[id]||(state.lessonLog[id]={attempts:0,seconds:0,first:t,last:t});
@@ -573,6 +579,7 @@ function openLesson(id){
 }
 function runStep(){
   const st=play.steps[play.i];
+  curIsReview=!!st.review;
   renderDots();
   ({hazirlik:stepHazirlik, bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle})[st.game](st.sounds||unlockedPool());
 }
@@ -626,6 +633,7 @@ function nextFreeRound(){
 let locked=false, sessionStart=0;
 let curTargets=[];   // bu turda çalışılan ses(ler)
 let curWrongCount=0; // bu turdaki yanlış deneme sayısı (E2.1 kademeli hata protokolü)
+let curIsReview=false; // bu tur reviewSteps() tarafından mı eklendi (E2.2)
 const qtext=document.getElementById('qtext');
 const playArea=document.getElementById('playArea');
 
@@ -643,6 +651,16 @@ function queueForReview(){
     if(!state.reviewQueue.includes(s)) state.reviewQueue.push(s);
   });
   if(state.reviewQueue.length>12) state.reviewQueue=state.reviewQueue.slice(-12);
+  save();
+}
+function consumeReview(){
+  // E2.2: tekrar turu ilk denemede (yardımsız) doğru yapılınca kuyruktan çıkar;
+  // 3 yanlıştan sonra modellenen turlar choose()'un "right" dalından geçmediği
+  // için kuyrukta kalır — çocuğun hâlâ pratiğe ihtiyacı olduğu varsayılır.
+  curTargets.forEach(s=>{
+    const idx=state.reviewQueue.indexOf(s);
+    if(idx>=0) state.reviewQueue.splice(idx,1);
+  });
   save();
 }
 
@@ -705,7 +723,9 @@ function roundHece(pool){
 function choose(el,right){
   if(locked) return;
   if(right){
-    locked=true; el.classList.add('right'); state.correct++; creditSounds(true); save();
+    locked=true; el.classList.add('right'); state.correct++; creditSounds(true);
+    if(curIsReview) consumeReview();
+    save();
     say(rnd(['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!']), award);
     return;
   }
