@@ -453,6 +453,15 @@ const SENTENCES=[
 ];
 const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma'];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
+/* E2.7: Kâşif'in tepki çeşitliliği — çabayı öv (sonucu değil), tekrarı azalt. */
+const PRAISE=['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!','Süpersin!',
+  'Çok iyi denedin!','Emeğinin karşılığını aldın!','Mükemmel bir deneme!','Tam sana göre!',
+  'Vay canına, doğru buldun!','Kâşif gibi düşündün!','Çok akıllısın!','Bir Kâşif gibisin!','Harika iş çıkardın!'];
+const RETRY_MSGS=['Az kaldı, tekrar dinleyelim.','Neredeyse! Bir daha dinleyelim.',
+  'Çok iyi deniyorsun, tekrar dinleyelim.','Az kaldı, sen yaparsın! Tekrar dinle.',
+  'Devam, çok güzel deniyorsun.','Hiç sorun değil, bir daha dinleyelim.'];
+const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
+  'Neredeyse buldun, ipucuna bak.','Harika deniyorsun, ipucu burada.','Az kaldı Kâşif, ipucuna bak.'];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c'];
 
@@ -733,7 +742,7 @@ function choose(el,right){
     locked=true; el.classList.add('right'); state.correct++; creditSounds(true);
     if(curIsReview) consumeReview();
     save();
-    say(rnd(['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!']), award);
+    say(rnd(PRAISE), award);
     return;
   }
   curWrongCount++;
@@ -748,10 +757,10 @@ function choose(el,right){
     // 2. yanlış: hedefli ipucu — yanlış şıkkı soluklaştır, doğru şıkkı vurgula
     el.style.opacity='.35'; el.disabled=true;
     if(correctEl) correctEl.classList.add('hint');
-    say('Az kaldı, ipucuna bak.',()=>{ say(roundPrompt); });
+    say(rnd(HINT_MSGS),()=>{ say(roundPrompt); });
   }else{
     // 1. yanlış: nötr tekrar
-    say('Az kaldı, tekrar dinleyelim.',()=>{ el.classList.remove('wrong'); say(roundPrompt); });
+    say(rnd(RETRY_MSGS),()=>{ el.classList.remove('wrong'); say(roundPrompt); });
   }
 }
 
@@ -809,8 +818,10 @@ function checkWord(){
     locked=true; state.correct++; creditSounds(true); save();
     document.querySelectorAll('#slots .slot').forEach(s=>{s.style.borderColor='var(--ok)';s.style.borderStyle='solid';});
     const praise = kind==='cumle'
-      ? rnd(['Cümleyi kurdun! Harika!','Aferin, doğru sırada!','Süper bir okuyucusun!'])
-      : rnd(['Kelimeyi kurdun! Aferin!','Harika, doğru sırada!','Süpersin!']);
+      ? rnd(['Cümleyi kurdun! Harika!','Aferin, doğru sırada!','Süper bir okuyucusun!',
+             'Çok iyi denedin, cümle tamam!','Kelimeleri harika sıraladın!','Bir Kâşif gibi okudun!'])
+      : rnd(['Kelimeyi kurdun! Aferin!','Harika, doğru sırada!','Süpersin!',
+             'Çok iyi denedin, kelime tamam!','Harfleri harika sıraladın!','Emeğinin karşılığını aldın!']);
     say(praise, award);
   }else{
     state.wrong++; creditSounds(false); save();
@@ -985,7 +996,8 @@ function checkTrace(){
   const coverage=cov/Math.max(maskPts.length,1), accuracy=acc/Math.max(pts.length,1);
   if(coverage>0.5 && accuracy>0.4){
     locked=true; traceMsg('Harika! 🌟'); creditSounds(true);
-    say(rnd(['Çok güzel yazdın!','Harika bir '+trace.letter+' oldu!','Aferin, tam üstünden geçtin!']), award);
+    say(rnd(['Çok güzel yazdın!','Harika bir '+trace.letter+' oldu!','Aferin, tam üstünden geçtin!',
+             'Çok iyi denedin, harika oldu!','Elin çok güzel çalıştı!','Bir Kâşif gibi yazdın!']), award);
   }else{
     creditSounds(false);
     const msg = coverage<=0.5 ? 'Harfin her yerini çizmeye çalış. Tekrar deneyelim.'
@@ -1002,7 +1014,7 @@ function award(){
   else {
     burst();
     document.getElementById('rewardEmoji').textContent=rnd(['🌟','🎉','⭐','🏅']);
-    document.getElementById('rewardTitle').textContent=rnd(['Süper!','Muhteşem!','Kâşif gibisin!','Devam!']);
+    document.getElementById('rewardTitle').textContent=rnd(['Süper!','Muhteşem!','Kâşif gibisin!','Devam!','Harikasın!','Çok iyi gidiyorsun!']);
     document.getElementById('rewardText').textContent=`${g} yıldız kazandın · Toplam ⭐ ${state.stars}`;
     openOverlay('reward');
   }

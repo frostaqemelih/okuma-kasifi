@@ -101,7 +101,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - Hece Kur: (a) hece tanı, (b) hece→resim (heceyle başlayan), (c) eksik harfi bul
 - [ ] **E2.5** Zorluk uyarlaması: son 5 turdaki doğruluk >%85 → seçenek sayısı/çeldirici artır; <%50 → azalt, ipucu süresini uzat.
 - [x] **E2.6** Oturum ritmi: `sessionMinutes` oturum boyunca birikir (`trackTime()`), yaş moduna göre eşik (Keşif 8 dk, Çözümleme 15 dk — aralığın orta noktası) aşılınca ders bitişinde (`finishLesson()`) nazik "mola ver" mesajı + düğmesi (`doneBreakMsg`/`doneBreakBtn`) bir kez gösterilir; `acceptBreak()` başlangıç ekranına döner ve sayacı sıfırlar. — 2026-09-03
-- [ ] **E2.7** Kâşif'in tepki çeşitliliği: övgü/ipucu cümlelerini 5→15+ varyanta çıkar, çabayı öv ("çok denedin!") sonucu değil.
+- [x] **E2.7** Kâşif'in tepki çeşitliliği: merkezi `PRAISE` (15), `RETRY_MSGS` (6), `HINT_MSGS` (5) dizileri — `choose()`, `checkWord()`, `checkTrace()`, `award()` ödül ekranı artık bunlardan rastgele seçiyor; çabayı öven cümleler eklendi ("Çok iyi denedin!", "Emeğinin karşılığını aldın!"). — 2026-09-03
 
 ### E3 — Pratik & Değerlendirme  → uzman: pedagoji raporu (§ Başarı ölçütü, § 12 ders)
 
@@ -199,6 +199,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.1 (rutin, Hafta 1 kilometre taşı): çoktan seçmeli turlarda (Harfi Bul/Sesi Eşleştir/Hece Kur) kademeli hata protokolü eklendi — 1. yanlışta nötr tekrar, 2.'de doğru şıkka görsel ipucu, 3.'te doğru modellenip tur biter ve ses `state.reviewQueue`'ya alınır. `okuma-kasifi-v2` şemasına `reviewQueue` alanı eklendi (geriye uyumlu). Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E2.2 (rutin, Hafta 1 kilometre taşı): tekrar kuyruğu artık tüketiliyor — ders başında `reviewSteps()` kuyruktaki en fazla 3 sesi kısa tur olarak ekliyor, yardımsız doğru cevapta `consumeReview()` ile kuyruktan çıkarıyor. Smoke test'e 3 yeni kontrol.
 - 2026-09-03 — E2.6 (rutin, Hafta 1 kilometre taşı): oturum ritmi — yaş moduna göre eşik dakika (Keşif 8, Çözümleme 15) aşılınca ders bitiş ekranında nazik "mola ver, yarın devam" önerisi bir kez gösteriliyor. Smoke test'e 4 yeni kontrol.
+- 2026-09-03 — E2.7 (rutin, Hafta 1 kilometre taşı): Kâşif'in övgü/ipucu cümleleri merkezi `PRAISE`/`RETRY_MSGS`/`HINT_MSGS` dizilerine taşındı ve 5'ten 15/6/5'e çıkarıldı; çabayı öven cümleler eklendi. Smoke test'e 3 yeni kontrol.
 
 ---
 

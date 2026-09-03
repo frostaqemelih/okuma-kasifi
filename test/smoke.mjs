@@ -131,6 +131,15 @@ const testDriver = `
     check('Oturum ritmi (mola önerisi) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 8) E2.7 Kâşif'in tepki çeşitliliği: övgü/ipucu cümleleri yeterince çeşitli mi? ---
+  try {
+    check('PRAISE en az 15 varyant içeriyor', Array.isArray(PRAISE) && PRAISE.length >= 15);
+    check('RETRY_MSGS en az 5 varyant içeriyor', Array.isArray(RETRY_MSGS) && RETRY_MSGS.length >= 5);
+    check('HINT_MSGS en az 5 varyant içeriyor', Array.isArray(HINT_MSGS) && HINT_MSGS.length >= 5);
+  } catch (e) {
+    check('Tepki çeşitliliği listeleri hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
