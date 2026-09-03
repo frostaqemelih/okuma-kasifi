@@ -184,6 +184,33 @@
   .sr.bad{background:color-mix(in srgb,var(--nope) 18%, var(--surface)); border-color:var(--nope); color:var(--ink)}
   .sr-legend{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:center; text-align:center}
   .sr-legend .sr{width:22px; height:22px; font-size:12px}
+
+  /* ebeveyn izleme sayfası */
+  #s-parent{gap:14px}
+  .ptabs{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; width:min(460px,94vw)}
+  .ptab{font-family:var(--font-display); font-weight:700; font-size:13px; border:2px solid var(--line);
+    background:var(--surface); color:var(--ink-soft); border-radius:999px; padding:7px 13px; cursor:pointer}
+  .ptab.active{background:var(--primary); border-color:var(--primary); color:#fff}
+  .pbody{width:min(460px,94vw); text-align:left}
+  .ph{font-family:var(--font-display); font-weight:800; font-size:15px; margin:16px 0 6px; color:var(--primary-d)}
+  .pweek{background:var(--surface-2); border:2px solid var(--line); border-radius:16px; padding:12px 14px; text-align:left}
+  .pcards{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px}
+  .pcard{background:var(--surface); border:2px solid var(--line); border-radius:16px; padding:12px 8px; text-align:center}
+  .pcard .pn{display:block; font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--ink); font-variant-numeric:tabular-nums}
+  .pcard .pl{display:block; font-size:11px; color:var(--ink-soft); margin-top:2px}
+  .chart-wrap{background:var(--surface); border:2px solid var(--line); border-radius:16px; padding:12px 10px 6px}
+  .advice{background:var(--surface); border:2px solid var(--line); border-radius:16px; padding:12px 14px; margin-top:10px}
+  .advice h4{font-family:var(--font-display); font-size:14px; color:var(--primary-d); margin-bottom:6px}
+  .advice p{font-size:13px; color:var(--ink); line-height:1.55; margin-top:6px}
+  .prow{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); font-size:14px}
+  .pselect{font-family:var(--font-body); font-size:14px; padding:6px 10px; border-radius:10px; border:2px solid var(--line); background:var(--surface); color:var(--ink)}
+  .prow input[type=checkbox]{width:22px; height:22px; accent-color:var(--primary)}
+  table.pdersler{font-size:13px}
+  table.pdersler th{font-family:var(--font-display); font-size:12px; color:var(--ink-soft); text-align:left; padding:6px 4px}
+  table.pdersler td:last-child{text-align:right; font-weight:400; color:var(--ink-soft); font-family:var(--font-body)}
+  :root.dys{ --font-body:"Nunito","Segoe UI",system-ui,sans-serif; }
+  :root.dys body{ letter-spacing:.03em; word-spacing:.08em; line-height:1.7; }
+  :root.dys .prompt, :root.dys .sub, :root.dys .advice p, :root.dys .mini{ text-align:left; }
   .sheet h2{font-family:var(--font-display); font-weight:800; color:var(--primary-d); margin-bottom:8px; font-size:25px}
   .sheet p{color:var(--ink-soft); line-height:1.5}
   .sheet .big{font-size:54px; line-height:1; margin-bottom:6px}
@@ -287,6 +314,24 @@
     <button class="btn ok" onclick="go('s-map')">Haritaya dön</button>
   </section>
 
+  <!-- EBEVEYN İZLEME SAYFASI -->
+  <section id="s-parent" class="screen scroll">
+    <div class="topbar">
+      <button class="icon-btn" onclick="go(state.mode?'s-map':'s-start')" aria-label="Kapat">✕</button>
+      <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Ebeveyn</span>
+      <span style="width:50px"></span>
+    </div>
+    <div class="ptabs" id="ptabs">
+      <button class="ptab active" data-tab="genel" onclick="parentTab('genel')">Genel</button>
+      <button class="ptab" data-tab="dersler" onclick="parentTab('dersler')">Dersler</button>
+      <button class="ptab" data-tab="karne" onclick="parentTab('karne')">Ses Karnesi</button>
+      <button class="ptab" data-tab="oneri" onclick="parentTab('oneri')">Öneriler</button>
+      <button class="ptab" data-tab="ayar" onclick="parentTab('ayar')">Ayarlar</button>
+    </div>
+    <div class="pbody" id="pbody"></div>
+    <p class="mini" style="text-align:center; margin-top:18px">Tüm veriler yalnızca bu cihazda. Hiçbir şey buluta gönderilmez.</p>
+  </section>
+
   <!-- EBEVEYN KAPISI -->
   <div class="overlay" id="gate">
     <div class="sheet">
@@ -294,21 +339,6 @@
       <p id="gateQ">…</p>
       <div class="pin-row" id="gatePins"></div>
       <div class="row"><button class="btn ghost tiny" onclick="closeOverlay('gate')">Vazgeç</button></div>
-    </div>
-  </div>
-
-  <!-- EBEVEYN PANELİ -->
-  <div class="overlay" id="panel">
-    <div class="sheet">
-      <h2>Ebeveyn köşesi</h2>
-      <p style="margin-bottom:6px">Bu cihazdaki ilerleme. Hiçbir veri buluta gönderilmez.</p>
-      <table class="report" id="report"></table>
-      <h2 style="font-size:18px; margin:18px 0 6px">📋 Ses Karnesi</h2>
-      <div id="soundReport"></div>
-      <div class="row">
-        <button class="btn ok" onclick="closeOverlay('panel')">Tamam</button>
-        <button class="btn ghost tiny" onclick="resetProgress()">İlerlemeyi sıfırla</button>
-      </div>
     </div>
   </div>
 
@@ -335,12 +365,23 @@ function fresh(){return{
   mode:null, done:[], badges:[], stars:0,
   freePlays:{bul:0,ses:0,hece:0,kelime:0,cumle:0,ciz:0},
   correct:0, wrong:0, seconds:0, last:null,
-  soundStats:{}   // { 'a': {c:doğru, w:yanlış}, ... }
+  soundStats:{},        // { 'a': {c:doğru, w:yanlış}, ... }
+  daily:{},             // { 'YYYY-MM-DD': saniye }
+  lessonLog:{},         // { id: {attempts, seconds, first, last} }
+  settings:{dailyGoalMin:15}
 }}
+function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
 try{
   const s=JSON.parse(localStorage.getItem(KEY));
-  if(s&&typeof s==='object') state=Object.assign(fresh(),s,{freePlays:Object.assign(fresh().freePlays,s.freePlays||{})});
+  if(s&&typeof s==='object'){
+    const f=fresh();
+    state=Object.assign(f,s,{
+      freePlays:Object.assign(f.freePlays,s.freePlays||{}),
+      settings:Object.assign(f.settings,s.settings||{}),
+      daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{}
+    });
+  }
 }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)) }catch(e){} }
 function syncStars(){ document.querySelectorAll('#stars1,#stars2,#stars3').forEach(el=>el.textContent=state.stars); }
@@ -355,7 +396,7 @@ function repeatPrompt(){ if(roundPrompt) say(roundPrompt) }
 function say(text,cb){
   let done=false;
   const fin=()=>{ if(done) return; done=true; if(cb) cb(); };
-  if(!('speechSynthesis' in window)){ if(cb) setTimeout(fin,340); return; }
+  if((state.settings&&state.settings.mute) || !('speechSynthesis' in window)){ if(cb) setTimeout(fin,340); return; }
   try{ speechSynthesis.cancel(); }catch(e){}
   const u=new SpeechSynthesisUtterance(text);
   const tr=voices.find(v=>(v.lang||'').toLowerCase().startsWith('tr'));
@@ -514,7 +555,11 @@ function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
   play={lessonId:id, steps:buildSteps(L), i:0};
-  state.last=new Date().toISOString(); save();
+  state.last=new Date().toISOString();
+  const t=today();
+  const lg=state.lessonLog[id]||(state.lessonLog[id]={attempts:0,seconds:0,first:t,last:t});
+  lg.attempts++; lg.last=t;
+  save();
   sessionStart=Date.now();
   go('s-game');
   runStep();
@@ -902,7 +947,15 @@ function award(){
     openOverlay('reward');
   }
 }
-function trackTime(){ if(sessionStart){ state.seconds+=Math.round((Date.now()-sessionStart)/1000); sessionStart=Date.now(); save(); } }
+function trackTime(){
+  if(!sessionStart) return;
+  const d=Math.round((Date.now()-sessionStart)/1000);
+  state.seconds+=d;
+  const t=today(); state.daily[t]=(state.daily[t]||0)+d;
+  if(play){ const lg=state.lessonLog[play.lessonId]||(state.lessonLog[play.lessonId]={attempts:0,seconds:0,first:t,last:t});
+    lg.seconds+=d; lg.last=t; }
+  sessionStart=Date.now(); save();
+}
 function burst(){ spawnConfetti(22); }
 function burstMini(){ spawnConfetti(10); }
 function spawnConfetti(n){
@@ -931,54 +984,189 @@ function openGate(){
   const row=document.getElementById('gatePins'); row.innerHTML='';
   opts.forEach(v=>{
     const btn=document.createElement('button'); btn.className='pin'; btn.textContent=v;
-    btn.onclick=()=>{ if(v===gateAns){ closeOverlay('gate'); openPanel(); } else { btn.style.borderColor='var(--nope)'; } };
+    btn.onclick=()=>{ if(v===gateAns){ closeOverlay('gate'); openParent(); } else { btn.style.borderColor='var(--nope)'; } };
     row.appendChild(btn);
   });
   openOverlay('gate');
 }
-function openPanel(){
-  trackTime();
+function openParent(){ trackTime(); go('s-parent'); parentTab('genel'); }
+function parentTab(name){
+  document.querySelectorAll('#ptabs .ptab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  const body=document.getElementById('pbody');
+  body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar})[name]();
+  if(name==='ayar') wireParentSettings();
+}
+
+/* --- ses karnesi (ortak) --- */
+const SOUND_ORDER=['a','n','e','t','i','l','o','k','u','r','ı','m'];
+function soundBuckets(){
+  const review=[], growing=[], mastered=[], fresh_=[];
+  SOUND_ORDER.forEach(s=>{
+    const st=state.soundStats[s]; if(!st) return;
+    const n=st.c+st.w, acc=n? st.c/n : 0;
+    if(n<3) fresh_.push(s);
+    else if(acc>=0.8) mastered.push(s);
+    else if(acc>=0.5) growing.push(s);
+    else review.push(s);
+  });
+  return {review,growing,mastered,fresh:fresh_};
+}
+function soundReportHTML(){
+  const seen=SOUND_ORDER.filter(s=>state.soundStats[s]);
+  if(!seen.length) return '<p class="mini">Henüz yeterli veri yok — birkaç ders sonra çocuğunuzun her sesteki ilerlemesi burada görünecek.</p>';
+  const b=soundBuckets();
+  const chips=seen.map(s=>{
+    const st=state.soundStats[s], n=st.c+st.w, acc=n?st.c/n:0;
+    let cls='new'; if(n>=3){ cls = acc>=0.8?'ok' : acc>=0.5?'mid' : 'bad'; }
+    return `<span class="sr ${cls}" title="${st.c} doğru / ${st.w} yanlış">${s}</span>`;
+  }).join('');
+  let sum='';
+  if(b.review.length) sum+=`<p class="mini"><b>Tekrar önerilir:</b> ${b.review.join(', ')}</p>`;
+  if(b.mastered.length) sum+=`<p class="mini"><b>Ustalaştı:</b> ${b.mastered.join(', ')} 👏</p>`;
+  if(b.growing.length) sum+=`<p class="mini">Gelişiyor: ${b.growing.join(', ')}</p>`;
+  return `<div class="sr-grid">${chips}</div>${sum}
+    <p class="mini sr-legend"><span class="sr ok">a</span> ustalaştı · <span class="sr mid">a</span> gelişiyor · <span class="sr bad">a</span> tekrar · <span class="sr new">a</span> yeni</p>`;
+}
+
+/* --- 14 günlük çalışma grafiği (SVG) --- */
+function dailyChartHTML(){
+  const days=[]; const d=new Date();
+  for(let i=13;i>=0;i--){ const x=new Date(d); x.setDate(d.getDate()-i); days.push(x.toISOString().slice(0,10)); }
+  const vals=days.map(k=>Math.round((state.daily[k]||0)/60));
+  const max=Math.max(10, ...vals);
+  const W=300, H=90, bw=W/14;
+  const goal=state.settings.dailyGoalMin||15;
+  const gy=H-(Math.min(goal,max)/max)*H;
+  const bars=vals.map((v,i)=>{
+    const h=(v/max)*H, x=i*bw+2, y=H-h;
+    const col=v>=goal?'var(--ok)':v>0?'var(--primary)':'var(--line)';
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-4).toFixed(1)}" height="${Math.max(h,2).toFixed(1)}" rx="2" fill="${col}"/>`;
+  }).join('');
+  const active=vals.filter(v=>v>0).length;
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${W} ${H+16}" width="100%" role="img" aria-label="Son 14 günün günlük çalışma süresi">
+    <line x1="0" y1="${gy.toFixed(1)}" x2="${W}" y2="${gy.toFixed(1)}" stroke="var(--sun)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    ${bars}
+    <text x="0" y="${H+12}" font-size="9" fill="var(--ink-soft)">14 gün önce</text>
+    <text x="${W}" y="${H+12}" font-size="9" fill="var(--ink-soft)" text-anchor="end">bugün</text>
+  </svg></div>
+  <p class="mini">Son 14 günde <b>${active} gün</b> çalışıldı · sarı çizgi = günlük hedef (${goal} dk)</p>`;
+}
+function streakDays(){
+  let s=0; const d=new Date();
+  for(let i=0;i<60;i++){ const k=new Date(d); k.setDate(d.getDate()-i); if((state.daily[k.toISOString().slice(0,10)]||0)>=60) s++; else if(i>0) break; }
+  return s;
+}
+function weekMinutes(){
+  let m=0; const d=new Date();
+  for(let i=0;i<7;i++){ const k=new Date(d); k.setDate(d.getDate()-i); m+=(state.daily[k.toISOString().slice(0,10)]||0); }
+  return Math.round(m/60);
+}
+
+/* --- sekmeler --- */
+function pGenel(){
   const total=state.correct+state.wrong;
   const acc=total? Math.round(state.correct/total*100):0;
   const lessons=state.done.filter(x=>x>0).length;
-  document.getElementById('report').innerHTML=`
-    <tr><td>Yaş modu</td><td>${state.mode==='kesif'?'Keşif 4–5':state.mode==='cozumleme'?'Çözümleme 6–7':'—'}</td></tr>
-    <tr><td>Tamamlanan ders</td><td>${lessons} / 12</td></tr>
-    <tr><td>Rozetler</td><td>${state.badges.length}</td></tr>
-    <tr><td>Toplam yıldız</td><td>⭐ ${state.stars}</td></tr>
-    <tr><td>Doğru / yanlış</td><td>${state.correct} / ${state.wrong}</td></tr>
-    <tr><td>Başarı oranı</td><td>%${acc}</td></tr>
-    <tr><td>Yaklaşık süre</td><td>${Math.round(state.seconds/60)} dk</td></tr>
-    <tr><td>Son oynama</td><td>${state.last? new Date(state.last).toLocaleDateString('tr-TR'):'—'}</td></tr>`;
-  renderSoundReport();
-  openOverlay('panel');
+  const sessions=Object.values(state.lessonLog).reduce((a,l)=>a+l.attempts,0)+
+                 Object.values(state.freePlays).reduce((a,x)=>a+x,0);
+  const avg=sessions? Math.round(state.seconds/sessions/60*10)/10 : 0;
+  const b=soundBuckets();
+  const wDays=(()=>{ let n=0; const d=new Date();
+    for(let i=0;i<7;i++){ const k=new Date(d); k.setDate(d.getDate()-i); if((state.daily[k.toISOString().slice(0,10)]||0)>=60)n++; } return n; })();
+  const name='Kâşif';
+  const sum = wDays
+    ? `${name} bu hafta <b>${wDays} gün</b> çalıştı (${weekMinutes()} dk).` +
+      (b.mastered.length?` <b>${b.mastered.join(', ')}</b> seslerinde ustalaştı.`:'') +
+      (b.review.length?` <b>${b.review.join(', ')}</b> sesleri tekrar gerektiriyor.`:'')
+    : 'Bu hafta henüz çalışma yok. Kısa ve düzenli oturumlar en iyi sonucu verir.';
+  return `
+    <p class="mini pweek">${sum}</p>
+    <div class="pcards">
+      <div class="pcard"><span class="pn">${streakDays()}</span><span class="pl">gün üst üste</span></div>
+      <div class="pcard"><span class="pn">${weekMinutes()}</span><span class="pl">dk (bu hafta)</span></div>
+      <div class="pcard"><span class="pn">${lessons}/12</span><span class="pl">ders tamam</span></div>
+      <div class="pcard"><span class="pn">${state.badges.length}</span><span class="pl">rozet</span></div>
+      <div class="pcard"><span class="pn">%${acc}</span><span class="pl">başarı oranı</span></div>
+      <div class="pcard"><span class="pn">${avg||'–'}</span><span class="pl">dk / oturum</span></div>
+    </div>
+    <h3 class="ph">Günlük çalışma</h3>
+    ${dailyChartHTML()}`;
 }
-function renderSoundReport(){
-  const box=document.getElementById('soundReport');
-  if(!box) return;
-  const order=['a','n','e','t','i','l','o','k','u','r','ı','m'];
-  const seen=order.filter(s=>state.soundStats[s]);
-  if(!seen.length){ box.innerHTML='<p class="mini">Henüz yeterli veri yok — birkaç ders sonra burada çocuğunuzun her sesteki ilerlemesini göreceksiniz.</p>'; return; }
-  const review=[], growing=[], mastered=[];
-  const chips = seen.map(s=>{
-    const {c,w}=state.soundStats[s]; const n=c+w; const acc=n? c/n : 0;
-    let cls='new', tip='';
-    if(n>=3){
-      if(acc>=0.8){ cls='ok'; mastered.push(s); }
-      else if(acc>=0.5){ cls='mid'; growing.push(s); }
-      else { cls='bad'; review.push(s); }
-    }
-    return `<span class="sr ${cls}" title="${c} doğru / ${w} yanlış">${s}</span>`;
+function pDersler(){
+  const rows=LESSONS.map(L=>{
+    const done=state.done.includes(L.id), now=!done && available(L.id);
+    const lg=state.lessonLog[L.id];
+    const st = done?'✅ tamam' : now?'▶ sırada' : '🔒 kilitli';
+    const extra = lg ? `${lg.attempts}× · ${Math.round(lg.seconds/60)} dk` : '—';
+    return `<tr><td>${L.id===0?'H':L.id}. ${L.ad}</td><td>${st}</td><td>${extra}</td></tr>`;
   }).join('');
-  let summary='';
-  if(review.length) summary += `<p class="mini"><b>Tekrar önerilir:</b> ${review.join(', ')} — bu seslerde birlikte biraz daha çalışın.</p>`;
-  if(mastered.length) summary += `<p class="mini"><b>Ustalaştı:</b> ${mastered.join(', ')} 👏</p>`;
-  if(!review.length && !mastered.length && growing.length) summary += `<p class="mini">Gelişiyor: ${growing.join(', ')} — iyi gidiyor.</p>`;
-  box.innerHTML = `<div class="sr-grid">${chips}</div>${summary}
-    <p class="mini sr-legend"><span class="sr ok">a</span> ustalaştı · <span class="sr mid">a</span> gelişiyor · <span class="sr bad">a</span> tekrar · <span class="sr new">a</span> yeni</p>`;
+  return `<table class="report pdersler">
+    <tr><th>Ders</th><th>Durum</th><th>Çalışma</th></tr>${rows}</table>`;
+}
+function pKarne(){
+  return `<p class="mini">Her ses için doğru/yanlış oranına göre. En az 3 denemeden sonra sınıflandırılır.</p>
+    ${soundReportHTML()}`;
+}
+const ADVICE_GENERIC=[
+  s=>`🔎 <b>${s.toUpperCase()} avı:</b> Evde/parkta «${s}» sesiyle başlayan 5 nesne bulun, birlikte sesli söyleyin.`,
+  s=>`👏 <b>Hece oyunu:</b> «${s}» ile heceler kurun (${s}a, ${s}e…) ve alkışlayarak söyleyin.`,
+  s=>`✏️ <b>Havada yaz:</b> «${s}» harfini havada, sırtına, una parmakla birlikte çizin.`,
+  s=>`📖 <b>Kitapta bul:</b> Bir resimli kitabın sayfasında «${s}» harfini kaç kez bulabileceğinize bakın.`
+];
+function pOneri(){
+  const b=soundBuckets();
+  if(!b.review.length && !b.growing.length){
+    return `<p class="mini">${b.mastered.length? 'Harika gidiyor — şu an tekrar gerektiren ses yok. 👏' : 'Birkaç ders sonra kişiye özel öneriler burada görünecek.'}</p>
+      <h3 class="ph">Her gün 5 dakika</h3>
+      <div class="advice"><p>${ADVICE_GENERIC[0]('a')}</p><p>${ADVICE_GENERIC[3]('e')}</p></div>`;
+  }
+  const targets=[...b.review, ...b.growing].slice(0,3);
+  const cards=targets.map(s=>{
+    const tips=shuffle(ADVICE_GENERIC).slice(0,2).map(f=>`<p>${f(s)}</p>`).join('');
+    return `<div class="advice"><h4>«${s}» sesi</h4>${tips}</div>`;
+  }).join('');
+  return `<p class="mini"><b>Tekrar önerilen sesler:</b> ${targets.join(', ')} — aşağıdaki etkinlikleri günde bir-iki kez, oyun havasında deneyin. Baskı yok, doğru söyleyince coşkuyla kutlayın.</p>${cards}`;
+}
+function pAyar(){
+  const s=state.settings;
+  return `
+    <div class="prow"><span>Yaş modu</span>
+      <button class="btn ghost tiny" onclick="go('s-mode')">${state.mode==='kesif'?'Keşif 4–5':'Çözümleme 6–7'} · değiştir</button></div>
+    <div class="prow"><span>Günlük hedef</span>
+      <select id="setGoal" class="pselect">${[5,10,15,20,30].map(m=>`<option value="${m}" ${m===(s.dailyGoalMin||15)?'selected':''}>${m} dk</option>`).join('')}</select></div>
+    <div class="prow"><span>Disleksi-dostu görünüm</span>
+      <input type="checkbox" id="setDys" ${s.dyslexia?'checked':''}></div>
+    <div class="prow"><span>Sessiz mod (TTS kapalı)</span>
+      <input type="checkbox" id="setMute" ${s.mute?'checked':''}></div>
+    <div class="prow" style="border:none; margin-top:14px; flex-direction:column; align-items:stretch; gap:8px">
+      <button class="btn ghost tiny" onclick="exportProgress()">İlerlemeyi dışa aktar (JSON)</button>
+      <button class="btn ghost tiny" onclick="importProgress()">İçe aktar</button>
+      <button class="btn ghost tiny" style="color:var(--nope)" onclick="resetProgress()">İlerlemeyi sıfırla</button>
+    </div>`;
+}
+function wireParentSettings(){
+  const g=document.getElementById('setGoal'); if(g) g.onchange=()=>{ state.settings.dailyGoalMin=+g.value; save(); parentTab('ayar'); };
+  const dy=document.getElementById('setDys'); if(dy) dy.onchange=()=>{ state.settings.dyslexia=dy.checked; save(); applySettings(); };
+  const mu=document.getElementById('setMute'); if(mu) mu.onchange=()=>{ state.settings.mute=mu.checked; save(); };
+}
+function applySettings(){
+  document.documentElement.classList.toggle('dys', !!state.settings.dyslexia);
+}
+function exportProgress(){
+  const txt=JSON.stringify(state);
+  navigator.clipboard?.writeText(txt).then(
+    ()=>alert('İlerleme panoya kopyalandı. Güvenli bir yere yapıştırın.'),
+    ()=>prompt('Kopyalayın:', txt)
+  ) || prompt('Kopyalayın:', txt);
+}
+function importProgress(){
+  const t=prompt('Dışa aktarılan JSON metnini yapıştırın:');
+  if(!t) return;
+  try{ const s=JSON.parse(t); if(s&&s.mode!==undefined){ localStorage.setItem(KEY,t); location.reload(); } else alert('Geçersiz veri.'); }
+  catch(e){ alert('Geçersiz veri.'); }
 }
 function resetProgress(){
-  if(confirm('Tüm ilerleme silinsin mi?')){ const m=state.mode; state=fresh(); state.mode=m; save(); syncStars(); openPanel(); }
+  if(confirm('Tüm ilerleme silinsin mi? Bu geri alınamaz.')){ const m=state.mode; state=fresh(); state.mode=m; save(); syncStars(); parentTab('genel'); }
 }
 
 /* PWA — localhost'ta kapalı */
@@ -988,6 +1176,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http') && !IS_D
 }else if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
 }
+applySettings();
 syncStars();
 </script>
 </body>

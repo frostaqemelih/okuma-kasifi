@@ -29,8 +29,8 @@ Sonra `http://localhost:8000` adresini aç.
 - **6 mini oyun** (derste + serbest oyunda): Harfi Bul · Sesi Eşleştir · Hece Kur · **Kelime Kur** (harf taşlarını sırayla diz) · **Cümle Bahçesi** (kelime taşlarından cümle) · **Harf Çiz** (yeşil noktadan başla + animasyonlu yazım gösterimi + "👀 Göster" + kapsama/isabet puanlama)
 - Türkçe seslendirme (tarayıcı `SpeechSynthesis`), yıldız + konfeti, açık/koyu tema
 - İlerleme cihazda (`localStorage`), sunucuya veri gitmez
-- Ebeveyn kapısı + panel (mod, tamamlanan ders, rozet, başarı oranı, süre)
-- **Ses Karnesi** — her ses için doğru/yanlış sayılır; panelde "ustalaştı / gelişiyor / tekrar / yeni" olarak renk kodlu gösterilir + "tekrar önerilir" özeti (tanısal ebeveyn raporu, rakiplerden ayrışma noktası)
+- **Ebeveyn İzleme Sayfası** (`s-parent`, 5 sekme): Genel (streak, 14 günlük SVG grafik, kartlar) · Dersler (12 ders + süre/deneme) · Ses Karnesi (per-ses tanısal renk kodu) · Öneriler (zayıf seslere "evde ne yapabilirsiniz" kartları) · Ayarlar (yaş modu, günlük hedef, disleksi-dostu görünüm, sessiz mod, JSON dışa/içe aktarma)
+- **Ses Karnesi** — her ses için doğru/yanlış; "ustalaştı / gelişiyor / tekrar / yeni" renk kodu + özet (rakiplerden ayrışma noktası)
 - Müfredat: kod içi `LESSONS` + kaynak `data/mufredat.json`
 
 ## Yapılacaklar (kısa)
