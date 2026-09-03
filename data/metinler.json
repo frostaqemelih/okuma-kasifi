@@ -1,0 +1,27 @@
+{
+  "surum": "0.1",
+  "not": "Tasarım kaynağı — index.html'deki TEXTS sabiti buradan elle senkronize edilir (mufredat.json ile aynı desen; runtime'da fetch edilmez, tek dosya mimarisi korunur). Her metin yalnız kendi 'gerekli' seslerinden kurulu olmalı (çocuğun o ana kadar öğrendiği sesler); anlama soruları/şıkları Kâşif tarafından sesli okunduğu için biraz daha esnek kelime seçebilir.",
+
+  "metinler": [
+    {
+      "id": "els-1",
+      "gerekli": ["a", "n", "e", "t", "i", "l"],
+      "aciklama": "1. grup (a,n,e,t,i,l) tamamlanınca açılır — en basit, 6 sesten kurulu mini metin.",
+      "metin": "At al. El ele. Nine anlat!",
+      "anlamaSorulari": [
+        { "soru": "Metinde ne alınıyor?", "secenekler": ["At", "Tel", "Anne"], "dogru": "At" },
+        { "soru": "Kim anlatıyor?", "secenekler": ["Nine", "Anne", "Tel"], "dogru": "Nine" }
+      ]
+    },
+    {
+      "id": "els-2",
+      "gerekli": ["a", "e", "l", "m", "r", "k", "t", "n", "u"],
+      "aciklama": "1.+2. grup sesleri (k,u,r,m dahil) açılınca açılır — ders 12 (Kâşif Gösterisi) seviyesi.",
+      "metin": "Ela markette. Elma al. Anne mutlu.",
+      "anlamaSorulari": [
+        { "soru": "Ela nerede?", "secenekler": ["Market", "Otel", "Kule"], "dogru": "Market" },
+        { "soru": "Anne nasıl?", "secenekler": ["Mutlu", "Kral", "Roket"], "dogru": "Mutlu" }
+      ]
+    }
+  ]
+}

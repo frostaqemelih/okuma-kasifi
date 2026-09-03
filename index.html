@@ -481,14 +481,29 @@ const SENTENCES=[
   {w:['nine','elma','al'], t:'Nine elma al.'}
 ];
 const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma'];
-/* E3.4: Okuma Kulübü — data/mufredat.json ders 12 metni + anlama soruları temel alınır (Çözümleme modu). */
-const READING={
-  metin:'Ela nar aldı. Anne kola aldı. Onlar ata baktı.',
-  sorular:[
-    {soru:'Ela ne aldı?', secenekler:['nar','kola','elma'], dogru:'nar'},
-    {soru:'Anne ne aldı?', secenekler:['nar','kola','kalem'], dogru:'kola'}
-  ]
-};
+/* E3.5: Okuma Kulübü metin bankası — data/metinler.json ile senkron. Her metin yalnız kendi
+   `gerekli` seslerinden kurulu (Kâşif metni okusa da çocuk seslerini tanıyabilsin diye); anlama
+   soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı
+   seslere (unlockedPool) göre en ileri uygun metni seçer. */
+const TEXTS=[
+  { id:'els-1', gerekli:['a','n','e','t','i','l'],
+    metin:'At al. El ele. Nine anlat!',
+    sorular:[
+      {soru:'Metinde ne alınıyor?', secenekler:['At','Tel','Anne'], dogru:'At'},
+      {soru:'Kim anlatıyor?', secenekler:['Nine','Anne','Tel'], dogru:'Nine'}
+    ]},
+  { id:'els-2', gerekli:['a','e','l','m','r','k','t','n','u'],
+    metin:'Ela markette. Elma al. Anne mutlu.',
+    sorular:[
+      {soru:'Ela nerede?', secenekler:['Market','Otel','Kule'], dogru:'Market'},
+      {soru:'Anne nasıl?', secenekler:['Mutlu','Kral','Roket'], dogru:'Mutlu'}
+    ]}
+];
+function pickText(pool){
+  const fits=TEXTS.filter(t=>t.gerekli.every(c=>pool.includes(c)));
+  return fits.length ? fits[fits.length-1] : TEXTS[0];
+}
+let READING=TEXTS[0];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 /* E2.7: Kâşif'in tepki çeşitliliği — çabayı öv (sonucu değil), tekrarı azalt. */
 const PRAISE=['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!','Süpersin!',
@@ -1125,6 +1140,7 @@ function roundCumle(pool){
 let okumaState=null;
 function roundOkuma(){
   locked=false; curTargets=[];
+  READING=pickText(unlockedPool());
   okumaState={qIndex:0, correct:0};
   qtext.textContent='Kâşif ile oku';
   playArea.innerHTML=`

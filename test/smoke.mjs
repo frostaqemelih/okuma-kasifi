@@ -427,6 +427,28 @@ const testDriver = `
     check('playClip (E5.1) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 22) E3.5 Okuma Kulübü metin bankası: birden çok metin, pool'a göre seçim ---
+  try {
+    check('TEXTS en az 2 metin içeriyor', TEXTS.length >= 2);
+    const lettersOf = s => Array.from(new Set(s.toLowerCase().replace(/[^a-zçğıöşü]/g, '').split('')));
+    const allValid = TEXTS.every(t => lettersOf(t.metin).every(c => t.gerekli.includes(c)));
+    check('Her metin yalnız kendi gerekli seslerinden kurulu', allValid);
+    check('pickText() dar pool için en basit metni seçiyor',
+      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === TEXTS[0].id);
+    check('pickText() geniş pool için en ileri uygun metni seçiyor',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === TEXTS[TEXTS.length - 1].id);
+
+    const origSay2 = say;
+    say = (text, cb) => { if (cb) cb(); };
+    state = fresh(); // taze durumda pool sadece 1. grup (a,n,e,t,i,l) -> els-1 seçilmeli
+    play = null;
+    roundOkuma();
+    check('roundOkuma() taze durumda en basit metni (els-1) seçiyor', READING.id === 'els-1');
+    say = origSay2;
+  } catch (e) {
+    check('Okuma Kulübü metin bankası (E3.5) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
