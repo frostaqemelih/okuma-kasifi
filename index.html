@@ -299,6 +299,7 @@
       <div class="age-card" id="freeKelime" onclick="startFree('kelime')"><span class="big">🔡</span><span><b>Kelime Kur</b><span>Harfleri sırayla diz</span></span></div>
       <div class="age-card" id="freeCumle" onclick="startFree('cumle')"><span class="big">🌱</span><span><b>Cümle Bahçesi</b><span>Kelimelerden cümle kur</span></span></div>
       <div class="age-card" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
+      <div class="age-card" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
     </div>
   </section>
 
@@ -455,6 +456,14 @@ const SENTENCES=[
   {w:['nine','elma','al'], t:'Nine elma al.'}
 ];
 const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma'];
+/* E3.4: Okuma Kulübü — data/mufredat.json ders 12 metni + anlama soruları temel alınır (Çözümleme modu). */
+const READING={
+  metin:'Ela nar aldı. Anne kola aldı. Onlar ata baktı.',
+  sorular:[
+    {soru:'Ela ne aldı?', secenekler:['nar','kola','elma'], dogru:'nar'},
+    {soru:'Anne ne aldı?', secenekler:['nar','kola','kalem'], dogru:'kola'}
+  ]
+};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 /* E2.7: Kâşif'in tepki çeşitliliği — çabayı öv (sonucu değil), tekrarı azalt. */
 const PRAISE=['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!','Süpersin!',
@@ -539,6 +548,7 @@ function go(id){
     document.getElementById('freeHece').style.display=h;
     document.getElementById('freeKelime').style.display=h;
     document.getElementById('freeCumle').style.display=h;
+    document.getElementById('freeOkuma').style.display=h; // E3.4: Okuma Kulübü de Çözümleme moduna özel
   }
 }
 function onStart(){
@@ -728,7 +738,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward');
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1084,6 +1094,56 @@ function roundCumle(pool){
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
   renderWord();
   sayPrompt(`${it.t} Kelimeleri sırala.`);
+}
+
+/* --- Okuma Kulübü (E3.4, Çözümleme modu) --- */
+let okumaState=null;
+function roundOkuma(){
+  locked=false; curTargets=[];
+  okumaState={qIndex:0, correct:0};
+  qtext.textContent='Kâşif ile oku';
+  playArea.innerHTML=`
+    <div class="stage" style="font-size:22px; line-height:1.7; padding:24px 22px; text-align:center">${READING.metin}</div>
+    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="btn ok tiny" onclick="startOkumaQuestions()">Anladım, sorulara geç →</button>`;
+  sayPrompt(READING.metin);
+}
+function startOkumaQuestions(){
+  askOkuma();
+}
+function askOkuma(){
+  locked=false;
+  const q=READING.sorular[okumaState.qIndex];
+  qtext.textContent=q.soru;
+  playArea.innerHTML=`
+    <div class="stage"><span class="glyph">❓</span></div>
+    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <div class="choices c3" id="choices"></div>`;
+  const box=document.getElementById('choices');
+  shuffle(q.secenekler).forEach(s=>{
+    const b=document.createElement('button'); b.className='choice';
+    b.innerHTML=`<span class="glyph">${s}</span>`;
+    if(s===q.dogru) b.dataset.right='1';
+    b.onclick=()=>answerOkuma(b, s===q.dogru);
+    box.appendChild(b);
+  });
+  sayPrompt(q.soru);
+}
+function answerOkuma(el,right){
+  if(locked) return;
+  locked=true;
+  el.classList.add(right?'right':'wrong');
+  if(right){ okumaState.correct++; state.correct++; } else { state.wrong++; }
+  if(!right){ const c=document.querySelector('#choices .choice[data-right="1"]'); if(c) c.classList.add('right'); }
+  save();
+  say(right?rnd(PRAISE):'Doğrusu buydu, önemli değil, devam edelim!', ()=>{
+    okumaState.qIndex++;
+    if(okumaState.qIndex<READING.sorular.length) askOkuma();
+    else finishOkuma();
+  });
+}
+function finishOkuma(){
+  say('Okuma Kulübü\'nü tamamladın! Harika bir okuyucusun!', award);
 }
 
 /* --- Harf Çiz --- */

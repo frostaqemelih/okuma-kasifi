@@ -373,6 +373,34 @@ const testDriver = `
     check('Vuruş vuruş kılavuz (E6.1) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 19) E3.4 Okuma Kulübü: metin + 2 anlama sorusu ---
+  try {
+    const origSay = say;
+    say = (text, cb) => { if (cb) cb(); }; // narrasyonu senkron hâle getir (test ortamında TTS yok)
+    state = fresh();
+    play = null;
+    const starsBefore = state.stars;
+    roundOkuma();
+    check('roundOkuma() metni playArea içinde gösteriyor', playArea.innerHTML.includes(READING.metin));
+    check('roundOkuma() "sorulara geç" düğmesi mevcut', playArea.innerHTML.includes('sorulara geç'));
+
+    startOkumaQuestions();
+    check('startOkumaQuestions() ilk soruyu gösteriyor', qtext.textContent === READING.sorular[0].soru);
+    check('İlk soruda tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    let rightBtn = document.querySelector('#choices .choice[data-right="1"]');
+    answerOkuma(rightBtn, true);
+    check('İlk soru doğru cevaplanınca ikinci soruya geçiyor', qtext.textContent === READING.sorular[1].soru);
+
+    rightBtn = document.querySelector('#choices .choice[data-right="1"]');
+    answerOkuma(rightBtn, true);
+    check('Okuma Kulübü bitince yıldız kazandırıyor (award)', state.stars > starsBefore);
+    check('Okuma Kulübü tüm sorular doğru cevaplandığında correct=2 sayıyor', okumaState.correct === 2);
+    say = origSay;
+  } catch (e) {
+    check('Okuma Kulübü (E3.4) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
