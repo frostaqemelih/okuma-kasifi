@@ -412,6 +412,21 @@ const testDriver = `
     check('WORDBANK (E4.5) hatasız kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- 21) E5.1 Ses klip altyapısı: boş AUDIO haritasında TTS'e düşüyor, klip varsa onu deniyor ---
+  try {
+    const origSay = say;
+    let sayCalledWith = null;
+    say = (text, cb) => { sayCalledWith = text; if (cb) cb(); };
+    check('AUDIO haritası başlangıçta boş (iskele)', Object.keys(AUDIO).length === 0);
+    let cbCalled = false;
+    playClip('yok-boyle-bir-klip', 'yedek metin', () => { cbCalled = true; });
+    check('playClip() klip yokken say() ile TTS yedeğine düşüyor', sayCalledWith === 'yedek metin');
+    check('playClip() geri çağırımı (cb) tetikliyor', cbCalled === true);
+    say = origSay;
+  } catch (e) {
+    check('playClip (E5.1) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

@@ -404,8 +404,26 @@ let voices=[];
 function loadVoices(){ try{ voices=speechSynthesis.getVoices() }catch(e){ voices=[] } }
 if('speechSynthesis' in window){ speechSynthesis.onvoiceschanged=loadVoices; loadVoices() }
 let roundPrompt='';
-function sayPrompt(t){ roundPrompt=t; say(t) }
-function repeatPrompt(){ if(roundPrompt) say(roundPrompt) }
+/* E5.1: Ses klip altyapısı — AUDIO haritası (metin → dosya yolu/dataURI) doldurulunca gerçek
+   klip çalınır, boşsa/hata olursa tarayıcı TTS'ine (say()) düşer. Şimdilik harita boş (iskele);
+   E5.2'de (Hafta 4) gerçek çocuk-dostu Türkçe seslerle doldurulacak. */
+const AUDIO={};
+function playClip(key,fallbackText,cb){
+  const src=AUDIO[key];
+  if(src){
+    try{
+      const a=new Audio(src);
+      let done=false;
+      const fin=()=>{ if(done) return; done=true; if(cb) cb(); };
+      a.onended=fin; a.onerror=()=>say(fallbackText,cb);
+      a.play().catch(()=>say(fallbackText,cb));
+      return;
+    }catch(e){}
+  }
+  say(fallbackText,cb);
+}
+function sayPrompt(t){ roundPrompt=t; playClip(t,t) }
+function repeatPrompt(){ if(roundPrompt) playClip(roundPrompt,roundPrompt) }
 function say(text,cb){
   let done=false;
   const fin=()=>{ if(done) return; done=true; if(cb) cb(); };
