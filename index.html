@@ -571,11 +571,12 @@ function buildSteps(L){
   const pool=poolUpTo(L.id);
   const steps=[];
   if(L.tip==='gosteri'){
+    // E3.2: "Kâşif Gösterisi" — puansız, kümülatif, kutlama odaklı; değerlendirme sorusu YOK.
     steps.push({game:'bul',sounds:pool});
     if(state.mode==='cozumleme' && syllablesFor(pool).length>=3) steps.push({game:'hece',sounds:pool});
     steps.push({game:'ses',sounds:pool});
     steps.push({game:'ciz',sounds:pool.slice(-3)});
-    return [...steps, ...assessSteps(pool)];
+    return steps;
   }
   L.yeni.forEach(s=>steps.push({game:'ciz',sounds:[s]}));
   steps.push({game:'ses',sounds:pool});
@@ -611,6 +612,7 @@ function startReviewRound(){
 function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
+  assessResults=[]; // önceki dersten kalan değerlendirme sonucu bu derse sızmasın (E3.2)
   play={lessonId:id, steps:[...warmupSteps(), ...reviewSteps(), ...buildSteps(L)], i:0};
   state.last=new Date().toISOString();
   const t=today();
@@ -652,10 +654,17 @@ function finishLesson(){
     assessResults=[];
   }
   trackTime(); save(); burst();
-  document.getElementById('doneMascot').textContent = L.rozet?'🏆':'🌟';
-  document.getElementById('doneTitle').textContent = L.rozet?'Rozet kazandın!':'Ders tamam!';
-  document.getElementById('doneText').textContent = L.yeni.length
-    ? `«${L.yeni.join(', ')}» sesini artık tanıyorsun.` : 'Harika bir keşif turuydu!';
+  if(L.tip==='gosteri'){
+    // E3.2: Kâşif Gösterisi bitişi — puansız, kutlama odaklı, öğrenilen tüm sesler kümülatif kutlanır
+    document.getElementById('doneMascot').textContent='🏆';
+    document.getElementById('doneTitle').textContent='Kâşif Gösterisi tamamlandı!';
+    document.getElementById('doneText').textContent='Öğrendiğin tüm sesleri harika kullandın. Tam bir Kâşif\'sin!';
+  }else{
+    document.getElementById('doneMascot').textContent = L.rozet?'🏆':'🌟';
+    document.getElementById('doneTitle').textContent = L.rozet?'Rozet kazandın!':'Ders tamam!';
+    document.getElementById('doneText').textContent = L.yeni.length
+      ? `«${L.yeni.join(', ')}» sesini artık tanıyorsun.` : 'Harika bir keşif turuydu!';
+  }
   const b=document.getElementById('doneBadge');
   if(L.rozet){ b.textContent='🎖️ '+L.rozet; b.hidden=false; } else b.hidden=true;
   const suggestBreak=maybeSuggestBreak();
@@ -663,7 +672,7 @@ function finishLesson(){
   document.getElementById('doneBreakBtn').hidden=!suggestBreak;
   play=null;
   go('s-done');
-  say(L.rozet?'Tebrikler, yeni bir rozet kazandın!':'Aferin, dersi bitirdin!');
+  say(L.tip==='gosteri' ? 'Tebrikler, harika bir Kâşif Gösterisi oldu!' : (L.rozet?'Tebrikler, yeni bir rozet kazandın!':'Aferin, dersi bitirdin!'));
 }
 function finishReviewRound(){
   // E3.3: hedefli tekrar turu bitişi — ders sayılmaz, harita ilerlemesine dokunmaz

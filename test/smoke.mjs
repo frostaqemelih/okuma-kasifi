@@ -248,6 +248,27 @@ const testDriver = `
     check('Harf Çiz 5 kademe sistemi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 14) E3.2 Kâşif Gösterisi: puansız/kümülatif ara sınav, önceki değerlendirme sızmıyor ---
+  try {
+    state = fresh();
+    const L12 = LESSONS.find(x => x.id === 12);
+    const gSteps = buildSteps(L12);
+    check('Kâşif Gösterisi (gosteri) adımlarında değerlendirme sorusu yok', gSteps.every(s => !s.assess));
+
+    state.done = Array.from({ length: 12 }, (_, i) => i); // 0..11 tamam, ders 12 açık
+    assessResults = [true, false, false]; // önceki dersten kalmış "başarısız" sonuç
+    play = null;
+    openLesson(12);
+    check('openLesson() önceki assessResults sonucunu sıfırlıyor', assessResults.length === 0);
+
+    play.i = play.steps.length;
+    finishLesson();
+    check('Kâşif Gösterisi bitişinde "tekrar önerilir" işareti YOK', !state.lessonLog[12].needsReview);
+    check('Kâşif Gösterisi bitiş ekranı kutlama başlığı gösteriyor', document.getElementById('doneTitle').textContent === 'Kâşif Gösterisi tamamlandı!');
+  } catch (e) {
+    check('Kâşif Gösterisi (E3.2) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
