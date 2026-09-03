@@ -487,6 +487,26 @@ const STROKES={
   m:[ [[.30,.40],[.30,.73]], [[.30,.50],[.36,.42],[.44,.41],[.49,.49],[.49,.73]], [[.49,.50],[.55,.42],[.63,.41],[.68,.49],[.68,.73]] ]
 };
 
+/* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
+function multiStrokeGuideOn(letter,level){
+  return !!(letter && STROKES[letter] && STROKES[letter].length>1 && level<=4);
+}
+function strokeMatchRatio(userPts,strokePath,size){
+  if(!userPts||!userPts.length||!strokePath||!strokePath.length) return 0;
+  const flat=[];
+  for(let k=0;k<strokePath.length-1;k++){
+    const a=strokePath[k], b=strokePath[k+1];
+    const steps=Math.max(4, Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])/(size*0.02)));
+    for(let j=0;j<=steps;j++) flat.push([a[0]+(b[0]-a[0])*j/steps, a[1]+(b[1]-a[1])*j/steps]);
+  }
+  if(strokePath.length===1) flat.push(strokePath[0]);
+  if(!flat.length) return 0;
+  const R2=(size*0.16)**2;
+  const near=(a,b)=>{ const dx=a[0]-b[0],dy=a[1]-b[1]; return dx*dx+dy*dy<R2; };
+  let cov=0; for(const g of flat){ if(userPts.some(p=>near(p,g))) cov++; }
+  return cov/flat.length;
+}
+
 function poolUpTo(lessonId){
   const out=[];
   for(const L of LESSONS){ if(L.id>=1 && L.id<=lessonId) out.push(...L.yeni); }
@@ -1127,6 +1147,18 @@ function setupTrace(letter,level){
   const sun=css.getPropertyValue('--sun').trim()||'#ffc24b';
   const path=(letter && STROKES[letter]) ? STROKES[letter].map(s=>s.map(([x,y])=>[x*size,y*size])) : null;
   let maskPts=[];
+  const multiStroke=multiStrokeGuideOn(letter,level);
+  let activeStroke=0;
+  function drawActiveHighlight(){
+    if(!multiStroke || activeStroke>=path.length) return;
+    const s=path[activeStroke];
+    ctx.save();
+    ctx.strokeStyle=sun; ctx.lineWidth=size*0.045; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.globalAlpha=0.6;
+    ctx.beginPath(); ctx.moveTo(s[0][0],s[0][1]);
+    for(let i=1;i<s.length;i++) ctx.lineTo(s[i][0],s[i][1]);
+    ctx.stroke();
+    ctx.restore();
+  }
   function drawGuide(withHint){
     ctx.clearRect(0,0,size,size);
     if(letter && level<=3){
@@ -1145,14 +1177,15 @@ function setupTrace(letter,level){
       ctx.restore();
     }
     if(path && withHint!==false && level<=4){
-      // başlangıç noktası (yeşil) + ilk yön oku — kademe 5'te (bellekten) gösterilmez
-      const s0=path[0], p0=s0[0], p1=s0[1]||s0[0];
+      // başlangıç noktası (yeşil) + ilk yön oku — çok vuruşluda aktif vuruşun başlangıcı, kademe 5'te gösterilmez
+      const s0=path[multiStroke?Math.min(activeStroke,path.length-1):0], p0=s0[0], p1=s0[1]||s0[0];
       ctx.fillStyle=ok;
       ctx.beginPath(); ctx.arc(p0[0],p0[1],size*0.045,0,7); ctx.fill();
       const ang=Math.atan2(p1[1]-p0[1], p1[0]-p0[0]);
       ctx.save(); ctx.translate(p0[0],p0[1]); ctx.rotate(ang);
       ctx.beginPath(); ctx.moveTo(size*0.06,0); ctx.lineTo(size*0.02,-size*0.03); ctx.lineTo(size*0.02,size*0.03); ctx.closePath(); ctx.fill();
       ctx.restore();
+      if(withHint!==false) drawActiveHighlight();
     }
   }
   function playHint(cb){
@@ -1198,7 +1231,21 @@ function setupTrace(letter,level){
   function move(e){ if(!drawing) return; e.preventDefault(); const p=pos(e); cur.push(p);
     ctx.strokeStyle=ink; ctx.lineWidth=size*0.078; ctx.lineCap='round'; ctx.lineJoin='round';
     const n=cur.length; ctx.beginPath(); ctx.moveTo(cur[n-2][0],cur[n-2][1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); }
-  function end(){ drawing=false; }
+  function end(){
+    if(!drawing) return;
+    drawing=false;
+    // E6.1: vuruş bitince — hedef vuruşla eşleşiyorsa sıradakine geç, eşleşmiyorsa nazikçe uyar (engellemez).
+    if(multiStroke && activeStroke<path.length && cur && cur.length>2){
+      const ratio=strokeMatchRatio(cur,path[activeStroke],size);
+      if(ratio>=0.4){
+        activeStroke++;
+        if(activeStroke<path.length){ drawActiveHighlight(); traceMsg((activeStroke+1)+'. vuruşa geç 👉'); }
+        else traceMsg('Tüm vuruşlar tamam! Şimdi Bitti\'ye bas ✅');
+      }else{
+        traceMsg('Bu vuruşu biraz farklı deneyelim, kılavuza bak 👀');
+      }
+    }
+  }
   if(window.PointerEvent){
     cv.addEventListener('pointerdown',start); cv.addEventListener('pointermove',move);
     cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end); window.addEventListener('pointerup',end);
@@ -1207,8 +1254,9 @@ function setupTrace(letter,level){
     cv.addEventListener('touchstart',start,{passive:false}); cv.addEventListener('touchmove',move,{passive:false}); cv.addEventListener('touchend',end);
   }
   trace={letter,size,strokes,maskPts,
-    reset(){ strokes.length=0; drawGuide(true); },
-    hint(cb){ strokes.length=0; playHint(cb); }};
+    activeStroke(){ return activeStroke; },
+    reset(){ strokes.length=0; activeStroke=0; drawGuide(true); },
+    hint(cb){ strokes.length=0; activeStroke=0; playHint(cb); }};
 }
 function traceMsg(t){ const m=document.getElementById('traceMsg'); if(m) m.textContent=t; }
 function clearTrace(){ if(trace.reset) trace.reset(); traceMsg('Yeşil noktadan başla 👇'); }

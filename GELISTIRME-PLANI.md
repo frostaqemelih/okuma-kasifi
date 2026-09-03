@@ -141,7 +141,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 ### E6 — Harf Çiz Derinleştirme  → uzman: pedagoji raporu (§ Yazma, 5 kademe)
 
-- [ ] **E6.1** Çok vuruşlu harflerde **vuruş vuruş kılavuz**: aktif vuruşu vurgula, biri bitince sonrakine geç, sıra dışı çizimde nazik uyar.
+- [x] **E6.1** Çok vuruşlu harflerde **vuruş vuruş kılavuz**: aktif vuruşu vurgula, biri bitince sonrakine geç, sıra dışı çizimde nazik uyar. — 2026-09-03
 - [x] **E6.2** 5 kademe: (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) sadece başlangıç noktası, (5) bellekten. `setupTrace(letter, level)` seviyeye göre kılavuzu çiziyor; `cizLevel(s)` = `state.soundStats[s].cizLevel` (varsayılan 1); `checkTrace()` başarılı çizimde kademeyi 1 artırıyor (üst sınır 5). — 2026-09-03
 - [ ] **E6.3** Yön hatası tespiti: çizim yönü kılavuzun tersineyse "yukarıdan aşağı gidelim" gibi uyarı.
 - [ ] **E6.4** "Havada çiz" ısınması (ders 0 zaten var) + parmak kası ısınma çizgi çalışmaları (dalga, zikzak, spiral).
@@ -211,6 +211,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E2.4 (c) (rutin, Hafta 1 kilometre taşı): Harfi Bul'a üçüncü varyant eklendi — büyük/küçük harf eşleme (`UPPER_MAP` Türkçe büyük harf tablosu; i→İ, ı→I noktasız kuralı dahil). `roundBul()` artık 3 varyant arasında eşit olasılıkla seçiyor. Smoke test'e 2 yeni kontrol.
 - 2026-09-03 — E2.4 Sesi Eşleştir (b)+(c) (rutin, Hafta 1 kilometre taşı): `roundSes()` artık 3 varyant arasında rastgele seçiyor — (a) ses→resim (mevcut, `roundSesStart`), (b) "hangisi farklı sesle başlıyor" (`roundSesOdd`, WORDBANK'ten çeşitli resimlerle), (c) "son ses" (`roundSesEnd`, kelimenin bitiş sesini bulma). Her ikisi de yeterli aday yoksa (a)'ya düşer. E2.4 artık Harfi Bul ve Sesi Eşleştir için tamamlandı; Hece Kur kaldı. Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E2.4 Hece Kur (b)+(c) (rutin, Hafta 1 kilometre taşı): `roundHece()` artık 3 varyant arasında rastgele seçiyor — (a) hece tanı (mevcut, `roundHeceListen`), (b) "hece→resim" (`roundHecePic`, bu heceyle başlayan kelimenin resmini bul), (c) "eksik harfi bul" (`roundHeceMissing`, heceyi tamamlayan harfi seç). **E2.4 (tüm mini oyunlarda ≥2 varyant çeşitliliği) tamamlandı.** Smoke test'e 4 yeni kontrol.
+- 2026-09-03 — E6.1 (rutin, Hafta 1 kilometre taşı): Harf Çiz'e vuruş vuruş kılavuz eklendi — çok vuruşlu harflerde (t,n,k,u,r,m,a,i) aktif vuruş kılavuzda turuncu/sarı çizgiyle vurgulanıyor (`drawActiveHighlight`), başlangıç noktası da o vuruşa göre kayıyor. Çocuk bir vuruşu bitirince (`end()`) çizim `strokeMatchRatio()` ile hedef vuruşa yakınlık oranına göre değerlendiriliyor: yeterince örtüşürse sıradaki vuruşa geçilip nazik teşvik mesajı gösteriliyor, örtüşmüyorsa çizim silinmeden nazik bir uyarı mesajı gösteriliyor (engellemiyor). Tek vuruşlu harflerde ve kademe 5'te (bellekten) devre dışı. Smoke test'e 7 yeni kontrol (saf fonksiyonlar `multiStrokeGuideOn`/`strokeMatchRatio` üzerinden, canvas'a ihtiyaç duymadan).
 
 ---
 

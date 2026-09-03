@@ -355,6 +355,24 @@ const testDriver = `
     check('Hece Kur çeşitliliği (E2.4 b/c) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 18) E6.1 Çok vuruşlu harflerde vuruş vuruş kılavuz ---
+  try {
+    check('multiStrokeGuideOn() 2+ vuruşlu harfte (t, kademe 1) true döner', multiStrokeGuideOn('t', 1) === true);
+    check('multiStrokeGuideOn() tek vuruşlu harfte (l, kademe 1) false döner', multiStrokeGuideOn('l', 1) === false);
+    check('multiStrokeGuideOn() kademe 5 (bellekten) için false döner', multiStrokeGuideOn('t', 5) === false);
+    check('multiStrokeGuideOn() bilinmeyen harf için false döner', multiStrokeGuideOn('x', 1) === false);
+
+    // t'nin ilk vuruşu dikey bir çizgi: [[50,30],[50,68],[55,73]] (size=100 ölçeğinde)
+    const strokePath = STROKES.t[0].map(([x, y]) => [x * 100, y * 100]);
+    const goodPts = strokePath.map(p => [p[0] + 1, p[1] + 1]); // neredeyse tam üstünden
+    const badPts = [[5, 5], [8, 8], [10, 10]]; // harfin uzağında
+    check('strokeMatchRatio() vuruşun üstünden geçince yüksek oran döner', strokeMatchRatio(goodPts, strokePath, 100) > 0.7);
+    check('strokeMatchRatio() alakasız noktalarda düşük oran döner', strokeMatchRatio(badPts, strokePath, 100) < 0.2);
+    check('strokeMatchRatio() boş nokta dizisinde 0 döner', strokeMatchRatio([], strokePath, 100) === 0);
+  } catch (e) {
+    check('Vuruş vuruş kılavuz (E6.1) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
