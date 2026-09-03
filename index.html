@@ -784,15 +784,22 @@ function pickTargets(pool){
   return pool;
 }
 function roundBul(pool){
+  // E2.4: en az 2 varyant — (a) resim→harf, (b) ses duy→harf. Rastgele seçilir.
   locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
   const same=shuffle(pool.filter(x=>x!==t)).slice(0,1);
   const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,2);
   const opts=shuffle([t,...same,...distr]);
-  qtext.textContent=`«${WORDS[t].word}» hangi harfle başlar?`;
-  playArea.innerHTML=stageHTML(`<span>${WORDS[t].emoji}</span>`);
+  if(Math.random()<0.5){
+    qtext.textContent=`«${WORDS[t].word}» hangi harfle başlar?`;
+    playArea.innerHTML=stageHTML(`<span>${WORDS[t].emoji}</span>`);
+    sayPrompt(`${WORDS[t].word}. ${WORDS[t].word} hangi harfle başlar?`);
+  }else{
+    qtext.textContent='Duyduğun ses hangi harf?';
+    playArea.innerHTML=stageHTML(`<span class="glyph">👂</span>`);
+    sayPrompt(`Dinle. ${t}… ${t}. Duyduğun ses hangi harf?`);
+  }
   paint(opts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===t);
-  sayPrompt(`${WORDS[t].word}. ${WORDS[t].word} hangi harfle başlar?`);
 }
 function roundSes(pool){
   locked=false; curWrongCount=0;

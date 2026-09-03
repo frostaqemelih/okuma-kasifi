@@ -213,6 +213,22 @@ const testDriver = `
     check('Aralıklı tekrar (ısınma turu) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 12) E2.4 Harfi Bul çeşitliliği: (a) resim→harf ve (b) ses duy→harf varyantları ---
+  try {
+    const origRandom = Math.random;
+    state = fresh();
+    Math.random = () => 0; // (a) resim→harf
+    roundBul(['a', 'n', 'e', 't']);
+    check('roundBul (a) resim→harf varyantı görseli gösteriyor', playArea.innerHTML.includes(WORDS[curTargets[0]].emoji));
+    Math.random = () => 0.99; // (b) ses duy→harf
+    roundBul(['a', 'n', 'e', 't']);
+    check('roundBul (b) ses duy→harf varyantı soru metnini gösteriyor', qtext.textContent === 'Duyduğun ses hangi harf?');
+    check('roundBul (b) varyantında doğru cevap seçenekler arasında', document.querySelector('#choices .choice[data-right="1"]') !== null);
+    Math.random = origRandom;
+  } catch (e) {
+    check('Harfi Bul çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
