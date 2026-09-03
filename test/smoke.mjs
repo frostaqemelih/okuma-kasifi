@@ -478,6 +478,21 @@ const testDriver = `
     check('3. grup ü sesi (E4.2) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 25) E4.2 (b) 3. grup: s sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.s tanımlı ve s ile başlıyor', !!WORDS.s && WORDS.s.word[0] === 's');
+    check('STROKES.s tanımlı (tek vuruşlu S eğrisi)', Array.isArray(STROKES.s) && STROKES.s.length === 1 && STROKES.s[0].length > 5);
+    const L14 = LESSONS.find(x => x.id === 14);
+    check('LESSONS içinde ders 14 "Ses s" olarak tanımlı', !!L14 && L14.yeni.includes('s'));
+    const poolWithS = poolUpTo(14);
+    check('poolUpTo(14) hem ü hem s seslerini içeriyor', poolWithS.includes('ü') && poolWithS.includes('s'));
+    const reachableS = WORDBANK.filter(it => it.w.split('').every(c => poolWithS.includes(c)));
+    check('"su" s ogrenilince WORDBANK icinde erisilebilir', reachableS.some(it => it.w === 'su'));
+    check('"kes" s ogrenilince WORDBANK icinde erisilebilir', reachableS.some(it => it.w === 'kes'));
+  } catch (e) {
+    check('3. grup s sesi (E4.2 b) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

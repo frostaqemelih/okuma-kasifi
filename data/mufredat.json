@@ -50,7 +50,8 @@
     "r": { "tur": "akici-unsuz", "uzatilabilir": true, "ornek": ["radyo", "resim", "kar", "nar"], "sesletim": "rrr", "cizimVurus": 2 },
     "ı": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ılık", "ırmak", "ışık"], "sesletim": "ııı", "cizimVurus": 1, "karisir": ["i"] },
     "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 },
-    "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] }
+    "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] },
+    "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 }
   },
 
   "ortakIskelet": [
@@ -176,6 +177,14 @@
       "basariOlcutu": "/u/ ve /ü/'yü ikili ayırt görevinde %80 ayırır; ü harfini (iki nokta dâhil) çizer; 'kü, ük, tü' hecelerini sesletir",
       "kelimeler": ["kül"], "heceler": ["kü", "ük", "tü"], "cumleler": [],
       "not": "3. grubun (ü,s,ö,y,d,z) ilk sesi. Diğer 5 sesi ders 14–18'de eklenecek."
+    },
+    {
+      "id": 14, "ad": "Ses s", "yeniSesler": ["s"], "yeniHarfler": ["s"],
+      "beceriler": ["/s/ ilk ve son ses avı", "/s/ uzatma (sürtünmeli)", "s harfini çizme (tek eğri vuruş)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/s/ sesini baş ve sonda %80 tanır; s harfini tek vuruşla doğru yönde çizer; 'su, kes, satı' hecelerini/kelimelerini sesletir",
+      "kelimeler": ["su", "kes"], "heceler": ["sa", "se", "si", "so", "su", "as", "es", "us"], "cumleler": ["Su iç."],
+      "not": "3. grubun (ü,s,ö,y,d,z) 2. sesi. Kalan 4 ses ders 15–18'de eklenecek."
     }
   ]
 }
