@@ -522,6 +522,21 @@ const testDriver = `
     check('3. grup y sesi (E4.2 d) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 28) E4.2 (e) 3. grup: d sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.d tanımlı ve d ile başlıyor', !!WORDS.d && WORDS.d.word[0] === 'd');
+    check('STROKES.d tanımlı (çok vuruşlu: gövde + dik vuruş)', Array.isArray(STROKES.d) && STROKES.d.length === 2);
+    const L17 = LESSONS.find(x => x.id === 17);
+    check('LESSONS içinde ders 17 "Ses d" olarak tanımlı', !!L17 && L17.yeni.includes('d'));
+    const poolWithD = poolUpTo(17);
+    check('poolUpTo(17) ü, s, ö, y ve d seslerinin hepsini içeriyor', ['ü', 's', 'ö', 'y', 'd'].every(c => poolWithD.includes(c)));
+    const reachableD = WORDBANK.filter(it => it.w.split('').every(c => poolWithD.includes(c)));
+    check('"domates" d ogrenilince WORDBANK icinde erisilebilir', reachableD.some(it => it.w === 'domates'));
+    check('"duman" d ogrenilince WORDBANK icinde erisilebilir', reachableD.some(it => it.w === 'duman'));
+  } catch (e) {
+    check('3. grup d sesi (E4.2 e) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

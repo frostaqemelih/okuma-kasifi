@@ -53,7 +53,8 @@
     "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] },
     "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 },
     "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] },
-    "y": { "tur": "surekli-unsuz", "uzatilabilir": false, "ornek": ["yol", "yumurta", "yıldız"], "sesletim": "y", "cizimVurus": 2 }
+    "y": { "tur": "surekli-unsuz", "uzatilabilir": false, "ornek": ["yol", "yumurta", "yıldız"], "sesletim": "y", "cizimVurus": 2 },
+    "d": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["davul", "duman", "domates"], "sesletim": "d", "cizimVurus": 2 }
   },
 
   "ortakIskelet": [
@@ -203,6 +204,14 @@
       "basariOlcutu": "/y/ ile başlayan sözcükleri %80 tanır; y harfini doğru sırayla çizer; 'yol, yumurta' kelimelerini okur",
       "kelimeler": ["yol", "yumurta"], "heceler": ["ya", "ye", "yı", "yo", "yu", "ay", "ey"], "cumleler": [],
       "not": "3. grubun (ü,s,ö,y,d,z) 4. sesi. Kalan 2 ses ders 17–18'de eklenecek."
+    },
+    {
+      "id": 17, "ad": "Ses d", "yeniSesler": ["d"], "yeniHarfler": ["d"],
+      "beceriler": ["/d/ ilk-ses avı", "d harfini çizme (gövde + dik vuruş)", "heceler", "kelimeler"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/d/ ile başlayan sözcükleri %80 tanır; d harfini doğru sırayla çizer; 'domates, duman' kelimelerini okur",
+      "kelimeler": ["domates", "duman"], "heceler": ["da", "de", "dı", "do", "du", "ad", "ed"], "cumleler": [],
+      "not": "3. grubun (ü,s,ö,y,d,z) 5. sesi. Son ses (z) ders 18'de eklenecek + 3. grup rozeti."
     }
   ]
 }

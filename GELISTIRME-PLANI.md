@@ -121,7 +121,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (b) **s** tam donanımlı eklendi: `mufredat.json` sesler.s+ders14, `WORDS.s` (su), `STROKES.s` (tek vuruşlu S eğrisi), `LESSONS` id14, `WORDBANK`'a su/kes. — 2026-09-03
   - [x] (c) **ö** tam donanımlı eklendi: `mufredat.json` sesler.ö+ders15, `WORDS.ö` (ördek), `STROKES.ö` (nokta+nokta+o gövdesi), `LESSONS` id15, `WORDBANK`'a körük. — 2026-09-03
   - [x] (d) **y** tam donanımlı eklendi: `mufredat.json` sesler.y+ders16, `WORDS.y` (yol), `STROKES.y` (iki eğik vuruş+kuyruk), `LESSONS` id16, `WORDBANK`'a yol/yumurta. — 2026-09-03
-  - [ ] (e) **d** ekle (ders 17)
+  - [x] (e) **d** tam donanımlı eklendi: `mufredat.json` sesler.d+ders17, `WORDS.d` (davul), `STROKES.d` (gövde+dik vuruş), `LESSONS` id17, `WORDBANK`'a domates/duman. — 2026-09-03
   - [ ] (f) **z** ekle (ders 18) + 3. grup rozeti/Kâşif Gösterisi 2 (ders 19)
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
@@ -227,6 +227,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E4.2 (b) (rutin, Hafta 2 kilometre taşı): "s" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.s` (sürtünmeli ünsüz) + ders 14; `index.html`'e `WORDS.s` (su💧), `STROKES.s` (tek vuruşlu S eğrisi, `o` gibi kapalı değil açık uçlu), `LESSONS` id14 ("Ses s"). `WORDBANK`'a su💧/kes✂️ eklendi (ikisi de yalnız önceki+s seslerinden, hemen erişilebilir). Sıradaki alt adım: ö (ders 15). Smoke test'e 6 yeni kontrol.
 - 2026-09-03 — E4.2 (c) (rutin, Hafta 2 kilometre taşı): "ö" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.ö` (o ile karışır) + ders 15; `index.html`'e `WORDS.ö` (ördek🦆), `STROKES.ö` (iki nokta + o gövdesi, `ü` deseninin aynısı ama u yerine o gövdesi), `LESSONS` id15 ("Ses ö"). `WORDBANK`'a körük🔥 eklendi (ö+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: y (ders 16). Smoke test'e 5 yeni kontrol.
 - 2026-09-03 — E4.2 (d) (rutin, Hafta 2 kilometre taşı): "y" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.y` (sürekli ünsüz/yarı ünlü) + ders 16; `index.html`'e `WORDS.y` (yol🛣️), `STROKES.y` (iki eğik vuruş bir noktada birleşip ikincisi kuyruk olarak devam eder), `LESSONS` id16 ("Ses y"). `WORDBANK`'a yol🛣️/yumurta🥚 eklendi (ikisi de y+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: d (ders 17). Smoke test'e 6 yeni kontrol.
+- 2026-09-03 — E4.2 (e) (rutin, Hafta 2 kilometre taşı): "d" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.d` (patlayıcı ünsüz) + ders 17; `index.html`'e `WORDS.d` (davul🥁), `STROKES.d` (kapalı ilmek gövde + sağdan yukarı çıkan dik vuruş), `LESSONS` id17 ("Ses d"). `WORDBANK`'a domates🍅/duman💨 eklendi (ikisi de d+önceki gruplardan, hemen erişilebilir). Son ses (z, ders 18) + 3. grup rozeti kaldı — E4.2 sıradaki çalışmada tamamlanacak. Smoke test'e 6 yeni kontrol.
 
 ---
 
