@@ -51,7 +51,8 @@
     "ı": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ılık", "ırmak", "ışık"], "sesletim": "ııı", "cizimVurus": 1, "karisir": ["i"] },
     "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 },
     "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] },
-    "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 }
+    "s": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["su", "saat", "sepet"], "sesletim": "sss", "cizimVurus": 1 },
+    "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] }
   },
 
   "ortakIskelet": [
@@ -185,6 +186,14 @@
       "basariOlcutu": "/s/ sesini baş ve sonda %80 tanır; s harfini tek vuruşla doğru yönde çizer; 'su, kes, satı' hecelerini/kelimelerini sesletir",
       "kelimeler": ["su", "kes"], "heceler": ["sa", "se", "si", "so", "su", "as", "es", "us"], "cumleler": ["Su iç."],
       "not": "3. grubun (ü,s,ö,y,d,z) 2. sesi. Kalan 4 ses ders 15–18'de eklenecek."
+    },
+    {
+      "id": 15, "ad": "Ses ö", "yeniSesler": ["ö"], "yeniHarfler": ["ö"],
+      "beceriler": ["/ö/ ilk-ses avı", "/o/–/ö/ ayırt etme (kritik, dudak yuvarlaklığı)", "ö harfini çizme (iki nokta dâhil)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur"],
+      "basariOlcutu": "/o/ ve /ö/'yü ikili ayırt görevinde %80 ayırır; ö harfini (iki nokta dâhil) çizer; 'kö, ör, sö' hecelerini sesletir",
+      "kelimeler": ["körük"], "heceler": ["kö", "ör", "sö", "ötü"], "cumleler": [],
+      "not": "3. grubun (ü,s,ö,y,d,z) 3. sesi. Kalan 3 ses ders 16–18'de eklenecek."
     }
   ]
 }

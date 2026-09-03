@@ -493,6 +493,20 @@ const testDriver = `
     check('3. grup s sesi (E4.2 b) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 26) E4.2 (c) 3. grup: ö sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.ö tanımlı ve ö ile başlıyor', !!WORDS['ö'] && WORDS['ö'].word[0] === 'ö');
+    check('STROKES.ö tanımlı (çok vuruşlu: nokta+nokta+gövde)', Array.isArray(STROKES['ö']) && STROKES['ö'].length === 3);
+    const L15 = LESSONS.find(x => x.id === 15);
+    check('LESSONS içinde ders 15 "Ses ö" olarak tanımlı', !!L15 && L15.yeni.includes('ö'));
+    const poolWithO2 = poolUpTo(15);
+    check('poolUpTo(15) ü, s ve ö seslerinin hepsini içeriyor', ['ü', 's', 'ö'].every(c => poolWithO2.includes(c)));
+    const reachableO2 = WORDBANK.filter(it => it.w.split('').every(c => poolWithO2.includes(c)));
+    check('"körük" ö ogrenilince WORDBANK icinde erisilebilir', reachableO2.some(it => it.w === 'körük'));
+  } catch (e) {
+    check('3. grup ö sesi (E4.2 c) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
