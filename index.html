@@ -316,7 +316,9 @@
     <h1 id="doneTitle">Ders tamam!</h1>
     <p class="sub" id="doneText">Yeni bir sesi öğrendin.</p>
     <div class="badge" id="doneBadge" hidden></div>
+    <p class="sub" id="doneBreakMsg" hidden>Bugün epey çalıştın! Kısa bir mola vermek ister misin? 🌤️</p>
     <button class="btn ok" onclick="go('s-map')">Haritaya dön</button>
+    <button class="btn ghost tiny" id="doneBreakBtn" onclick="acceptBreak()" hidden>☕ Mola ver, yarın devam</button>
   </section>
 
   <!-- EBEVEYN İZLEME SAYFASI -->
@@ -507,6 +509,7 @@ function go(id){
 }
 function onStart(){
   syncStars();
+  sessionMinutes=0; breakShown=false; // E2.6: yeni oturum, mola sayacı sıfırlanır
   if(!state.mode){ go('s-mode'); say('Kâşif kaç yaşında?'); }
   else { go('s-map'); say('Keşif haritasına hoş geldin!'); }
 }
@@ -604,6 +607,9 @@ function finishLesson(){
     ? `«${L.yeni.join(', ')}» sesini artık tanıyorsun.` : 'Harika bir keşif turuydu!';
   const b=document.getElementById('doneBadge');
   if(L.rozet){ b.textContent='🎖️ '+L.rozet; b.hidden=false; } else b.hidden=true;
+  const suggestBreak=maybeSuggestBreak();
+  document.getElementById('doneBreakMsg').hidden=!suggestBreak;
+  document.getElementById('doneBreakBtn').hidden=!suggestBreak;
   play=null;
   go('s-done');
   say(L.rozet?'Tebrikler, yeni bir rozet kazandın!':'Aferin, dersi bitirdin!');
@@ -634,6 +640,7 @@ let locked=false, sessionStart=0;
 let curTargets=[];   // bu turda çalışılan ses(ler)
 let curWrongCount=0; // bu turdaki yanlış deneme sayısı (E2.1 kademeli hata protokolü)
 let curIsReview=false; // bu tur reviewSteps() tarafından mı eklendi (E2.2)
+let sessionMinutes=0, breakShown=false; // E2.6 oturum ritmi
 const qtext=document.getElementById('qtext');
 const playArea=document.getElementById('playArea');
 
@@ -1004,11 +1011,21 @@ function trackTime(){
   if(!sessionStart) return;
   const d=Math.round((Date.now()-sessionStart)/1000);
   state.seconds+=d;
+  sessionMinutes+=d/60;
   const t=today(); state.daily[t]=(state.daily[t]||0)+d;
   if(play){ const lg=state.lessonLog[play.lessonId]||(state.lessonLog[play.lessonId]={attempts:0,seconds:0,first:t,last:t});
     lg.seconds+=d; lg.last=t; }
   sessionStart=Date.now(); save();
 }
+/* E2.6: oturum ritmi — pedagoji raporundaki önerilen süreye göre nazik mola önerisi.
+   Keşif (4–5 yaş) 6–10 dk, Çözümleme (6–7 yaş) 12–18 dk aralığının orta noktası eşik alınır. */
+function breakThresholdMin(){ return state.mode==='cozumleme' ? 15 : 8; }
+function maybeSuggestBreak(){
+  if(breakShown) return false;
+  if(sessionMinutes>=breakThresholdMin()){ breakShown=true; return true; }
+  return false;
+}
+function acceptBreak(){ sessionMinutes=0; breakShown=false; go('s-start'); }
 function burst(){ spawnConfetti(22); }
 function burstMini(){ spawnConfetti(10); }
 function spawnConfetti(n){

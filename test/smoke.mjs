@@ -117,6 +117,20 @@ const testDriver = `
     check('Tekrar kuyruğu akışı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 7) E2.6 Oturum ritmi: eşik dakika sonrası nazik mola önerisi bir kez gösteriliyor mu? ---
+  try {
+    state = fresh();
+    state.mode = 'kesif';
+    sessionMinutes = 8; breakShown = false;
+    check('mola eşiği (Keşif, 8 dk) aşılınca öneri tetikleniyor', maybeSuggestBreak() === true);
+    check('mola önerisi aynı oturumda tekrar tetiklenmiyor', maybeSuggestBreak() === false);
+    acceptBreak();
+    check('acceptBreak() sayaç ve bayrağı sıfırlıyor', sessionMinutes === 0 && breakShown === false);
+    check('acceptBreak() başlangıç ekranına dönüyor', document.getElementById('s-start').classList.contains('active'));
+  } catch (e) {
+    check('Oturum ritmi (mola önerisi) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
