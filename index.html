@@ -56,7 +56,7 @@
   .screen.scroll{justify-content:flex-start; overflow-y:auto; padding:92px 20px 40px}
   .screen.anim{animation:rise .34s cubic-bezier(.2,.8,.2,1)}
   @keyframes rise{from{opacity:0; transform:translateY(14px) scale(.98)}to{opacity:1; transform:none}}
-  @media (prefers-reduced-motion:reduce){ .screen.anim{animation:none} .mascot,.node.now{animation:none!important} }
+  @media (prefers-reduced-motion:reduce){ .screen.anim{animation:none} .mascot,.node.now,.choice.hint{animation:none!important} }
 
   h1{font-family:var(--font-display); font-weight:800; font-size:clamp(26px,5.6vw,48px);
     color:var(--primary-d); letter-spacing:-.01em; text-wrap:balance; line-height:1.06}
@@ -145,8 +145,10 @@
   .choice:active{transform:scale(.95)}
   .choice.right{border-color:var(--ok); animation:cheer .5s}
   .choice.wrong{border-color:var(--nope); animation:shake .38s}
+  .choice.hint{border-color:var(--primary); animation:hintPulse 1s ease-in-out infinite}
   @keyframes cheer{50%{transform:scale(1.1)}}
   @keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  @keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 55%, transparent)}50%{box-shadow:0 0 0 10px transparent}}
 
   .word-slots{display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
   .slot{width:50px; height:58px; border-radius:14px; border:3px dashed var(--line);
@@ -371,6 +373,7 @@ function fresh(){return{
   soundStats:{},        // { 'a': {c:doğru, w:yanlış}, ... }
   daily:{},             // { 'YYYY-MM-DD': saniye }
   lessonLog:{},         // { id: {attempts, seconds, first, last} }
+  reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
   settings:{dailyGoalMin:15}
 }}
 function today(){ return new Date().toISOString().slice(0,10); }
@@ -382,7 +385,8 @@ try{
     state=Object.assign(f,s,{
       freePlays:Object.assign(f.freePlays,s.freePlays||{}),
       settings:Object.assign(f.settings,s.settings||{}),
-      daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{}
+      daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{},
+      reviewQueue:s.reviewQueue||[]
     });
   }
 }catch(e){}
@@ -621,6 +625,7 @@ function nextFreeRound(){
 /* ================= TURLAR ================= */
 let locked=false, sessionStart=0;
 let curTargets=[];   // bu turda çalışılan ses(ler)
+let curWrongCount=0; // bu turdaki yanlış deneme sayısı (E2.1 kademeli hata protokolü)
 const qtext=document.getElementById('qtext');
 const playArea=document.getElementById('playArea');
 
@@ -630,6 +635,14 @@ function creditSounds(ok){
     const st=state.soundStats[s]||(state.soundStats[s]={c:0,w:0});
     st[ok?'c':'w']++;
   });
+  save();
+}
+function queueForReview(){
+  curTargets.forEach(s=>{
+    if(!/^[a-zçğıöşü]$/.test(s)) return;
+    if(!state.reviewQueue.includes(s)) state.reviewQueue.push(s);
+  });
+  if(state.reviewQueue.length>12) state.reviewQueue=state.reviewQueue.slice(-12);
   save();
 }
 
@@ -645,7 +658,9 @@ function paint(items,cls,isRight){
     const b=document.createElement('button'); b.className='choice';
     b.innerHTML = it.emoji ? `<span>${it.emoji}</span><span class="cap">${it.cap}</span>`
                            : `<span class="glyph">${it.glyph}</span>`;
-    b.onclick=()=>choose(b,isRight(it));
+    const right=isRight(it);
+    if(right) b.dataset.right='1';
+    b.onclick=()=>choose(b,right);
     box.appendChild(b);
   });
 }
@@ -655,7 +670,7 @@ function pickTargets(pool){
   return pool;
 }
 function roundBul(pool){
-  locked=false;
+  locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
   const same=shuffle(pool.filter(x=>x!==t)).slice(0,1);
   const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,2);
@@ -666,7 +681,7 @@ function roundBul(pool){
   sayPrompt(`${WORDS[t].word}. ${WORDS[t].word} hangi harfle başlar?`);
 }
 function roundSes(pool){
-  locked=false;
+  locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
   let dist=shuffle(pool.filter(x=>x!==t));
   if(dist.length<2) dist=dist.concat(shuffle(Object.keys(WORDS).filter(x=>x!==t&&!dist.includes(x))));
@@ -677,7 +692,7 @@ function roundSes(pool){
   sayPrompt(`Dinle. ${t}… ${t}. Hangisi ${t} sesiyle başlıyor?`);
 }
 function roundHece(pool){
-  locked=false;
+  locked=false; curWrongCount=0;
   const sy=syllablesFor(pool);
   if(sy.length<3){ roundSes(pool); return; }
   const t=rnd(sy); curTargets=t.split('');
@@ -692,8 +707,23 @@ function choose(el,right){
   if(right){
     locked=true; el.classList.add('right'); state.correct++; creditSounds(true); save();
     say(rnd(['Aferin!','Çok güzel!','Harikasın!','Tam isabet!','Bravo Kâşif!']), award);
+    return;
+  }
+  curWrongCount++;
+  el.classList.add('wrong'); state.wrong++; creditSounds(false); save();
+  const correctEl=document.querySelector('#choices .choice[data-right="1"]');
+  if(curWrongCount>=3){
+    // 3. yanlış: modelle + birlikte — doğruyu göster, birlikte söyle, doğruyla bitir, tekrar kuyruğuna al
+    locked=true; queueForReview();
+    if(correctEl) correctEl.classList.add('right');
+    say('Doğrusu bu. Birlikte söyleyelim: '+roundPrompt, ()=>{ say(roundPrompt, award); });
+  }else if(curWrongCount===2){
+    // 2. yanlış: hedefli ipucu — yanlış şıkkı soluklaştır, doğru şıkkı vurgula
+    el.style.opacity='.35'; el.disabled=true;
+    if(correctEl) correctEl.classList.add('hint');
+    say('Az kaldı, ipucuna bak.',()=>{ say(roundPrompt); });
   }else{
-    el.classList.add('wrong'); state.wrong++; creditSounds(false); save();
+    // 1. yanlış: nötr tekrar
     say('Az kaldı, tekrar dinleyelim.',()=>{ el.classList.remove('wrong'); say(roundPrompt); });
   }
 }

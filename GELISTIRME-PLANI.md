@@ -92,7 +92,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 ### E2 — Hata Kurtarma & Çeşitlilik  → uzman: pedagoji raporu (§ Hata protokolü, § Oyunlaştırma)
 
-- [ ] **E2.1** Kademeli hata protokolü: 1. yanlış → nötr "tekrar dinle"; 2. yanlış → **hedefli ipucu** (yanlış şıkkı soluklaştır / doğru şıkkın ilk harfini vurgula); 3. yanlış → **modelle + birlikte** (doğruyu göster, "birlikte söyleyelim"), sonra doğruyla bitir, o maddeyi tekrar kuyruğuna al. `wrongCount` say.
+- [x] **E2.1** Kademeli hata protokolü: 1. yanlış → nötr "tekrar dinle"; 2. yanlış → **hedefli ipucu** (yanlış şık soluklaşır+kilitlenir, doğru şıkka `.hint` nabız vurgusu); 3. yanlış → **modelle + birlikte** (doğru gösterilir, "birlikte söyleyelim" + tur doğruyla biter), hedef ses `state.reviewQueue`'ya eklenir (E2.2 bunu tüketecek). Şimdilik Harfi Bul/Sesi Eşleştir/Hece Kur (`choose()`) kapsıyor; Kelime Kur/Cümle Bahçesi (`checkWord()`) ayrı madde olarak bırakıldı. — 2026-09-03
 - [ ] **E2.2** "Tekrar kuyruğu": bir turda takılınan ses/hece `state.reviewQueue`'ya eklenir; sonraki oturumların başında 2–3 kısa tekrar turu.
 - [ ] **E2.3** Aralıklı tekrar (spaced repetition): her sesin `lastSeen` + `strength` (0–5). Ders başı "ısınma" turu, `strength` düşük + `lastSeen` eski sesleri seçer. Basit Leitner mantığı.
 - [ ] **E2.4** Aynı hedef için çeşitli alıştırma tipleri — her mini oyunda en az 2 varyant:
@@ -190,6 +190,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E1 (Ebeveyn İzleme Sayfası) tamamlandı: `s-parent` 5 sekme, 14 günlük grafik, ders logları, evde-etkinlik önerileri, ayarlar (disleksi/sessiz/hedef), JSON dışa/içe aktarma. `state` şeması genişledi (daily, lessonLog, settings) — hâlâ `v2` (geriye uyumlu merge).
 - 2026-09-03 — E1.9 + E1.10 (rutin): 14 günlük grafikte hedef çizgisi görünürlüğü düzeltildi, çubuklara gün etiketi + hover, `.ptabs` yatay kaydırılan şerit oldu. İlk test altyapısı: `npm i -D jsdom` + `test/smoke.mjs` (16 kontrol), `npm test`.
 - 2026-09-03 — Plan yeniden düzenlendi: **~1 ay halka sunum hedefi** + § 1.5 haftalık yol haritası + **E8 (Freemium & Premium)** + **E9 (Yayın & Dağıtım)** epikleri eklendi. Rutin sıklığı artırıldı (3 saatte bir).
+- 2026-09-03 — E2.1 (rutin, Hafta 1 kilometre taşı): çoktan seçmeli turlarda (Harfi Bul/Sesi Eşleştir/Hece Kur) kademeli hata protokolü eklendi — 1. yanlışta nötr tekrar, 2.'de doğru şıkka görsel ipucu, 3.'te doğru modellenip tur biter ve ses `state.reviewQueue`'ya alınır. `okuma-kasifi-v2` şemasına `reviewQueue` alanı eklendi (geriye uyumlu). Smoke test'e 4 yeni kontrol.
 
 ---
 

@@ -83,6 +83,24 @@ const testDriver = `
     check("award() akışı hatasız çalıştı (hata: " + e.message + ")", false);
   }
 
+  // --- 5) E2.1 Kademeli hata protokolü: 3. yanlışta doğru gösterilip tekrar kuyruğuna alınıyor mu? ---
+  try {
+    state = fresh();
+    play = null;
+    roundBul(['a','n','e','t']);
+    const wrongBtn = document.querySelector('#choices .choice:not([data-right="1"])');
+    const correctBtn = document.querySelector('#choices .choice[data-right="1"]');
+    choose(wrongBtn, false);
+    check('1. yanlışta tur kilitlenmiyor', locked === false);
+    choose(wrongBtn, false);
+    check('2. yanlışta doğru şıkka ipucu vurgusu eklendi', correctBtn.classList.contains('hint'));
+    choose(wrongBtn, false);
+    check('3. yanlışta tur kilitlendi (modelle+birlikte)', locked === true);
+    check('3. yanlışta hedef ses tekrar kuyruğuna eklendi', state.reviewQueue.includes(curTargets[0]));
+  } catch (e) {
+    check('Kademeli hata protokolü hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
