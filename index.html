@@ -472,15 +472,19 @@ const WORDBANK=[
   {w:'market',e:'🏪'},{w:'keman',e:'🎻'},{w:'kamera',e:'📷'},{w:'otel',e:'🏨'},{w:'terlik',e:'🥿'},
   {w:'kol',e:'💪'},{w:'tekne',e:'⛵'},{w:'metro',e:'🚇'}
 ];
+/* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
   {w:['el','ele'],       t:'El ele.'},
   {w:['at','al'],        t:'At al.'},
   {w:['o','el','ele'],   t:'O el ele.'},
   {w:['kola','al'],      t:'Kola al.'},
   {w:['kalem','al'],     t:'Kalem al.'},
-  {w:['nine','elma','al'], t:'Nine elma al.'}
+  {w:['nine','elma','al'], t:'Nine elma al.'},
+  {w:['nine','kutu','al'],  t:'Nine kutu al.'},
+  {w:['kral','armut','al'], t:'Kral armut al.'},
+  {w:['o','roket','al'],    t:'O roket al.'}
 ];
-const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma'];
+const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne'];
 /* E3.5: Okuma Kulübü metin bankası — data/metinler.json ile senkron. Her metin yalnız kendi
    `gerekli` seslerinden kurulu (Kâşif metni okusa da çocuk seslerini tanıyabilsin diye); anlama
    soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı

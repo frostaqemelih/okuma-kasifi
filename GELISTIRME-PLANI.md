@@ -115,7 +115,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 ### E4 — İçerik Genişletme  → uzman: pedagoji + `data/mufredat.json`
 
-- [ ] **E4.1** 2. ses grubu tam oyunlaştırma: `o,k,u,r,ı,m` için `WORDS` + `STROKES` + `WORDBANK` + `SENTENCES` zaten kısmen var — eksikleri tamamla, ders 7–11 içeriğini `mufredat.json` ile hizala.
+- [x] **E4.1** 2. ses grubu tam oyunlaştırma: `o,k,u,r,ı,m` için `WORDS` + `STROKES` + `WORDBANK` + `SENTENCES` zaten kısmen var — eksikleri tamamla, ders 7–11 içeriğini `mufredat.json` ile hizala. — 2026-09-03
 - [ ] **E4.2** 3. grup `ü,s,ö,y,d,z`: `WORDS` (ör. ü→üzüm, s→su, ö→ördek, y→yıldız, d→davul, z→zil), `STROKES` yaz, ders 13–18 ekle.
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
@@ -216,6 +216,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E4.5 (rutin, Hafta 2 kilometre taşı başlangıcı): `WORDBANK` 12'den 40 kelimeye çıkarıldı — hepsi yalnızca 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m) kurulu, her biri net emoji ile (elma🍎, kartal🦅, roket🚀, market🏪, ırmak🌊, vb.). Kelimeler zaten `pool`'a göre filtrelendiğinden (Kelime Kur/Kelime Eşle) yeni sözcükler öğrenilen seslere göre otomatik açılıyor. Smoke test'e 3 yeni kontrol (kelime sayısı, ses kapsamı, emoji varlığı).
 - 2026-09-03 — E5.1 (rutin, Hafta 2 kilometre taşı): ses klip altyapısı eklendi — boş `AUDIO` haritası + `playClip(key,fallbackText,cb)` (klip varsa `Audio` ile çalar, yoksa/hata olursa `say()` TTS'ine düşer). `sayPrompt`/`repeatPrompt` artık merkezi olarak `playClip` üzerinden geçiyor, böylece tüm oyun turu anlatımları (15+ çağrı noktası tek yerden) E5.2'de (Hafta 4) `AUDIO` doldurulduğunda otomatik gerçek klibe geçecek — hiçbir çağrı noktası değişmedi. Smoke test'e 3 yeni kontrol.
 - 2026-09-03 — E3.5 (rutin, Hafta 2 kilometre taşı): Okuma Kulübü artık tek sabit metin yerine `TEXTS` metin bankasından besleniyor (`data/metinler.json` ile senkron) — `pickText(pool)` çocuğun açtığı seslere göre en ileri uygun metni seçer. İlk metin (`els-1`) yalnız 1. grup (a,n,e,t,i,l) seslerinden, ikincisi (`els-2`) 1.+2. grup kesişiminden kurulu; ayrıca eski metindeki henüz öğretilmeyen 'd'/'b' sesi hatası (aldı/baktı) düzeltildi — artık her metnin gövdesi gerçekten yalnız kendi `gerekli` seslerinden oluşuyor. `roundOkuma()` her çağrıda `READING=pickText(unlockedPool())` ile günceller. Smoke test'e 5 yeni kontrol.
+- 2026-09-03 — E4.1 (rutin, Hafta 2 kilometre taşı): 2. ses grubu (o,k,u,r,ı,m) gözden geçirildi — `WORDS`/`STROKES` zaten 12 sesin tamamını (1.+2. grup) kapsıyordu, `WORDBANK` E4.5 ile zaten genişlemişti; eksik kalan tek nokta Cümle Bahçesi'ydi (mevcut cümleler r/u/m seslerini neredeyse hiç kullanmıyordu) — 3 yeni cümle eklendi ("Nine kutu al.", "Kral armut al.", "O roket al.") ve `SENT_WORDS` dağıtıcı havuzu genişletildi. Böylece 2. grup, Hece Kur/Sesi Eşleştir/Harfi Bul (zaten E2.4'te varyantlı)+Kelime Kur (WORDBANK)+Cümle Bahçesi'nin hepsinde tam oynanabilir hâle geldi. Smoke test'e 4 yeni kontrol.
 
 ---
 

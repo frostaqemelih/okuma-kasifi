@@ -449,6 +449,20 @@ const testDriver = `
     check('Okuma Kulübü metin bankası (E3.5) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 23) E4.1 2. grup (o,k,u,r,ı,m) pekiştirmesi: yeni cümleler pool-güvenli ve r/u/m içeriyor ---
+  try {
+    check('SENTENCES en az 9 cümle içeriyor', SENTENCES.length >= 9);
+    const pool12b = 'anetilokurım'.split('');
+    const bad = SENTENCES.filter(s => !s.w.every(w => w.split('').every(c => pool12b.includes(c))));
+    check('SENTENCES kelimeleri yalnız 1.+2. grup seslerinden kurulu', bad.length === 0);
+    const usesGroup2 = SENTENCES.some(s => s.w.join('').split('').some(c => 'urm'.includes(c)));
+    check('En az bir cümle r/u/m (2. grup) seslerini içeriyor', usesGroup2);
+    check('SENT_WORDS pool-güvenli kelimelerden kurulu',
+      SENT_WORDS.every(w => w.split('').every(c => pool12b.includes(c))));
+  } catch (e) {
+    check('Cümle Bahçesi genişlemesi (E4.1) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
