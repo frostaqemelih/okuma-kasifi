@@ -401,12 +401,12 @@ const testDriver = `
     check('Okuma Kulübü (E3.4) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
-  // --- 20) E4.5 WORDBANK genişletme: 40+ kelime, hepsi 1.+2. grup seslerinden ---
+  // --- 20) E4.5 WORDBANK genişletme: 40+ kelime, 1.+2. grup kelimeleri o havuzla filtrelenince görünür ---
   try {
     check('WORDBANK en az 40 kelime içeriyor', WORDBANK.length >= 40);
     const pool12 = 'anetilokurım'.split('');
-    const bad = WORDBANK.filter(it => !it.w.split('').every(c => pool12.includes(c)));
-    check('WORDBANK kelimeleri yalnız 1.+2. grup seslerinden kurulu', bad.length === 0);
+    const group12Words = WORDBANK.filter(it => it.w.split('').every(c => pool12.includes(c)));
+    check('WORDBANK icinde en az 40 kelime yalniz 1.+2. grup seslerinden kurulu', group12Words.length >= 40);
     check('WORDBANK her kelimede emoji taşıyor', WORDBANK.every(it => it.e && it.e.length));
   } catch (e) {
     check('WORDBANK (E4.5) hatasız kontrol edildi (hata: ' + e.message + ')', false);
@@ -461,6 +461,21 @@ const testDriver = `
       SENT_WORDS.every(w => w.split('').every(c => pool12b.includes(c))));
   } catch (e) {
     check('Cümle Bahçesi genişlemesi (E4.1) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- 24) E4.2 3. grup başlangıcı: ü sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.ü tanımlı ve ü ile başlıyor', !!WORDS['ü'] && WORDS['ü'].word[0] === 'ü');
+    check('STROKES.ü tanımlı (çok vuruşlu: nokta+nokta+gövde+kuyruk)', Array.isArray(STROKES['ü']) && STROKES['ü'].length === 4);
+    const L13 = LESSONS.find(x => x.id === 13);
+    check('LESSONS içinde ders 13 "Ses ü" olarak tanımlı', !!L13 && L13.yeni.includes('ü'));
+    const poolWithU = poolUpTo(13);
+    check('poolUpTo(13) ü sesini içeriyor', poolWithU.includes('ü'));
+    const reachable = WORDBANK.filter(it => it.w.split('').every(c => poolWithU.includes(c)));
+    check('"kül" u ogrenilince WORDBANK icinde erisilebilir', reachable.some(it => it.w === 'kül'));
+    check('"üzüm" z öğrenilmeden erişilebilir değil (gated)', !reachable.some(it => it.w === 'üzüm'));
+  } catch (e) {
+    check('3. grup ü sesi (E4.2) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
   return results;

@@ -49,7 +49,8 @@
     "u": { "tur": "unlu", "uzatilabilir": true, "ornek": ["uçak", "un", "uyku"], "sesletim": "uuu", "cizimVurus": 2, "karisir": ["o", "ü"] },
     "r": { "tur": "akici-unsuz", "uzatilabilir": true, "ornek": ["radyo", "resim", "kar", "nar"], "sesletim": "rrr", "cizimVurus": 2 },
     "ı": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ılık", "ırmak", "ışık"], "sesletim": "ııı", "cizimVurus": 1, "karisir": ["i"] },
-    "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 }
+    "m": { "tur": "surekli-unsuz", "uzatilabilir": true, "ornek": ["masa", "elma", "kum"], "sesletim": "mmm", "cizimVurus": 3 },
+    "ü": { "tur": "unlu", "uzatilabilir": true, "ornek": ["üzüm", "ütü", "ürün"], "sesletim": "üüü", "cizimVurus": 1, "karisir": ["u"] }
   },
 
   "ortakIskelet": [
@@ -167,6 +168,14 @@
       ],
       "basariOlcutuKesif": "12 sesin en az 8'ini işitsel tanır; ilk-ses eşlemede %70+; 6+ harfin ön-formunu doğru yönle çizer",
       "basariOlcutuCozumleme": "12 sesi %90 tanır/çizer; CV ve CVC heceleri akıcı birleştirir; 15+ sözcüğü akıcı okur; tanıdık metni okuyup 2 anlama sorusundan 1'ini yanıtlar"
+    },
+    {
+      "id": 13, "ad": "Ses ü", "yeniSesler": ["ü"], "yeniHarfler": ["ü"],
+      "beceriler": ["/ü/ ilk-ses avı", "/u/–/ü/ ayırt etme (kritik, dudak yuvarlaklığı)", "ü harfini çizme (iki nokta dâhil)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur"],
+      "basariOlcutu": "/u/ ve /ü/'yü ikili ayırt görevinde %80 ayırır; ü harfini (iki nokta dâhil) çizer; 'kü, ük, tü' hecelerini sesletir",
+      "kelimeler": ["kül"], "heceler": ["kü", "ük", "tü"], "cumleler": [],
+      "not": "3. grubun (ü,s,ö,y,d,z) ilk sesi. Diğer 5 sesi ders 14–18'de eklenecek."
     }
   ]
 }

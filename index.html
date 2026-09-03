@@ -442,7 +442,9 @@ const WORDS={
   a:{word:'arı',   emoji:'🐝'}, n:{word:'nine', emoji:'👵'}, e:{word:'ev',   emoji:'🏠'},
   t:{word:'top',   emoji:'⚽'}, i:{word:'iğne', emoji:'🪡'}, l:{word:'limon',emoji:'🍋'},
   o:{word:'orman', emoji:'🌲'}, k:{word:'kedi', emoji:'🐈'}, u:{word:'uçak', emoji:'✈️'},
-  r:{word:'radyo', emoji:'📻'}, 'ı':{word:'ışık',emoji:'💡'}, m:{word:'mum',  emoji:'🕯️'}
+  r:{word:'radyo', emoji:'📻'}, 'ı':{word:'ışık',emoji:'💡'}, m:{word:'mum',  emoji:'🕯️'},
+  /* E4.2: 3. grup (ü,s,ö,y,d,z) — sırayla eklenecek, şimdilik ilk ses ü. */
+  'ü':{word:'üzüm', emoji:'🍇'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -457,7 +459,8 @@ const LESSONS=[
   {id:9,  ad:'Ses u', yeni:['u']},
   {id:10, ad:'Ses r', yeni:['r']},
   {id:11, ad:'Ses ı ve m', yeni:['ı','m']},
-  {id:12, ad:'Kâşif Gösterisi', alt:'Kısa metin', yeni:[], rozet:'2. Grup Kâşifi 🏆', tip:'gosteri'}
+  {id:12, ad:'Kâşif Gösterisi', alt:'Kısa metin', yeni:[], rozet:'2. Grup Kâşifi 🏆', tip:'gosteri'},
+  {id:13, ad:'Ses ü', yeni:['ü']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -470,7 +473,9 @@ const WORDBANK=[
   {w:'kral',e:'👑'},{w:'et',e:'🥩'},{w:'ırmak',e:'🌊'},{w:'ot',e:'🌿'},{w:'not',e:'📝'},
   {w:'on',e:'🔟'},{w:'koala',e:'🐨'},{w:'inek',e:'🐄'},{w:'kartal',e:'🦅'},{w:'roket',e:'🚀'},
   {w:'market',e:'🏪'},{w:'keman',e:'🎻'},{w:'kamera',e:'📷'},{w:'otel',e:'🏨'},{w:'terlik',e:'🥿'},
-  {w:'kol',e:'💪'},{w:'tekne',e:'⛵'},{w:'metro',e:'🚇'}
+  {w:'kol',e:'💪'},{w:'tekne',e:'⛵'},{w:'metro',e:'🚇'},
+  /* E4.2: 3. grup ü sesi eklendi — 'kül' hemen erişilebilir, 'üzüm'/'üç' z/ç öğrenilince açılır. */
+  {w:'kül',e:'🔥'},{w:'üzüm',e:'🍇'},{w:'üç',e:'3️⃣'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -537,7 +542,9 @@ const STROKES={
   k:[ [[.38,.27],[.38,.73]], [[.60,.45],[.38,.57]], [[.44,.53],[.62,.73]] ],
   u:[ [[.36,.40],[.36,.62],[.43,.71],[.55,.70],[.62,.60]], [[.63,.40],[.63,.73]] ],
   r:[ [[.40,.40],[.40,.73]], [[.40,.50],[.48,.42],[.60,.41]] ],
-  m:[ [[.30,.40],[.30,.73]], [[.30,.50],[.36,.42],[.44,.41],[.49,.49],[.49,.73]], [[.49,.50],[.55,.42],[.63,.41],[.68,.49],[.68,.73]] ]
+  m:[ [[.30,.40],[.30,.73]], [[.30,.50],[.36,.42],[.44,.41],[.49,.49],[.49,.73]], [[.49,.50],[.55,.42],[.63,.41],[.68,.49],[.68,.73]] ],
+  /* E4.2: ü — u'nun gövdesi + kuyruğu, üstünde iki nokta (i'deki nokta deseniyle aynı: 2 yakın nokta). */
+  'ü':[ [[.40,.28],[.41,.29]], [[.58,.28],[.59,.29]], [[.36,.42],[.36,.64],[.43,.71],[.55,.70],[.62,.60]], [[.63,.42],[.63,.73]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
