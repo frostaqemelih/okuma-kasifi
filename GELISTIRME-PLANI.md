@@ -65,7 +65,7 @@ Haftalar yaklaşıktır; rutin her hafta o haftanın kilometre taşına ağırl�
 | **1** | **Öğrenme çekirdeği sağlam** | E2 (hata kurtarma + çeşitlilik + aralıklı tekrar), E3.1–E3.4 (değerlendirme, Okuma Kulübü), E6.1–E6.2 (Harf Çiz kılavuz + kademeler) |
 | **2** | **İçerik derinliği** | E4.1–E4.3 (2.–4. ses grupları oynanır), E3.5 (metin bankası), E4.5 (40+ kelime), E5.1 (ses klip altyapısı) |
 | **3** | **Premium & para kazanma** | E8 tamamı: ücretsiz/premium ayrımı, paywall ekranı, entitlement/lisans katmanı (stub ödeme), "premium'u aç" akışı, geri yükleme, aile planı, tanıtım kodu |
-| **4** | **Yayın cilası** | E5.4 (erişilebilirlik geçişi), E7 (PWA ikonları, hata sınırları, KVKK metinleri), E9 (landing sayfası, mağaza görselleri, Capacitor iskeleti, fiyat sayfası, beta) |
+| **4** | **Yayın cilası + SES** | E5.4 (erişilebilirlik geçişi), **E5.2/E5.8 (yapay zekâ sesini değiştir — çocuk-dostu Türkçe ses, EN SON iş)**, E7 (PWA ikonları, hata sınırları, KVKK metinleri), E9 (landing sayfası, mağaza görselleri, Capacitor iskeleti, fiyat sayfası, beta) |
 
 **"Halka sunulabilir" tanımı:** PWA olarak kurulabilir; ilk 3 ders grubu oynanır (ücretsiz 1. grup + premium
 2.–3.); ebeveyn izleme + Ses Karnesi çalışır; paywall + entitlement katmanı hazır (gerçek ödeme sağlayıcı
@@ -124,8 +124,14 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 
 ### E5 — Ses & Erişilebilirlik  → uzman: `arastirma/teknik-mimari.md` (§ TTS 3 katman), Accessibility Auditor
 
-- [ ] **E5.1** Ses klip altyapısı: `AUDIO` haritası (ses/hece/kelime → dosya yolu veya dataURI) + `playClip(key, fallbackText)` — klip varsa `Audio` çal, yoksa `say()`. Boş harita + TTS fallback ile başla.
-- [ ] **E5.2** Harf/hece için placeholder ses klipleri üretme betiği/talimatı (gerçek kayıt veya onaylı TTS toplu üretim — `arastirma/teknik-mimari.md`).
+> **KULLANICI NOTU (2026-09-03):** Yapay zekâ SESİ (şu an tarayıcı `SpeechSynthesis`) değiştirilecek —
+> daha doğal, çocuk-dostu Türkçe ses (Azure Neural / ElevenLabs / gömülü insan kaydı). Ama bu
+> **EN SON aşama**: önce E2–E4 (öğrenme çekirdeği + içerik) ve E8 (premium) bitsin. E5.1 (altyapı)
+> erken yapılabilir; E5.2/E5.8 (gerçek ses üretimi + entegrasyon) Hafta 4'e ertelendi.
+
+- [ ] **E5.1** Ses klip altyapısı: `AUDIO` haritası (ses/hece/kelime → dosya yolu veya dataURI) + `playClip(key, fallbackText)` — klip varsa `Audio` çal, yoksa `say()`. Boş harita + TTS fallback ile başla. (Bu erken yapılabilir — sadece iskele.)
+- [ ] **E5.2** `[Hafta 4 / EN SON]` Harf/hece/cümle için gerçek ses klipleri: çocuk-dostu Türkçe ses seçimi (Azure Neural tr-TR / ElevenLabs / insan kaydı — `arastirma/teknik-mimari.md` § TTS), toplu üretim, `AUDIO` haritasını doldur.
+- [ ] **E5.8** `[Hafta 4 / EN SON]` Tarayıcı TTS'i tamamen bırak: tüm sesletim `playClip` üzerinden gömülü/CDN klipler; `say()` yalnızca acil yedek. Ses tutarlılığı testi.
 - [ ] **E5.3** Ses hız/tekrar kontrolü: yavaş/normal, "bir daha" her ekranda tutarlı.
 - [ ] **E5.4** Erişilebilirlik geçişi: her interaktif öğede görünür `:focus-visible`, `role`/`aria-label`, klavye ile tam oynanabilirlik, `prefers-reduced-motion` tüm animasyonlarda.
 - [ ] **E5.5** Disleksi-dostu görünüm toggle'ı (ebeveyn ayarı): geniş harf/satır aralığı, düşük kontrast yerine sıcak zemin, tüm metin sola hizalı, serif değil.
