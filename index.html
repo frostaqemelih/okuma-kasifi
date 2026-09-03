@@ -902,6 +902,13 @@ function roundHece(pool){
   locked=false; curWrongCount=0;
   const sy=syllablesFor(pool);
   if(sy.length<3){ roundSes(pool); return; }
+  const r=Math.random();
+  if(r<1/3) roundHeceListen(sy);
+  else if(r<2/3) roundHecePic(sy);
+  else roundHeceMissing(pool,sy);
+}
+function roundHeceListen(sy){
+  // E2.4(a): hece tanı — dinle ve doğru heceyi seç.
   const t=rnd(sy); curTargets=t.split('');
   const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
   const opts=shuffle([t,...shuffle(sy.filter(x=>x!==t)).slice(0,need)]);
@@ -909,6 +916,36 @@ function roundHece(pool){
   playArea.innerHTML=stageHTML(`<span>🧩</span>`);
   paint(opts.map(s=>({glyph:s,key:s})),'c3',o=>o.key===t);
   sayPrompt(`Hece kuralım. ${t[0]}… ${t[1]}… ${t}. Hangisi ${t}?`);
+}
+function roundHecePic(sy){
+  // E2.4(b): hece→resim — bu heceyle başlayan kelimenin resmini bul.
+  const words=allKnownWords();
+  const candidates=sy.filter(s=>words.some(w=>w.w.startsWith(s)));
+  if(!candidates.length){ roundHeceListen(sy); return; }
+  const t=rnd(candidates); curTargets=t.split('');
+  const matching=words.filter(w=>w.w.startsWith(t));
+  const target=rnd(matching);
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distr=shuffle(words.filter(w=>!w.w.startsWith(t))).slice(0,need);
+  const opts=shuffle([{emoji:target.e,cap:target.w,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  qtext.textContent=`«${t}» hecesiyle başlayan resim hangisi?`;
+  playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Dinle. ${t}… ${t} hecesiyle başlayan resim hangisi?`);
+}
+function roundHeceMissing(pool,sy){
+  // E2.4(c): eksik harfi bul — heceyi tamamlayan harfi seç.
+  const t=rnd(sy); curTargets=t.split('');
+  const pos=Math.random()<0.5?0:1;
+  const missing=t[pos];
+  const shown=pos===0?('_'+t[1]):(t[0]+'_');
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distr=shuffle(pool.filter(x=>x!==missing)).slice(0,need);
+  const opts=shuffle([missing,...distr]);
+  qtext.textContent=`«${shown}» — eksik harf hangisi?`;
+  playArea.innerHTML=stageHTML(`<span class="glyph">${shown}</span>`);
+  paint(opts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===missing);
+  sayPrompt(`${t}. Eksik harf hangisi?`);
 }
 function choose(el,right){
   if(locked) return;

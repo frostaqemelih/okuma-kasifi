@@ -333,6 +333,28 @@ const testDriver = `
     check('Sesi Eşleştir çeşitliliği (E2.4 b/c) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 17) E2.4 Hece Kur çeşitliliği: (b) hece→resim, (c) eksik harfi bul ---
+  try {
+    const origRandom = Math.random;
+    const fullPool = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    state = fresh();
+    recentRounds = [];
+
+    Math.random = () => 0.5; // (b) hece→resim
+    roundHece(fullPool);
+    check('roundHece (b) varyantı doğru soru metnini gösteriyor', qtext.textContent.includes('hecesiyle başlayan'));
+    check('roundHece (b) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = () => 0.99; // (c) eksik harfi bul
+    roundHece(fullPool);
+    check('roundHece (c) varyantı "eksik harf" soru metnini gösteriyor', qtext.textContent.includes('eksik harf'));
+    check('roundHece (c) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = origRandom;
+  } catch (e) {
+    check('Hece Kur çeşitliliği (E2.4 b/c) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
