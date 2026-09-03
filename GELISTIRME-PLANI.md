@@ -15,10 +15,14 @@
 2. **Backlog'dan sıradaki `[ ]` maddeyi seç** (bir epik içinde yukarıdan aşağıya; epikler arası: E1 → E2 → E3 → E4 → E5 → E6 döngüsel, ama "acil" etiketli maddeler öne alınır).
 3. Gerekiyorsa ilgili uzman bakış açısını benimse (madde `→ uzman:` ile işaretli). Karmaşık maddelerde önce `arastirma/` klasöründeki ilgili raporu oku.
 4. Değişikliği **yalnızca `index.html`** (ve gerekiyorsa `data/`, yeni asset) üzerinde yap. Tek dosya mimarisi korunur.
-5. **Test:** Node ile hızlı sözdizimi kontrolü + mümkünse başsız tarayıcı kontrolü. En azından:
-   - `node --check` yerine: HTML içindeki script'i ayıklayıp `node -e` ile parse et, ya da
-   - Basit bir `test/smoke.mjs` ile jsdom yoksa en azından string/DOM kontrolü.
-   - Manuel test adımlarını commit mesajına yaz.
+5. **Test — ZORUNLU, geçmeden commit yok:**
+   - `test/` + `package.json` yoksa ilk çalışmada kur: `npm init -y`, `npm i -D jsdom`, `test/smoke.mjs`
+     (index.html'i jsdom'a yükler; tüm `.screen` ekranları DOM'da mı, global veri yapıları — `LESSONS`,
+     `WORDS`, `STROKES`, `SENTENCES` — tutarlı mı, `startGame`/`openLesson` hata veriyor mu, bir turda
+     doğru cevapla `award()`'a ulaşılıyor mu). `npm test` bunu çalıştırsın.
+   - Her çalışmada: `<script>` bloğunu geçici `.mjs`'e çıkar → `node --check` (sözdizimi) + `npm test`.
+   - İkisi de yeşil değilse commit ETME, değişikliği geri al.
+   - Commit gövdesine `TEST:` satırıyla ne doğrulandığını yaz.
 6. **Commit:** açıklayıcı Türkçe mesaj + `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`. `git push`.
 7. Bu belgede maddeyi `[x]` yap, altına 1 satır "ne yapıldı" notu ekle. `## Değişiklik günlüğü`'ne tarihli satır ekle.
 8. Bir çalışmada **1–3 madde** bitir. Büyük maddeyi alt maddelere böl, hepsini birden yapma.
