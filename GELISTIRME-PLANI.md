@@ -2,7 +2,10 @@
 
 > Bu belge, projeyi otonom olarak geliştiren ajanın **tek kaynak talimatıdır**.
 > Her çalışmada: en üstteki `[ ]` işaretli maddeyi al → uygula → test et → commit et → `[x]` yap → bu belgeyi güncelle.
-> Hedef: 1–2 ay boyunca, her gün küçük ama sağlam bir ilerleme.
+>
+> **HEDEF: ~1 ay içinde halka sunulabilir bir sürüm** (önce PWA/web, sonra Capacitor ile mağaza).
+> Ücretsiz çekirdek + premium (ücretli) katman olacak. Yol haritası: § 1.5.
+> Rutin sık çalışır (birkaç saatte bir) — her çalışma görünür + test edilmiş bir ilerleme.
 
 ---
 
@@ -12,7 +15,7 @@
 
 **Bir çalışmanın adımları:**
 1. `git pull` (varsa). Bu belgeyi ve `README.md`'yi oku.
-2. **Backlog'dan sıradaki `[ ]` maddeyi seç** (bir epik içinde yukarıdan aşağıya; epikler arası: E1 → E2 → E3 → E4 → E5 → E6 döngüsel, ama "acil" etiketli maddeler öne alınır).
+2. **Backlog'dan sıradaki `[ ]` maddeyi seç.** Öncelik: (a) `acil` etiketli her şey, (b) o haftanın § 1.5 kilometre taşına ait maddeler, (c) epik sırası E1→E2→…→E9 içinde yukarıdan aşağıya. Bir epik bitince sıradakine geç; hepsi biterse E2/E3/E4'e yeni varyant/içerik ekle.
 3. Gerekiyorsa ilgili uzman bakış açısını benimse (madde `→ uzman:` ile işaretli). Karmaşık maddelerde önce `arastirma/` klasöründeki ilgili raporu oku.
 4. Değişikliği **yalnızca `index.html`** (ve gerekiyorsa `data/`, yeni asset) üzerinde yap. Tek dosya mimarisi korunur.
 5. **Test — ZORUNLU, geçmeden commit yok:**
@@ -48,8 +51,25 @@ oyunlaştırılmış ve sese dayalı öğreten uygulama. Ayrıntı: `TASLAK.md`,
 
 **Şu anki durum (v0):** onboarding + yaş modu (Keşif 4–5 / Çözümleme 6–7) · 12 derslik keşif
 haritası (kilit + rozet) · 6 mini oyun (Harfi Bul, Sesi Eşleştir, Hece Kur, Kelime Kur, Cümle
-Bahçesi, Harf Çiz) · Ses Karnesi (per-ses tanısal rapor) · serbest oyun · ebeveyn paneli ·
-tarayıcı TTS · yerel ilerleme.
+Bahçesi, Harf Çiz) · Ses Karnesi (per-ses tanısal rapor) · serbest oyun · ebeveyn izleme sayfası
+(5 sekme) · tarayıcı TTS · yerel ilerleme.
+
+---
+
+## 1.5 — 1 Aylık Yol Haritası (halka sunum hedefi)
+
+Haftalar yaklaşıktır; rutin her hafta o haftanın kilometre taşına ağırlık verir.
+
+| Hafta | Kilometre taşı | Kapsam |
+|---|---|---|
+| **1** | **Öğrenme çekirdeği sağlam** | E2 (hata kurtarma + çeşitlilik + aralıklı tekrar), E3.1–E3.4 (değerlendirme, Okuma Kulübü), E6.1–E6.2 (Harf Çiz kılavuz + kademeler) |
+| **2** | **İçerik derinliği** | E4.1–E4.3 (2.–4. ses grupları oynanır), E3.5 (metin bankası), E4.5 (40+ kelime), E5.1 (ses klip altyapısı) |
+| **3** | **Premium & para kazanma** | E8 tamamı: ücretsiz/premium ayrımı, paywall ekranı, entitlement/lisans katmanı (stub ödeme), "premium'u aç" akışı, geri yükleme, aile planı, tanıtım kodu |
+| **4** | **Yayın cilası** | E5.4 (erişilebilirlik geçişi), E7 (PWA ikonları, hata sınırları, KVKK metinleri), E9 (landing sayfası, mağaza görselleri, Capacitor iskeleti, fiyat sayfası, beta) |
+
+**"Halka sunulabilir" tanımı:** PWA olarak kurulabilir; ilk 3 ders grubu oynanır (ücretsiz 1. grup + premium
+2.–3.); ebeveyn izleme + Ses Karnesi çalışır; paywall + entitlement katmanı hazır (gerçek ödeme sağlayıcı
+anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlilik metinleri var; landing sayfası var.
 
 ---
 
@@ -120,14 +140,47 @@ tarayıcı TTS · yerel ilerleme.
 - [ ] **E6.4** "Havada çiz" ısınması (ders 0 zaten var) + parmak kası ısınma çizgi çalışmaları (dalga, zikzak, spiral).
 - [ ] **E6.5** Büyük harf çizimi (ayrı `STROKES_UPPER`).
 
-### E7 — Yayın Hazırlığı (sona doğru)
+### E7 — Sağlamlık & PWA
 
-- [ ] **E7.1** PWA: gerçek `icon-192.png`/`icon-512.png` (canvas ile maskottan üret), `manifest.json` düzelt, service worker sürüm yönetimi, "ana ekrana ekle" ipucu.
-- [ ] **E7.2** İlk açılış hızı: font `display=swap` + kritik CSS satır içi (zaten), gereksiz reflow yok.
-- [ ] **E7.3** KVKK aydınlatma + gizlilik + kullanım şartları metinleri (`arastirma/gizlilik-uyum.md`'den) — ebeveyn bölümünde, sade dille.
-- [ ] **E7.4** Hata sınırları: `try/catch` + kullanıcıya "bir şeyler ters gitti, Kâşif'i yeniden başlat" ekranı; `localStorage` bozuksa sıfırdan başlat.
-- [ ] **E7.5** i18n iskeleti (metinleri `T('anahtar')` ile dışarı al) — ileride dil genişletme için.
-- [ ] **E7.6** Basit landing/tanıtım sayfası (`site/index.html`) — ne olduğunu anlatan, demoya link.
+- [ ] **E7.1** PWA: gerçek `icon-192.png`/`icon-512.png` (canvas ile maskottan data-URI üret veya repo'ya ekle), `manifest.json` düzelt (kategori, ekran görüntüsü alanları), service worker sürüm yönetimi (`CACHE` sürümü otomatik), "ana ekrana ekle" ipucu (iOS/Android ayrı).
+- [ ] **E7.2** İlk açılış hızı: kritik CSS satır içi (zaten), font `display=swap`, gereksiz reflow yok, ilk boya < 1.5 sn (Lighthouse notu commit'e).
+- [ ] **E7.3** KVKK aydınlatma + gizlilik politikası + kullanım şartları metinleri (`arastirma/gizlilik-uyum.md`'den, sade dille) — ebeveyn bölümünde ayrı bir "Yasal / Gizlilik" sekmesi.
+- [ ] **E7.4** Hata sınırları: global `try/catch` + "bir şeyler ters gitti, Kâşif'i yeniden başlat" ekranı; `localStorage` bozuksa güvenli sıfırlama; `speechSynthesis` yoksa sessiz moda düş.
+- [ ] **E7.5** i18n iskeleti: tüm kullanıcı metinlerini `T('anahtar')` ile bir `STR` sözlüğüne al (tek dil `tr`, ama yapı hazır).
+- [ ] **E7.6** Çevrimdışı sağlamlık: service worker tüm asset'leri önbelleğe alır, uçak modunda tam çalışır, "çevrimdışısın" göstergesi yok (sessizce çalışsın).
+- [ ] **E7.7** Otomatik güncelleme: yeni sürüm yayınlanınca nazik "yenile" bildirimi (çocuğu bölmeden).
+
+### E8 — Freemium & Premium  → uzman: `arastirma/rakip-analizi.md` (§ fiyatlandırma), Pricing Analyst
+
+**Model (rakip analizinden):** kalıcı ücretsiz çekirdek + aylık ~149–199 TL / yıllık ~999–1.499 TL +
+tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal (Morpa'nın Şikayetvar tuzağına düşme).
+
+**Ücretsiz kapsam:** 1. ses grubu (a,n,e,t,i,l), ders 0–6, 6 oyun tipinin hepsi (kısıtsız), temel ebeveyn izleme, Ses Karnesi.
+**Premium kapsam:** 2.–5. ses grupları + ders 7–40+, Okuma Kulübü & metin bankası, ayrıntılı ebeveyn raporu + PDF + haftalık özet, çoklu çocuk profili, çevrimdışı indirme, Kâşif koleksiyon ödülleri, "zayıf seslere odak turu", yazdırılabilir çalışma sayfaları.
+
+**KURAL:** Ödeme sağlayıcısı entegrasyonu STUB ile yapılır. Gerçek anahtar/hesap (Stripe, RevenueCat, iyzico, App Store/Play faturalama) **repoya girmez** — kullanıcıdan gelir, `.env` / build-time. Ajan yalnızca arayüz + entitlement mantığı + stub sağlayıcı yazar, "premium'u aç" düğmesi test modunda entitlement'ı açar.
+
+- [ ] **E8.1** Entitlement katmanı: `state.entitlement = { plan:'free'|'premium', source, since, expires }` + `isPremium()` yardımcı + `requirePremium(feature)` (premium değilse paywall aç). `localStorage` şeması `v3` + göç.
+- [ ] **E8.2** Özellik bayrakları: `FEATURES` haritası (her premium özellik → `free`/`premium`). Kilitli içerik haritada/menüde 🔒 rozetiyle görünür ama tıklayınca paywall.
+- [ ] **E8.3** Paywall ekranı (`s-paywall`): ne kazanılıyor (3–4 madde, çocuk değil ebeveyn diliyle), 3 plan kartı (aylık/yıllık/tek seferlik), "yıllık = 2 ay bedava" vurgusu, küçük "belki sonra". Ebeveyn kapısının arkasında.
+- [ ] **E8.4** Stub satın alma akışı: "Satın Al" → ebeveyn kapısı → sahte sağlayıcı ekranı ("bu bir test sürümüdür") → başarı → `entitlement.plan='premium'`. Gerçek entegrasyon noktası `buy(planId)` fonksiyonu, `// TODO: gerçek sağlayıcı` ile işaretli.
+- [ ] **E8.5** "Satın alımları geri yükle" (aynı cihazda entitlement kaybolursa) + tanıtım/hediye kodu alanı (`PROMO` haritası, stub).
+- [ ] **E8.6** Aile planı / çoklu çocuk profili: premium'da 3'e kadar çocuk profili (`state.profiles[]`, aktif profil seçimi), her profilin ayrı ilerlemesi. Onboarding'de "kimin için?" ekranı.
+- [ ] **E8.7** Ücretsiz kullanıcıya nazik premium teşviki: ders 6 bitince "2. grubu keşfet" kartı (baskı yok, kapatılabilir), ebeveyn panelinde "premium'da neler var" bölümü. Çocuğa ASLA satış göstermez.
+- [ ] **E8.8** Premium rozeti/teşekkür: satın alan ebeveyne "teşekkürler" + çocuğa özel Kâşif kıyafeti/eşya (koleksiyon).
+- [ ] **E8.9** Fiyatlandırma verisi: `data/plans.json` (plan id, ad, TL fiyat, periyot, özellik listesi) — hem paywall hem landing sayfası buradan okur.
+- [ ] **E8.10** Deneme süresi: 7 gün premium deneme (ebeveyn başlatır, tek sefer), bitiminde nazik hatırlatma, otomatik ücret YOK (deneme = sadece kilit açık, süre bitince kilitlenir).
+
+### E9 — Yayın & Dağıtım  → uzman: App Store Optimizer, Growth Hacker
+
+- [ ] **E9.1** Landing / tanıtım sayfası (`site/index.html`, ayrı tek dosya): ne, kimin için, 3 ekran görüntüsü, "ücretsiz başla" + fiyat özeti, SSS, KVKK linki. Aynı tasarım dili (Baloo 2 + Nunito).
+- [ ] **E9.2** Fiyat sayfası (`site/fiyatlar.html` veya landing içinde): 3 plan, karşılaştırma tablosu, "okul/kurum için" iletişim.
+- [ ] **E9.3** Mağaza metaverisi taslağı (`site/store-listing.md`): uygulama adı, kısa/uzun açıklama, anahtar kelimeler, yaş derecesi, "Designed for Families" / Kids Category notları (`arastirma/gizlilik-uyum.md`).
+- [ ] **E9.4** Capacitor iskeleti: `capacitor.config` + `README` talimatı (kod değişmeden `index.html`'i sarar). Gerçek build kullanıcıda.
+- [ ] **E9.5** Beta geri bildirim kanalı: ebeveyn bölümünde "geri bildirim gönder" — `mailto:` veya form linki (dış servis yok, sadece link).
+- [ ] **E9.6** Hafif kullanım ölçümü (gizlilik-dostu, opsiyonel, varsayılan KAPALI): sadece toplam/anonim sayaçlar cihazda; ebeveyn açarsa özet e-posta linki oluşturur. Üçüncü taraf analiz YOK.
+- [ ] **E9.7** Sürüm notları ekranı ("Bu sürümde yeni neler var") — çocuk değil ebeveyn için.
+- [ ] **E9.8** `CHANGELOG.md` (kullanıcı-yönlü) — her yayınlanabilir kilometre taşında güncelle.
 
 ---
 
@@ -135,15 +188,16 @@ tarayıcı TTS · yerel ilerleme.
 
 - 2026-09-03 — Repo oluşturuldu, GELISTIRME-PLANI.md eklendi. v0 durumu: 6 oyun + harita + Ses Karnesi.
 - 2026-09-03 — E1 (Ebeveyn İzleme Sayfası) tamamlandı: `s-parent` 5 sekme, 14 günlük grafik, ders logları, evde-etkinlik önerileri, ayarlar (disleksi/sessiz/hedef), JSON dışa/içe aktarma. `state` şeması genişledi (daily, lessonLog, settings) — hâlâ `v2` (geriye uyumlu merge).
+- 2026-09-03 — Plan yeniden düzenlendi: **~1 ay halka sunum hedefi** + § 1.5 haftalık yol haritası + **E8 (Freemium & Premium)** + **E9 (Yayın & Dağıtım)** epikleri eklendi. Rutin sıklığı artırıldı (birkaç saatte bir).
 
 ---
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
-- Çoklu çocuk profili (tek cihaz, birden çok kardeş)
-- Öğretmen/sınıf paneli (B2B — `arastirma/rakip-analizi.md`)
-- Ebeveyne haftalık e-posta/WhatsApp özeti (çift opt-in)
-- "Kâşif'in defteri": çocuğun çizdiği harflerin galerisi
-- Sesli komutla değil ama dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden)
-- Ödül olarak maskota kıyafet/eşya (ekonomi değil, koleksiyon)
-- Günlük "3 dakikalık Kâşif" hızlı görev
+- Öğretmen/sınıf paneli (B2B — `arastirma/rakip-analizi.md`), okul lisansı (öğrenci başı ~200–400 TL/yıl)
+- "Kâşif'in defteri": çocuğun çizdiği harflerin galerisi (premium)
+- Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium
+- Günlük "3 dakikalık Kâşif" hızlı görev + gün serisi ödülü
+- Ebeveyne haftalık WhatsApp özeti (çift opt-in, dış servis gerektirir — kullanıcı kararı)
+- Sesli okuma değerlendirmesi (Faz 2, `arastirma/teknik-mimari.md` — Azure Pronunciation Assessment)
+- Yıllık aboneye fiziksel "Kâşif rozet/çıkartma seti" (kargo — kullanıcı kararı)
