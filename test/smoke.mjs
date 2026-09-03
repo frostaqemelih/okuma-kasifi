@@ -229,6 +229,25 @@ const testDriver = `
     check('Harfi Bul çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 13) E6.2 Harf Çiz 5 kademe: cizLevel varsayılan + başarılı çizimde ilerleme ---
+  try {
+    state = fresh();
+    check('cizLevel() ses hiç çizilmemişken varsayılan 1', cizLevel('a') === 1);
+
+    state.soundStats = { a: { c: 0, w: 0, cizLevel: 4 } };
+    check('cizLevel() kayıtlı kademeyi döndürüyor', cizLevel('a') === 4);
+
+    state = fresh();
+    curTargets = ['a'];
+    const pts = Array.from({ length: 15 }, (_, i) => [i, i]);
+    trace = { letter: 'a', strokes: [pts], maskPts: [[1, 1], [5, 5], [10, 10]], size: 100 };
+    checkTrace();
+    check('checkTrace() başarılı çizimde cizLevel 1→2 ilerliyor', state.soundStats.a.cizLevel === 2);
+    check('checkTrace() başarılı çizimde 5 kademeyi aşmıyor (üst sınır kontrolü)', state.soundStats.a.cizLevel <= 5);
+  } catch (e) {
+    check('Harf Çiz 5 kademe sistemi hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

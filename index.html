@@ -942,6 +942,8 @@ function roundCumle(pool){
 
 /* --- Harf Çiz --- */
 let trace={};
+/* E6.2: harf çizim kademesi (1 kılavuzlu iz → 5 bellekten), her başarılı çizimde ilerler. */
+function cizLevel(s){ const st=state.soundStats[s]; return (st && st.cizLevel) || 1; }
 function roundCiz(sounds){
   locked=false;
   const t=rnd(sounds); curTargets=[t];
@@ -955,7 +957,7 @@ function roundCiz(sounds){
       <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
     </div>
     <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
-  setupTrace(t);
+  setupTrace(t,cizLevel(t));
   roundPrompt=`${t} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
   say(`${t} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
@@ -982,7 +984,9 @@ function checkHazirlik(){
   locked=true; traceMsg('Harika! ✨');
   say('Çok güzel! Ellerin hazır.', award);
 }
-function setupTrace(letter){
+function setupTrace(letter,level){
+  // E6.2: 5 kademe — (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) yalnız başlangıç noktası, (5) bellekten.
+  level=level||1;
   const wrap=document.getElementById('traceWrap');
   const cv=document.getElementById('traceCanvas');
   const dpr=Math.min(window.devicePixelRatio||1,2);
@@ -999,13 +1003,23 @@ function setupTrace(letter){
   let maskPts=[];
   function drawGuide(withHint){
     ctx.clearRect(0,0,size,size);
-    if(letter){
-      ctx.fillStyle=guide; ctx.textAlign='center'; ctx.textBaseline='middle';
+    if(letter && level<=3){
+      ctx.save();
+      ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.font=`800 ${size*0.78}px "Baloo 2", sans-serif`;
-      ctx.fillText(letter, size/2, size/2+size*0.02);
+      if(level===2){
+        ctx.strokeStyle=guide; ctx.lineWidth=Math.max(1,size*0.012);
+        ctx.setLineDash([size*0.022, size*0.02]);
+        ctx.strokeText(letter, size/2, size/2+size*0.02);
+      }else{
+        ctx.globalAlpha = level===3 ? 0.28 : 1;
+        ctx.fillStyle=guide;
+        ctx.fillText(letter, size/2, size/2+size*0.02);
+      }
+      ctx.restore();
     }
-    if(path && withHint!==false){
-      // başlangıç noktası (yeşil) + ilk yön oku
+    if(path && withHint!==false && level<=4){
+      // başlangıç noktası (yeşil) + ilk yön oku — kademe 5'te (bellekten) gösterilmez
       const s0=path[0], p0=s0[0], p1=s0[1]||s0[0];
       ctx.fillStyle=ok;
       ctx.beginPath(); ctx.arc(p0[0],p0[1],size*0.045,0,7); ctx.fill();
@@ -1085,6 +1099,9 @@ function checkTrace(){
   const coverage=cov/Math.max(maskPts.length,1), accuracy=acc/Math.max(pts.length,1);
   if(coverage>0.5 && accuracy>0.4){
     locked=true; traceMsg('Harika! 🌟'); creditSounds(true);
+    // E6.2: başarılı çizimde kademe ilerler (kılavuz azalır); sınır 5 (bellekten)
+    const cst=state.soundStats[trace.letter];
+    if(cst){ cst.cizLevel=Math.min(5,(cst.cizLevel||1)+1); save(); }
     say(rnd(['Çok güzel yazdın!','Harika bir '+trace.letter+' oldu!','Aferin, tam üstünden geçtin!',
              'Çok iyi denedin, harika oldu!','Elin çok güzel çalıştı!','Bir Kâşif gibi yazdın!']), award);
   }else{

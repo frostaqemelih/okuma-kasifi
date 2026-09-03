@@ -142,7 +142,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 ### E6 — Harf Çiz Derinleştirme  → uzman: pedagoji raporu (§ Yazma, 5 kademe)
 
 - [ ] **E6.1** Çok vuruşlu harflerde **vuruş vuruş kılavuz**: aktif vuruşu vurgula, biri bitince sonrakine geç, sıra dışı çizimde nazik uyar.
-- [ ] **E6.2** 5 kademe: (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) sadece başlangıç noktası, (5) bellekten. `state.soundStats[s].cizLevel` ile ilerlet.
+- [x] **E6.2** 5 kademe: (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) sadece başlangıç noktası, (5) bellekten. `setupTrace(letter, level)` seviyeye göre kılavuzu çiziyor; `cizLevel(s)` = `state.soundStats[s].cizLevel` (varsayılan 1); `checkTrace()` başarılı çizimde kademeyi 1 artırıyor (üst sınır 5). — 2026-09-03
 - [ ] **E6.3** Yön hatası tespiti: çizim yönü kılavuzun tersineyse "yukarıdan aşağı gidelim" gibi uyarı.
 - [ ] **E6.4** "Havada çiz" ısınması (ders 0 zaten var) + parmak kası ısınma çizgi çalışmaları (dalga, zikzak, spiral).
 - [ ] **E6.5** Büyük harf çizimi (ayrı `STROKES_UPPER`).
@@ -205,6 +205,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E3.1 (rutin, Hafta 1 kilometre taşı): her ders sonuna 3 soruluk hızlı değerlendirme eklendi (`assessSteps`); 2/3+ doğru geçti sayılır, değilse ders yine tamamlanır ama harita düğümünde `🔁 tekrar önerilir` işareti (`state.lessonLog[id].needsReview`) beliriyor. Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E2.3 (rutin, Hafta 1 kilometre taşı): aralıklı tekrar (basit Leitner) — her ses için `strength` (0–5) ve `lastSeen` izleniyor, ders başında düşük/eski sesler için 1-2 turluk "ısınma" adımları ekleniyor (`warmupSteps`, `reviewSteps`'ten de önce). Smoke test'e 4 yeni kontrol.
 - 2026-09-03 — E2.4 kısmi (rutin, Hafta 1 kilometre taşı): Harfi Bul'a ikinci varyant eklendi — (a) resim→harf (mevcut) ve (b) "duyduğun ses hangi harf?" arasında `roundBul()` rastgele seçiyor. Sesi Eşleştir/Hece Kur varyantları ve Harfi Bul (c) sonraki çalışmaya bırakıldı. Smoke test'e 3 yeni kontrol.
+- 2026-09-03 — E6.2 (rutin, Hafta 1 kilometre taşı): Harf Çiz'e 5 kademeli kılavuz sistemi eklendi — `setupTrace(letter,level)` seviyeye göre tam/nokralı/soluk/yalnız-başlangıç-noktası/hiç kılavuz göstermiyor; her başarılı çizimde `state.soundStats[s].cizLevel` bir artıyor (üst sınır 5). Smoke test'e 4 yeni kontrol.
 
 ---
 
