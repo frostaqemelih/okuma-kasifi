@@ -1591,6 +1591,36 @@ const testDriver = `
     check('Kelime Kur çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E2.5 zorluk uyarlaması genişletildi: Kelime Kur / Cümle Bahçesi çeldirici sayısı da uyarlanıyor ---
+  try {
+    const origRandomZorluk = Math.random;
+    state = fresh();
+    Math.random = () => 0.9; // (a) resim varyantı sabitlensin ki taş sayısı yalnızca zorluktan değişsin
+
+    recentRounds = [true, true, true, true, true]; // %100 -> zor
+    roundKelime(['a', 'n', 'e', 't', 'i', 'l']);
+    const zorTiles = wordState.tiles.length, zorTarget = wordState.target.length;
+    recentRounds = [false, false, false, true, false]; // %20 -> kolay
+    roundKelime(['a', 'n', 'e', 't', 'i', 'l']);
+    const kolayTiles = wordState.tiles.length;
+    check('roundKelime (zor) en az kolay kadar çeldirici taş sunuyor', (zorTiles - zorTarget) >= (kolayTiles - wordState.target.length));
+
+    recentRounds = [true, true, true, true, true]; // zor
+    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    const zorCumleTiles = wordState.tiles.length, zorCumleTarget = wordState.target.length;
+    recentRounds = [false, false, false, true, false]; // kolay
+    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    check('roundCumle (kolay) hiç çeldirici kelime eklemiyor', wordState.tiles.length === wordState.target.length);
+    check('roundCumle (zor) kolaydan daha fazla/eşit çeldirici kelime sunuyor', (zorCumleTiles - zorCumleTarget) >= (wordState.tiles.length - wordState.target.length));
+
+    recentRounds = [];
+    Math.random = origRandomZorluk;
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('Kelime Kur/Cümle Bahçesi zorluk uyarlaması hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- Kendi Hikayeni Kur (Fikir havuzu, premium): serbest kelime seçimiyle açık uçlu cümle kurma ---
   try {
     check('FEATURES.hikaye premium olarak isaretli', FEATURES.hikaye === 'premium');

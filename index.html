@@ -1990,7 +1990,11 @@ function roundKelime(pool){
   if(!cands.length){ roundHece(pool); return; }
   const it=rnd(cands);
   const target=it.w.split(''); curTargets=[...new Set(target)];
-  const distr=shuffle(pool.filter(c=>!target.includes(c))).slice(0, target.length<=3?1:2);
+  // E2.5 zorluk uyarlaması genişletildi: çeldirici harf sayısı da son turlardaki başarıya göre değişir.
+  const baseDistrN=target.length<=3?1:2, lvl=difficultyLevel();
+  const distrN=lvl==='zor'?baseDistrN+1:lvl==='kolay'?Math.max(1,baseDistrN-1):baseDistrN;
+  const distrPool=pool.filter(c=>!target.includes(c));
+  const distr=shuffle(distrPool).slice(0, Math.min(distrN, distrPool.length));
   wordState={target, tiles:shuffle([...target,...distr]), filled:[]};
   const listenOnly=Math.random()<0.5;
   qtext.textContent=listenOnly?'Dinle ve kelimeyi kur':'Harfleri sırayla koy';
@@ -2059,7 +2063,10 @@ function roundCumle(pool){
   if(!cands.length){ roundKelime(pool); return; }
   const it=rnd(cands);
   curTargets=[...new Set(it.w.join('').split(''))];
-  const distr=shuffle(SENT_WORDS.filter(w=>!it.w.includes(w) && w.split('').every(c=>pool.includes(c)))).slice(0,1);
+  // E2.5 zorluk uyarlaması genişletildi: çeldirici kelime sayısı da son turlardaki başarıya göre değişir.
+  const lvl=difficultyLevel(), distrN=lvl==='zor'?2:lvl==='kolay'?0:1;
+  const distrCands=SENT_WORDS.filter(w=>!it.w.includes(w) && w.split('').every(c=>pool.includes(c)));
+  const distr=shuffle(distrCands).slice(0, Math.min(distrN, distrCands.length));
   wordState={kind:'cumle', sep:' ', target:it.w.slice(), tiles:shuffle([...it.w,...distr]), filled:[]};
   qtext.textContent='Kelimeleri sırala, cümleyi kur';
   playArea.innerHTML=`
