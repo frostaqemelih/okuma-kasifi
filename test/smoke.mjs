@@ -14,6 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 const swJs = readFileSync(join(__dirname, '..', 'sw.js'), 'utf8');
 const manifestJson = readFileSync(join(__dirname, '..', 'manifest.json'), 'utf8');
+const siteHtml = readFileSync(join(__dirname, '..', 'site', 'index.html'), 'utf8');
 
 const dom = new JSDOM(html, { url: 'http://localhost/', runScripts: 'outside-only' });
 const { window } = dom;
@@ -1481,6 +1482,20 @@ pushCheck('HTML: "çevrimdışısın" gibi engelleyici bir gösterge YOK (sessiz
 // yüzünden görünür kalabiliyordu (author CSS her zaman UA varsayılanını geçersiz kılar) — gerçek
 // tarayıcıda çekilen ekran görüntüsüyle keşfedildi (#updateBar/#trialBox/#a2hsBar hep görünüyordu).
 pushCheck('CSS: global [hidden] kuralı display:none!important ile korunuyor (hidden ATTR override edilemiyor)', /\[hidden\]\{display:none!important\}/.test(html));
+
+// --- E9.1: landing / tanıtım sayfası (site/index.html, ayrı tek dosya) ---
+pushCheck('site/index.html: "Ücretsiz Başla" CTA uygulamaya (../index.html) bağlanıyor', /href="\.\.\/index\.html"/.test(siteHtml) && /Ücretsiz Başla/.test(siteHtml));
+pushCheck('site/index.html: 3 ekran görüntüsü referanslanıyor', (siteHtml.match(/screenshots\/[\w-]+\.png/g) || []).length >= 3);
+pushCheck('site/index.html: referans verilen 3 ekran görüntüsü dosyası gerçekten var', ['karsilama', 'kesif-haritasi', 'harf-ciz'].every(n => {
+  try { pngDims(join(__dirname, '..', 'site', 'screenshots', n + '.png')); return true; } catch { return false; }
+}));
+pushCheck('site/index.html: fiyatlandırma özeti PLANS ile aynı (179/1199/349 TL)', /179 TL/.test(siteHtml) && /1199 TL/.test(siteHtml) && /349 TL/.test(siteHtml));
+pushCheck('site/index.html: SSS bölümü var', /Sıkça sorulanlar|sıkça sorulanlar/.test(siteHtml) && /<details>/.test(siteHtml));
+pushCheck('site/index.html: KVKK/gizlilik bilgisine değiniyor', /KVKK/.test(siteHtml));
+pushCheck('site/index.html: çocuk güvenliği mesajı var (reklam yok, sohbet robotu değil)', /[Rr]eklam/.test(siteHtml) && /sohbet robotuyla konuşmaz/.test(siteHtml));
+pushCheck('site/index.html: harici <script> yok, tek istisna Google Fonts (mimari kuralı)', !/<script/.test(siteHtml) && (siteHtml.match(/(?:href|src)="(https?:\/\/[^"]+)"/g) || []).every(m => /fonts\.(googleapis|gstatic)\.com/.test(m)));
+pushCheck('site/index.html: aynı marka renk token\'larını kullanıyor (--primary:#f2795b)', /--primary:#f2795b/.test(siteHtml));
+pushCheck('site/index.html: koyu tema desteği var (prefers-color-scheme:dark)', /prefers-color-scheme:dark/.test(siteHtml));
 
 let failed = 0;
 for (const { name, pass } of results) {
