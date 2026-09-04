@@ -447,7 +447,7 @@ const WORDS={
   'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}, y:{word:'yol', emoji:'🛣️'},
   d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'},
   /* E4.3: 4. grup (ç,b,g,c,ş) — sırayla ekleniyor. */
-  'ç':{word:'çay', emoji:'☕'}
+  'ç':{word:'çay', emoji:'☕'}, b:{word:'balon', emoji:'🎈'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -470,7 +470,8 @@ const LESSONS=[
   {id:17, ad:'Ses d', yeni:['d']},
   {id:18, ad:'Ses z', yeni:['z']},
   {id:19, ad:'Kâşif Gösterisi 2', alt:'Kısa metin', yeni:[], rozet:'3. Grup Kâşifi 🏆', tip:'gosteri'},
-  {id:20, ad:'Ses ç', yeni:['ç']}
+  {id:20, ad:'Ses ç', yeni:['ç']},
+  {id:21, ad:'Ses b', yeni:['b']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -497,7 +498,9 @@ const WORDBANK=[
   /* E4.2 (f): z sesi eklendi — 3. grup tamam. 'zil'/'kazan' hemen erişilebilir; 'üzüm' de artık açık. */
   {w:'zil',e:'🔔'},{w:'kazan',e:'🍲'},
   /* E4.3 (a): ç sesi eklendi — 4. grup başlangıcı. 'çay' ç+önceki gruplardan, hemen erişilebilir. */
-  {w:'çay',e:'☕'}
+  {w:'çay',e:'☕'},
+  /* E4.3 (b): b sesi eklendi — 'balon'/'boya' b+önceki gruplardan, hemen erişilebilir. */
+  {w:'balon',e:'🎈'},{w:'boya',e:'🎨'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -578,7 +581,9 @@ const STROKES={
   /* E4.2 (f): z — tek zikzak vuruş (üst yatay + çapraz + alt yatay), 3. grup tamamlandı. */
   z:[ [[.34,.36],[.66,.36],[.35,.70],[.67,.70]] ],
   /* E4.3 (a): ç — açık eğri gövde (c gibi) + altına küçük çengel (kedilya). */
-  'ç':[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]], [[.50,.73],[.46,.79],[.51,.84]] ]
+  'ç':[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]], [[.50,.73],[.46,.79],[.51,.84]] ],
+  /* E4.3 (b): b — dik gövde (yukarıdan aşağı) + gövdenin ortasından sağa çıkan kabarcık (ilmek). */
+  b:[ [[.35,.27],[.35,.73]], [[.35,.55],[.44,.50],[.55,.51],[.63,.58],[.65,.67],[.58,.73],[.47,.73],[.38,.68]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */

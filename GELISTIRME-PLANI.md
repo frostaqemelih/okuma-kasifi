@@ -125,7 +125,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (f) **z** tam donanımlı eklendi + 3. grup rozeti: `mufredat.json` sesler.z+ders18+ders19, `WORDS.z` (zil), `STROKES.z` (tek zikzak vuruş), `LESSONS` id18 ("Ses z") + id19 ("Kâşif Gösterisi 2", `tip:'gosteri'`, rozet "3. Grup Kâşifi 🏆"), `WORDBANK`'a zil/kazan (ve daha önce gated olan "üzüm" artık erişilebilir). **E4.2 tamamlandı.** — 2026-09-03
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
   - [x] (a) **ç** tam donanımlı eklendi: `mufredat.json` sesler.ç+ders20, `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde+kedilya çengeli), `LESSONS` id20, `WORDBANK`'a çay☕. — 2026-09-04
-  - [ ] (b) **b** ekle (ders 21)
+  - [x] (b) **b** tam donanımlı eklendi: `mufredat.json` sesler.b+ders21, `WORDS.b` (balon🎈), `STROKES.b` (2 vuruş: dik gövde+kabarcık ilmek), `LESSONS` id21, `WORDBANK`'a balon🎈/boya🎨. — 2026-09-04
   - [ ] (c) **g** ekle (ders 22)
   - [ ] (d) **c** ekle (ders 23)
   - [ ] (e) **ş** ekle (ders 24) + 4. grup rozeti/Kâşif Gösterisi 3 (ders 25)
@@ -238,6 +238,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 ---
 
 - 2026-09-04 — E4.3 (a) (rutin, Hafta 2 kilometre taşı — 4. grup başlangıcı): "ç" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.ç` (patlayıcı ünsüz, c ile karışır) + ders 20; `index.html`'e `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde + altında küçük kedilya çengeli), `LESSONS` id20 ("Ses ç"), `ALL_LETTERS`'a ç/ş eklendi (Harfi Bul dağıtıcı havuzu için). `WORDBANK`'a çay☕ eklendi (ç+önceki gruplardan, hemen erişilebilir). Büyük madde (E4.3, 5 ses) alt adımlara bölündü; sıradaki alt adımlar b→g→c→ş. Smoke test'e 5 yeni kontrol.
+
+- 2026-09-04 — E4.3 (b) (rutin, Hafta 2 kilometre taşı): "b" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.b` (patlayıcı ünsüz) + ders 21; `index.html`'e `WORDS.b` (balon🎈), `STROKES.b` (dik gövde + gövde ortasından sağa çıkan kabarcık ilmeği), `LESSONS` id21 ("Ses b"). `WORDBANK`'a balon🎈/boya🎨 eklendi (ikisi de b+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: g (ders 22). Smoke test'e 6 yeni kontrol.
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

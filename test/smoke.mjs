@@ -570,6 +570,21 @@ const testDriver = `
     check('4. grup ç sesi (E4.3 a) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 31) E4.3 (b) 4. grup: b sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.b tanımlı ve b ile başlıyor', !!WORDS.b && WORDS.b.word[0] === 'b');
+    check('STROKES.b tanımlı (çok vuruşlu: gövde + kabarcık)', Array.isArray(STROKES.b) && STROKES.b.length === 2);
+    const L21 = LESSONS.find(x => x.id === 21);
+    check('LESSONS içinde ders 21 "Ses b" olarak tanımlı', !!L21 && L21.yeni.includes('b'));
+    const poolWithB = poolUpTo(21);
+    check('poolUpTo(21) ç ve b seslerinin ikisini de içeriyor', ['ç', 'b'].every(c => poolWithB.includes(c)));
+    const reachableB = WORDBANK.filter(it => it.w.split('').every(c => poolWithB.includes(c)));
+    check('"balon" b ogrenilince WORDBANK icinde erisilebilir', reachableB.some(it => it.w === 'balon'));
+    check('"boya" b ogrenilince WORDBANK icinde erisilebilir', reachableB.some(it => it.w === 'boya'));
+  } catch (e) {
+    check('4. grup b sesi (E4.3 b) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
