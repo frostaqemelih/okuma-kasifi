@@ -467,6 +467,7 @@
       <button class="ptab" data-tab="oneri" onclick="parentTab('oneri')">Öneriler</button>
       <button class="ptab" data-tab="ayar" onclick="parentTab('ayar')">Ayarlar</button>
       <button class="ptab" data-tab="yasal" onclick="parentTab('yasal')">Yasal / Gizlilik</button>
+      <button class="ptab" data-tab="surum" onclick="parentTab('surum')">Yenilikler</button>
     </div>
     <div class="pbody" id="pbody"></div>
     <button class="btn ghost tiny" style="margin-top:14px" onclick="printReport()">🖨️&nbsp; Yazdır / PDF olarak kaydet</button>
@@ -2298,7 +2299,7 @@ function parentTab(name){
     if(on) b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth', inline:'center', block:'nearest'});
   });
   const body=document.getElementById('pbody');
-  body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar, yasal:pYasal})[name]();
+  body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar, yasal:pYasal, surum:pSurum})[name]();
   if(name==='ayar') wireParentSettings();
 }
 
@@ -2508,6 +2509,37 @@ function exportProgress(){
 function feedbackMailto(){
   const subject=encodeURIComponent('Okuma Kâşifi - Geri Bildirim');
   return `mailto:destek@okumakasifi.app?subject=${subject}`;
+}
+// E9.7: "Bu sürümde yeni neler var" — ebeveyn için, çocuk asla görmez. En yeni en üstte, elle güncellenir
+// (CHANGELOG.md ile aynı emsal ama burada teknik olmayan, kısa/ebeveyn diliyle özetlenmiş madde listesi).
+const RELEASE_NOTES=[
+  {tarih:'2026-09-04', baslik:'Sürüm notları ve fiyat sayfası', maddeler:[
+    'Bu ekran eklendi: artık her güncellemede neyin değiştiğini buradan görebilirsiniz.',
+    'Ayrıntılı bir fiyatlandırma/karşılaştırma sayfası eklendi (site/fiyatlar.html).'
+  ]},
+  {tarih:'2026-09-04', baslik:'Deneme süresi ve yayın hazırlıkları', maddeler:[
+    '7 günlük ücretsiz premium deneme eklendi — kart bilgisi istenmez.',
+    'Uygulama artık tamamen çevrimdışı (uçak modunda) çalışıyor.',
+    'Gerçek uygulama simgeleri ve "ana ekrana ekle" ipucu eklendi.',
+    'Yeni bir sürüm yayınlandığında nazik bir "güncelle" bildirimi görünüyor.'
+  ]},
+  {tarih:'2026-09-03', baslik:'Premium katman ve erişilebilirlik', maddeler:[
+    'Ücretsiz ve premium (ücretli) bölüm ayrımı, satın alma ve geri yükleme akışı eklendi.',
+    'Disleksi-dostu görünüm, sessiz mod ve tam klavye desteğiyle erişilebilirlik geliştirildi.',
+    "Türk alfabesinin tüm 29 sesi artık oynanabilir (5 ses grubu tamamlandı)."
+  ]},
+  {tarih:'2026-09-03', baslik:'İlk sürüm', maddeler:[
+    'Okuma Kâşifi yayında: keşif haritası, 6 mini oyun, Ses Karnesi ve ebeveyn izleme sayfası.'
+  ]}
+];
+function pSurum(){
+  return `<div class="advice"><h4>🆕 Bu sürümde yeni neler var</h4>
+    <p>Okuma Kâşifi düzenli olarak güncelleniyor. En son değişiklikler aşağıda — çocuğunuza gösterilmez, yalnızca sizin bilginiz içindir.</p></div>
+    ${RELEASE_NOTES.map(n=>`
+      <div class="prow" style="flex-direction:column; align-items:stretch; gap:4px">
+        <b>${n.baslik} <span class="mini" style="font-weight:400">— ${n.tarih}</span></b>
+        <ul class="mini" style="margin:0; padding-right:4px; padding-left:18px">${n.maddeler.map(m=>`<li>${m}</li>`).join('')}</ul>
+      </div>`).join('')}`;
 }
 function importProgress(){
   const t=prompt('Dışa aktarılan JSON metnini yapıştırın:');

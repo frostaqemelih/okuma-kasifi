@@ -203,7 +203,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - [ ] **E9.4** Capacitor iskeleti: `capacitor.config` + `README` talimatı (kod değişmeden `index.html`'i sarar). Gerçek build kullanıcıda.
 - [x] **E9.5** Beta geri bildirim kanalı: ebeveyn bölümünde "geri bildirim gönder" — `mailto:` veya form linki (dış servis yok, sadece link). — 2026-09-04
 - [ ] **E9.6** Hafif kullanım ölçümü (gizlilik-dostu, opsiyonel, varsayılan KAPALI): sadece toplam/anonim sayaçlar cihazda; ebeveyn açarsa özet e-posta linki oluşturur. Üçüncü taraf analiz YOK.
-- [ ] **E9.7** Sürüm notları ekranı ("Bu sürümde yeni neler var") — çocuk değil ebeveyn için.
+- [x] **E9.7** Sürüm notları ekranı ("Bu sürümde yeni neler var") — çocuk değil ebeveyn için. — 2026-09-04
 - [x] **E9.8** `CHANGELOG.md` (kullanıcı-yönlü) — her yayınlanabilir kilometre taşında güncelle. — 2026-09-04
 
 ---
@@ -312,6 +312,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E9.5 (rutin, Hafta 4 kilometre taşı — yayın & dağıtım): beta geri bildirim kanalı eklendi. Ebeveyn "Ayarlar" sekmesine, dışa/içe aktarma düğmelerinin yanına, `feedbackMailto()` ile üretilen önceden doldurulmuş konu satırlı (`Okuma Kâşifi - Geri Bildirim`) bir "📮 Geri bildirim gönder" `mailto:` bağlantısı eklendi — dış servis/form yok, kişisel veri otomatik eklenmiyor (mimari kuralına uygun). "Yasal / Gizlilik" sekmesindeki mevcut genel iletişim satırından ayrı olarak, doğrudan/keşfedilebilir bir eylem düğmesi. Smoke test'e 5 yeni kontrol (427 test toplamda). Sıradaki öncelik: E9.3 (mağaza metaveri taslağı) / E9.7 (sürüm notları ekranı) veya E8.6 (aile planı) / E7.2/E7.5 (hız notu/i18n iskeleti).
 
 - 2026-09-04 — E9.3 (rutin, Hafta 4 kilometre taşı — yayın & dağıtım): mağaza metaveri taslağı eklendi (`site/store-listing.md`, saf belge) — uygulama adı/altbaşlık/kısa-uzun açıklama, anahtar kelimeler, kategori, yaş derecesi (App Store Kids Category "6-8" bandı önerisi + gerekçe, Play Families "karma yaş" önerisi + gerekçe), `arastirma/gizlilik-uyum.md` § 3-4'e dayanan "Designed for Families"/Kids Category uygunluk kontrol listesi (karşılananlar ✅ + yayın öncesi kalanlar ⚠️: herkese açık gizlilik politikası URL'i, mağaza boyutunda gerçek ekran görüntüleri, avukat incelemesi). Kod değişikliği yok, test eklenmedi (E9.8 CHANGELOG.md ile aynı emsal — saf belge). Sıradaki öncelik: E9.7 (sürüm notları ekranı) / E9.2 (fiyat sayfası) veya E8.6 (aile planı) / E7.2/E7.5.
+
+- 2026-09-04 — E9.7 (rutin, Hafta 4 kilometre taşı — yayın & dağıtım): "Yenilikler" sekmesi eklendi (`s-parent` panelinde 7. ptab, `parentTab('surum')`/`pSurum()`). Elle güncellenen `RELEASE_NOTES` dizisi (tarih+başlık+madde listesi, en yeni en üstte) — CHANGELOG.md ile aynı emsal ama ebeveyne yönelik kısa/teknik-olmayan dille. Ekranda "çocuğunuza gösterilmez, yalnızca sizin bilginiz içindir" notu var. Smoke test'e 4 yeni kontrol + ptab sayısı 6→7 güncellendi (431 test toplamda). Sıradaki öncelik: E9.2 (fiyat sayfası) / E7.2 (ilk açılış hızı) veya E8.6 (aile planı).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

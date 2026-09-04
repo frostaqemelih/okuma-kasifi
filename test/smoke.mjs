@@ -43,7 +43,7 @@ const testDriver = `
   ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent','s-collection'].forEach(id=>{
     check("#" + id + " ekranı DOM'da", !!document.getElementById(id));
   });
-  check('6 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 6);
+  check('7 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 7);
 
   // --- 2) Ebeveyn sekmeleri çalışıyor ve 14 günlük grafik render ediliyor mu? ---
   try {
@@ -1415,6 +1415,17 @@ const testDriver = `
     check('E9.5 feedbackMailto()/Ayarlar sekmesi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E9.7: "Yenilikler" (sürüm notları) sekmesi ebeveyn panelinde ---
+  try {
+    check('RELEASE_NOTES dizisi tanımlı ve dolu', Array.isArray(RELEASE_NOTES) && RELEASE_NOTES.length >= 2);
+    parentTab('surum');
+    const pbodySurum = document.getElementById('pbody').innerHTML;
+    check('Yenilikler sekmesi en yeni sürüm notunu render ediyor', pbodySurum.includes(RELEASE_NOTES[0].baslik));
+    check('Yenilikler sekmesi çocuğa gösterilmediğini belirtiyor', pbodySurum.includes('çocuğunuza gösterilmez'));
+  } catch (e) {
+    check('E9.7 Yenilikler sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1512,6 +1523,9 @@ pushCheck('site/index.html: koyu tema desteği var (prefers-color-scheme:dark)',
 // --- E9.5: beta geri bildirim kanalı — ebeveyn Ayarlar sekmesinde mailto: düğmesi (dış servis yok) ---
 pushCheck('JS: feedbackMailto() dış servis olmadan mailto: linki üretiyor', /function feedbackMailto\(\)\{/.test(html) && /return `mailto:/.test(html));
 pushCheck('HTML: Ayarlar sekmesinde "Geri bildirim gönder" düğmesi feedbackMailto()\'ya bağlı', /href="\$\{feedbackMailto\(\)\}"/.test(html) && /Geri bildirim gönder/.test(html));
+
+// --- E9.7: sürüm notları ekranı — ebeveyn panelinde "Yenilikler" sekmesi ---
+pushCheck('HTML: "Yenilikler" ptab düğmesi tanımlı', /data-tab="surum" onclick="parentTab\('surum'\)">Yenilikler</.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {

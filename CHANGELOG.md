@@ -34,6 +34,8 @@ yeni sürümde en üste eklenen tarihli bir bölümle güncellenecek.
 - Yaş modu, günlük hedef, disleksi-dostu görünüm, sessiz mod, ses hızı gibi
   ayarlar.
 - İlerlemeyi JSON olarak dışa/içe aktarma.
+- Yeni bir **"Yenilikler" sekmesi**: her güncellemede uygulamada neyin
+  değiştiğini kısaca burada görebilirsiniz (çocuğunuza gösterilmez).
 
 ### Erişilebilirlik
 - Açık/koyu tema, disleksi-dostu sıcak zemin seçeneği.
