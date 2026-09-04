@@ -248,6 +248,13 @@
     #printReport{display:block; position:absolute; left:0; top:0; width:100%; padding:24px; color:#000; background:#fff}
     #printReport .pcard, #printReport .pweek, #printReport .advice, #printReport .chart-wrap{border-color:#999}
   }
+  /* E7.7: otomatik güncelleme çubuğu — sessizce köşede bekler, oyunu kaplamaz/bölmez */
+  .update-bar{position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
+    z-index:50; display:flex; align-items:center; gap:10px; justify-content:center; flex-wrap:wrap;
+    background:var(--surface); border:2px solid var(--line); border-radius:16px; box-shadow:var(--shadow);
+    padding:10px 14px; font-family:var(--font-body); font-weight:700; max-width:420px; margin:0 auto}
+  .update-bar span{font-size:14px}
+  @media (prefers-reduced-motion:no-preference){ .update-bar:not([hidden]){animation:cheer .4s} }
   /* E5.5: disleksi-dostu görünüm — sıcak/kremsi zemin (düşük kontrastlı beyaz yerine), geniş harf/satır
      aralığı, sola hizalı metin, serif olmayan yazı tipi. Sıcak zemin bilinçli olarak tema/koyu moddan
      bağımsızdır — disleksi araştırmalarında önerilen krem tonu, koyu temanın yüksek kontrastından daha
@@ -528,6 +535,12 @@
   </div>
 
   <div class="confetti" id="confetti"></div>
+</div>
+<!-- E7.7: otomatik güncelleme — nazik "yenile" çubuğu, çocuğu bölmeden köşede bekler -->
+<div id="updateBar" class="update-bar" role="status" aria-live="polite" hidden>
+  <span>🔄 Yeni bir sürüm hazır</span>
+  <button class="btn ok tiny" onclick="applyUpdate()">Güncelle</button>
+  <button class="icon-btn" onclick="dismissUpdate()" aria-label="Şimdi değil">✕</button>
 </div>
 <div id="printReport" class="print-only" aria-hidden="true"></div>
 
@@ -2535,10 +2548,38 @@ function resetProgress(){
   }
 }
 
+/* E7.7: otomatik güncelleme — yeni bir service worker sürümü hazır olduğunda çocuğu
+   bölmeden, ekranın kenarında sessizce bekleyen nazik bir "güncelle" çubuğu gösterir.
+   Kullanıcı tıklamadıkça hiçbir şey değişmez (sw.js'in kendisi de skipWaiting()'i
+   otomatik çağırmıyor, bkz. sw.js yorumu). */
+let waitingWorker=null;
+function showUpdateBar(worker){
+  waitingWorker=worker;
+  const b=document.getElementById('updateBar'); if(b) b.hidden=false;
+}
+function applyUpdate(){
+  if(waitingWorker) waitingWorker.postMessage('SKIP_WAITING');
+}
+function dismissUpdate(){
+  const b=document.getElementById('updateBar'); if(b) b.hidden=true;
+}
+
 /* PWA — localhost'ta kapalı */
 const IS_DEV=['localhost','127.0.0.1'].includes(location.hostname);
 if('serviceWorker' in navigator && location.protocol.startsWith('http') && !IS_DEV){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    if(reg.waiting && navigator.serviceWorker.controller) showUpdateBar(reg.waiting);
+    reg.addEventListener('updatefound', ()=>{
+      const nw=reg.installing; if(!nw) return;
+      nw.addEventListener('statechange', ()=>{
+        if(nw.state==='installed' && navigator.serviceWorker.controller) showUpdateBar(nw);
+      });
+    });
+  }).catch(()=>{});
+  let reloadedOnce=false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(reloadedOnce) return; reloadedOnce=true; location.reload();
+  });
 }else if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
 }

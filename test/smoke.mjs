@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
+const swJs = readFileSync(join(__dirname, '..', 'sw.js'), 'utf8');
 
 const dom = new JSDOM(html, { url: 'http://localhost/', runScripts: 'outside-only' });
 const { window } = dom;
@@ -1337,6 +1338,22 @@ const testDriver = `
     check('E5.4 klavye erişilebilirliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E7.7: otomatik güncelleme — nazik "güncelle" çubuğu (gerçek serviceWorker jsdom'da yok,
+  // bu yüzden saf gösterme/uygulama fonksiyonlarını sahte bir "worker" nesnesiyle doğruluyoruz) ---
+  try {
+    check('updateBar başlangıçta gizli', document.getElementById('updateBar').hidden === true);
+    let posted = null;
+    const fakeWorker = { postMessage: (m) => { posted = m; } };
+    showUpdateBar(fakeWorker);
+    check('showUpdateBar() çubuğu gösteriyor', document.getElementById('updateBar').hidden === false);
+    applyUpdate();
+    check('applyUpdate() bekleyen worker SKIP_WAITING mesajı alıyor', posted === 'SKIP_WAITING');
+    dismissUpdate();
+    check('dismissUpdate() çubuğu tekrar gizliyor', document.getElementById('updateBar').hidden === true);
+  } catch (e) {
+    check('E7.7 güncelleme çubuğu hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E8.10: 7 gün ücretsiz deneme (ebeveyn başlatır, cihaz başına tek sefer, otomatik ücret yok) ---
   try {
     state = fresh();
@@ -1419,6 +1436,10 @@ pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (12 kart)',
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
+// --- E7.7: sw.js install sırasında otomatik skipWaiting() ÇAĞIRMIYOR (güncelleme kullanıcı onayına bağlı) ---
+pushCheck('sw.js: install olayı skipWaiting() cagirmiyor (guncelleme onaya bagli)', !/addAll\(ASSETS\)\)\.then\(\(\) => self\.skipWaiting\(\)\)/.test(swJs));
+pushCheck('sw.js: SKIP_WAITING mesajinda skipWaiting() cagriliyor', /addEventListener\('message'/.test(swJs) && /SKIP_WAITING.*self\.skipWaiting\(\)/.test(swJs));
+pushCheck('HTML: #updateBar guncelleme cubugu tanimli', /id="updateBar"/.test(html) && /applyUpdate\(\)/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {

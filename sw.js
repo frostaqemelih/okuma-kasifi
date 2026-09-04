@@ -1,9 +1,17 @@
 /* Okuma Kâşifi — basit çevrimdışı önbellek (prototip) */
-const CACHE = 'okuma-kasifi-v0';
+const CACHE = 'okuma-kasifi-v1';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
+  // E7.7: skipWaiting() burada ÇAĞRILMAZ — yeni sürüm hazır olunca sayfa bunu
+  // fark edip nazik bir "güncelle" düğmesi gösterir, kullanıcı onaylayınca
+  // (SKIP_WAITING mesajı) devreye girer. Böylece oyun ortasında sürüm değişip
+  // çocuk bölünmez.
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+});
+
+self.addEventListener('message', e => {
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
