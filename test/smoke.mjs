@@ -1044,6 +1044,45 @@ const testDriver = `
     check('5. grup j sesi + Kâşif Gösterisi 4 (E4.4 f) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
+  try {
+    check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
+    check('NUMBERS sırayla 1den 10a kadar', NUMBERS.every((x, i) => x.n === i + 1));
+    check('NUMBERS her girişte Türkçe okunuş (tr) var', NUMBERS.every(x => typeof x.tr === 'string' && x.tr.length > 0));
+
+    state = fresh();
+    recentRounds = [];
+    play = null;
+
+    const origRandom = Math.random;
+    Math.random = () => 0.2; // (a) duy-bul varyantı
+    roundRakam();
+    Math.random = origRandom;
+    check('roundRakam() (a) varyantı "Duyduğun sayı hangisi?" soruyor', qtext.textContent === 'Duyduğun sayı hangisi?');
+    check('roundRakam() normal seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
+    check('roundRakam() tam olarak 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = () => 0.8; // (b) say-bul varyantı
+    roundRakam();
+    Math.random = origRandom;
+    check('roundRakam() (b) varyantı "Kaç tane? Say ve bul." soruyor', qtext.textContent === 'Kaç tane? Say ve bul.');
+    check('roundRakam() (b) varyantı sesli anlatımda cevabı ele vermiyor', NUMBERS.every(x => !roundPrompt.includes(x.tr)));
+
+    const rBtn = document.querySelector('#choices .choice[data-right="1"]');
+    curWrongCount = 0;
+    const correctBefore = state.correct;
+    choose(rBtn, true);
+    check('roundRakam() doğru cevapta dogru sayacini artirip butonu isaretliyor', state.correct === correctBefore + 1 && rBtn.classList.contains('right'));
+
+    state = fresh();
+    play = null;
+    freeGame = 'rakam';
+    startFree('rakam');
+    check('startFree("rakam") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('E4.7 rakam mini-modülü hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1061,6 +1100,8 @@ function pushCheck(name, cond) { results.push({ name, pass: !!cond }); }
 pushCheck('CSS: .choice.right icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.right::after\{[^}]*content:'✓'/.test(html));
 pushCheck('CSS: .choice.wrong icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.wrong::after\{[^}]*content:'✕'/.test(html));
 pushCheck('CSS: .choice ust eleman position:relative (ikon konumlandirmasi icin)', /\.choice\{position:relative;/.test(html));
+// --- E4.7: Serbest oyun menüsünde "Sayılar" kartı mevcut ---
+pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("startFree('rakam')") && html.includes('>Sayılar<'));
 
 let failed = 0;
 for (const { name, pass } of results) {

@@ -138,7 +138,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (e)-(f) **f, j** tam donanımlı eklendi + 5. grup rozeti: `mufredat.json` sesler.f/j + ders30/31/32, `index.html`'e `WORDS.f` (fil🐘), `WORDS.j` (jeton🪙), `STROKES.f` (2 vuruş: kancalı gövde+çizgi), `STROKES.j` (2 vuruş: nokta+kancalı kuyruk), `LESSONS` id30-32 (id32 "Kâşif Gösterisi 4", `tip:'gosteri'`, rozet "5. Grup Kâşifi 🏆"), `ALL_LETTERS`/`UPPER_MAP`'e f/j eklendi, `WORDBANK`'a fil🐘/jeton🪙. **E4.4 tamamlandı — MEB 2024 TYMM'in tüm 29 sesi/harfi (5 grup, ders 0-32) artık oynanabilir.** — 2026-09-04
 - [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
 - [ ] **E4.6** Büyük harf / küçük harf farkındalığı modülü (cümle başı, özel ad).
-- [ ] **E4.7** Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik.
+- [x] **E4.7** Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik. — 2026-09-04
 
 ### E5 — Ses & Erişilebilirlik  → uzman: `arastirma/teknik-mimari.md` (§ TTS 3 katman), Accessibility Auditor
 
@@ -273,6 +273,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E8.8 (rutin, Hafta 3 kalan maddesi): premium satın alma "teşekkür" + koleksiyon ödülü — E3.6'da eklenen rozet koleksiyon sistemine yeni bir `MILESTONE_BADGES` girişi ("Kâşif'in Yıldız Pelerini 🦸") eklendi, `confirmStubPurchase()` başarılı (gerçek para karşılığı) satın almada bu rozeti veriyor ve satın alma başarı ekranına ("🎉 Premium açıldı!") bir teşekkür + rozet cümlesi (`#pwSuccessBadge`) ekleniyor. Tanıtım/hediye kodu (`redeemPromo()`, ücretsiz) bu rozeti KAZANDIRMIYOR — yalnız gerçek satın almaya özel, çocuğa asla satış gösterilmiyor (rozet sadece koleksiyon ekranında görünür). Smoke test'e 3 yeni kontrol (291 test toplamda). Sıradaki öncelik: E8.6 (aile planı/çoklu profil) veya E8.10 (7 gün deneme) ile Hafta 3'ü tamamen kapatmak, ya da Hafta 4'ün E5.4 (erişilebilirlik)/E7 (PWA cilası) maddeleri.
 
 - 2026-09-04 — E5.6 (rutin, Hafta 4 erişilebilirlik öncelik sırası): doğru/yanlış artık yalnız kenarlık rengiyle değil, `.choice` köşesine sabit konumlu ikon rozetiyle de gösteriliyor — `.choice.right::after` yeşil ✓ dairesi, `.choice.wrong::after` kırmızı ✕ dairesi, `.choice.hint::after` 💡. Tüm çoktan seçmeli oyun türleri (Harfi Bul/Sesi Eşleştir/Hece Kur, checkTrace() geri bildirimi) aynı `.choice` sınıfını paylaştığından JS değişikliği gerekmedi, saf CSS. Smoke test'e 3 yeni kontrol (294 test toplamda). Sıradaki öncelik: E4.6/E4.7 (E4 epiği kalanı) veya E5.3 (ses hız kontrolü).
+
+- 2026-09-04 — E4.7 (rutin, backlog sırası): "Sayılar" mini-modülü eklendi — `NUMBERS` sabiti (1-10, rakam+Türkçe okunuş+emoji), `roundRakam()` 2 varyantla (a) sesle söylenen sayıyı duy-bul, (b) resimdeki yıldızları say-bul; harf havuzundan (`pool`) bağımsız olduğundan Serbest Oyun menüsünde her zaman oynanabilir ("🔢 Sayılar" kartı). Mevcut `paint()`/`choose()`/zorluk uyarlaması (`difficultyLevel()`) altyapısı aynen kullanıldı, yeni JS mekanizması gerekmedi. Smoke test'e 14 yeni kontrol (305 test toplamda). E4 epiğinde tek kalan madde: E4.6 (büyük/küçük harf farkındalığı — cümle başı, özel ad). Sıradaki öncelik: E4.6 veya E5.3 (ses hız/tekrar kontrolü).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

@@ -362,6 +362,7 @@
       <div class="age-card" id="freeCumle" onclick="startFree('cumle')"><span class="big">🌱</span><span><b>Cümle Bahçesi</b><span>Kelimelerden cümle kur</span></span></div>
       <div class="age-card" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
       <div class="age-card" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
+      <div class="age-card" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
     </div>
   </section>
 
@@ -814,6 +815,13 @@ const WORDBANK=[
   /* E4.4 (e)-(f): f, j sesleri eklendi — 5. grup tamam. 'fil'/'jeton' hemen erişilebilir. */
   {w:'fil',e:'🐘'},{w:'jeton',e:'🪙'}
 ];
+/* E4.7: Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik, harf havuzundan bağımsız. */
+const NUMBERS=[
+  {n:1,tr:'bir',emoji:'1️⃣'},{n:2,tr:'iki',emoji:'2️⃣'},{n:3,tr:'üç',emoji:'3️⃣'},
+  {n:4,tr:'dört',emoji:'4️⃣'},{n:5,tr:'beş',emoji:'5️⃣'},{n:6,tr:'altı',emoji:'6️⃣'},
+  {n:7,tr:'yedi',emoji:'7️⃣'},{n:8,tr:'sekiz',emoji:'8️⃣'},{n:9,tr:'dokuz',emoji:'9️⃣'},
+  {n:10,tr:'on',emoji:'🔟'}
+];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
   {w:['el','ele'],       t:'El ele.'},
@@ -1175,7 +1183,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward');
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1425,6 +1433,27 @@ function roundSesEnd(pool){
   playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. Hangisi ${t} sesiyle bitiyor?`);
+}
+/* E4.7: Rakam ve sayı sesleri mini-modülü — 2 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
+function roundRakam(){
+  locked=false; curWrongCount=0; curTargets=[];
+  const t=rnd(NUMBERS);
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distr=shuffle(NUMBERS.filter(x=>x.n!==t.n)).slice(0,need);
+  const opts=shuffle([t,...distr]);
+  if(Math.random()<0.5){
+    // (a) duy-bul: sayının adını duy, rakamı bul
+    qtext.textContent='Duyduğun sayı hangisi?';
+    playArea.innerHTML=stageHTML(`<span class="glyph">👂</span>`);
+    paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===t.n);
+    sayPrompt(`Dinle. ${t.tr}. Duyduğun sayı hangisi?`);
+  }else{
+    // (b) say-bul: resimdeki nesneleri say, rakamı bul
+    qtext.textContent='Kaç tane? Say ve bul.';
+    playArea.innerHTML=stageHTML(`<span>${'⭐'.repeat(t.n)}</span>`);
+    paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===t.n);
+    sayPrompt('Kaç tane yıldız var? Say ve bul.');
+  }
 }
 function roundHece(pool){
   locked=false; curWrongCount=0;
