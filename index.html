@@ -517,7 +517,7 @@ function fresh(){return{
   daily:{},             // { 'YYYY-MM-DD': saniye }
   lessonLog:{},         // { id: {attempts, seconds, first, last} }
   reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
-  settings:{dailyGoalMin:15},
+  settings:{dailyGoalMin:15, speechRate:'normal'}, // E5.3: speechRate 'normal'|'yavas'
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
   purchaseHistory:[]     // E8.5: geri yükleme için cihazdaki satın alma kayıtları
@@ -702,6 +702,8 @@ function playClip(key,fallbackText,cb){
 }
 function sayPrompt(t){ roundPrompt=t; playClip(t,t) }
 function repeatPrompt(){ if(roundPrompt) playClip(roundPrompt,roundPrompt) }
+/* E5.3: Ses hız kontrolü — ebeveyn ayarındaki speechRate'e göre TTS hızı. */
+function ttsRate(){ return (state.settings&&state.settings.speechRate==='yavas') ? .62 : .86; }
 function say(text,cb){
   let done=false;
   const fin=()=>{ if(done) return; done=true; if(cb) cb(); };
@@ -710,8 +712,9 @@ function say(text,cb){
   const u=new SpeechSynthesisUtterance(text);
   const tr=voices.find(v=>(v.lang||'').toLowerCase().startsWith('tr'));
   if(tr) u.voice=tr;
-  u.lang='tr-TR'; u.rate=.86; u.pitch=1.15;
-  if(cb){ u.onend=fin; u.onerror=fin; setTimeout(fin, Math.min(6500, 850+text.length*85)); }
+  u.lang='tr-TR'; u.rate=ttsRate(); u.pitch=1.15;
+  if(cb){ u.onend=fin; u.onerror=fin; const slow=state.settings&&state.settings.speechRate==='yavas';
+    setTimeout(fin, Math.min(slow?9000:6500, (850+text.length*85)*(slow?1.4:1))); }
   try{ speechSynthesis.speak(u); }catch(e){ fin(); }
 }
 
@@ -2167,6 +2170,11 @@ function pAyar(){
       <button class="btn ghost tiny" onclick="go('s-mode')">${state.mode==='kesif'?'Keşif 4–5':'Çözümleme 6–7'} · değiştir</button></div>
     <div class="prow"><span>Günlük hedef</span>
       <select id="setGoal" class="pselect">${[5,10,15,20,30].map(m=>`<option value="${m}" ${m===(s.dailyGoalMin||15)?'selected':''}>${m} dk</option>`).join('')}</select></div>
+    <div class="prow"><span>Kâşif'in ses hızı</span>
+      <select id="setRate" class="pselect">
+        <option value="normal" ${(s.speechRate||'normal')==='normal'?'selected':''}>Normal</option>
+        <option value="yavas" ${s.speechRate==='yavas'?'selected':''}>Yavaş</option>
+      </select></div>
     <div class="prow"><span>Disleksi-dostu görünüm</span>
       <input type="checkbox" id="setDys" ${s.dyslexia?'checked':''}></div>
     <div class="prow"><span>Sessiz mod (TTS kapalı)</span>
@@ -2179,6 +2187,7 @@ function pAyar(){
 }
 function wireParentSettings(){
   const g=document.getElementById('setGoal'); if(g) g.onchange=()=>{ state.settings.dailyGoalMin=+g.value; save(); parentTab('ayar'); };
+  const rt=document.getElementById('setRate'); if(rt) rt.onchange=()=>{ state.settings.speechRate=rt.value; save(); };
   const dy=document.getElementById('setDys'); if(dy) dy.onchange=()=>{ state.settings.dyslexia=dy.checked; save(); applySettings(); };
   const mu=document.getElementById('setMute'); if(mu) mu.onchange=()=>{ state.settings.mute=mu.checked; save(); };
 }

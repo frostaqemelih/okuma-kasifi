@@ -1141,6 +1141,30 @@ const testDriver = `
     check('E4.6 büyük/küçük harf farkındalığı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E5.3: Ses hız/tekrar kontrolü (yavaş/normal) ---
+  try {
+    state = fresh();
+    check('fresh() varsayılan speechRate normal', state.settings.speechRate === 'normal');
+    check('ttsRate() normalde 0.86 dönüyor', ttsRate() === 0.86);
+    state.settings.speechRate = 'yavas';
+    check('ttsRate() yavasta daha dusuk bir deger donuyor', ttsRate() < 0.86 && ttsRate() > 0);
+
+    state = fresh();
+    parentTab('ayar');
+    const rateSelect = document.getElementById('setRate');
+    check('Ayarlar sekmesinde ses hızı seçici mevcut', !!rateSelect);
+    check('Ses hızı seçicide normal secili varsayılan', rateSelect && rateSelect.value === 'normal');
+    if (rateSelect) {
+      rateSelect.value = 'yavas';
+      rateSelect.dispatchEvent(new window.Event('change'));
+    }
+    check('Ses hızı degistirilince state.settings.speechRate guncelleniyor', state.settings.speechRate === 'yavas');
+    const savedRate = JSON.parse(localStorage.getItem(KEY));
+    check('Ses hızı tercihi localStorage a kaydediliyor', savedRate && savedRate.settings && savedRate.settings.speechRate === 'yavas');
+  } catch (e) {
+    check('E5.3 ses hızı kontrolü hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
