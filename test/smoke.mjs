@@ -1165,6 +1165,20 @@ const testDriver = `
     check('E5.3 ses hızı kontrolü hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E5.5: Disleksi-dostu görünüm (sıcak zemin + genişletilmiş aralık) ---
+  try {
+    state = fresh();
+    state.settings.dyslexia = false;
+    applySettings();
+    check('applySettings() dyslexia kapaliyken dys sinifi yok', !document.documentElement.classList.contains('dys'));
+    state.settings.dyslexia = true;
+    applySettings();
+    check('applySettings() dyslexia acikken dys sinifini ekliyor', document.documentElement.classList.contains('dys'));
+    document.documentElement.classList.remove('dys');
+  } catch (e) {
+    check('E5.5 disleksi-dostu gorunum hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1186,6 +1200,8 @@ pushCheck('CSS: .choice ust eleman position:relative (ikon konumlandirmasi icin)
 pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("startFree('rakam')") && html.includes('>Sayılar<'));
 // --- E4.6: Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut ---
 pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', html.includes("startFree('buyuk')") && html.includes('Büyük mü Küçük mü?'));
+// --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
+pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {

@@ -239,7 +239,12 @@
     #printReport{display:block; position:absolute; left:0; top:0; width:100%; padding:24px; color:#000; background:#fff}
     #printReport .pcard, #printReport .pweek, #printReport .advice, #printReport .chart-wrap{border-color:#999}
   }
-  :root.dys{ --font-body:"Nunito","Segoe UI",system-ui,sans-serif; }
+  /* E5.5: disleksi-dostu görünüm — sıcak/kremsi zemin (düşük kontrastlı beyaz yerine), geniş harf/satır
+     aralığı, sola hizalı metin, serif olmayan yazı tipi. Sıcak zemin bilinçli olarak tema/koyu moddan
+     bağımsızdır — disleksi araştırmalarında önerilen krem tonu, koyu temanın yüksek kontrastından daha
+     rahat okunur kabul edilir. */
+  :root.dys{ --font-body:"Nunito","Segoe UI",system-ui,sans-serif;
+    --bg:#faf1de; --surface:#fffaf0; --surface-2:#fdf3e2; --ink:#3a2f1f; --ink-soft:#7a6a52; }
   :root.dys body{ letter-spacing:.03em; word-spacing:.08em; line-height:1.7; }
   :root.dys .prompt, :root.dys .sub, :root.dys .advice p, :root.dys .mini{ text-align:left; }
   .sheet h2{font-family:var(--font-display); font-weight:800; color:var(--primary-d); margin-bottom:8px; font-size:25px}
