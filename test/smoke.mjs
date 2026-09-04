@@ -1157,6 +1157,35 @@ const testDriver = `
     check('5. grup j sesi + Kâşif Gösterisi 4 (E4.4 f) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme (rutin): 3.-5. grup kelime çeşitliliği artırıldı ---
+  try {
+    check('WORDBANK en az 49 kelime içeriyor (genişletme sonrası)', WORDBANK.length >= 49);
+    const g3Words = ['yıldız', 'dondurma', 'deniz'];
+    const g4Words = ['güneş', 'çiçek', 'balık'];
+    const g5Words = ['top', 'fırın', 'kağıt'];
+    check('Yeni 3. grup kelimeleri WORDBANK icinde tanimli', g3Words.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni 4. grup kelimeleri WORDBANK icinde tanimli', g4Words.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni 5. grup kelimeleri WORDBANK icinde tanimli', g5Words.every(w => WORDBANK.some(it => it.w === w)));
+    const poolG3 = poolUpTo(18);
+    check('Yeni 3. grup kelimeleri 3. grup havuzunda erisilebilir (henuz 4.-5. grup gerektirmiyor)',
+      g3Words.every(w => w.split('').every(c => poolG3.includes(c))));
+    const poolG4 = poolUpTo(24);
+    check('Yeni 4. grup kelimeleri 4. grup havuzunda erisilebilir, 3. grupta degil',
+      g4Words.every(w => w.split('').every(c => poolG4.includes(c)))
+      && g4Words.every(w => !w.split('').every(c => poolG3.includes(c))));
+    const poolG5 = poolUpTo(31);
+    check('Yeni 5. grup kelimeleri 5. grup havuzunda erisilebilir, 4. grupta degil',
+      g5Words.every(w => w.split('').every(c => poolG5.includes(c)))
+      && g5Words.every(w => !w.split('').every(c => poolG4.includes(c))));
+    check('Yeni kelimelerin hepsi emoji tasiyor',
+      [...g3Words, ...g4Words, ...g5Words].every(w => {
+        const it = WORDBANK.find(x => x.w === w);
+        return it && it.e && it.e.length;
+      }));
+  } catch (e) {
+    check('WORDBANK genisletme (3.-5. grup) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
