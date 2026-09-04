@@ -344,6 +344,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-04 — WORDBANK genişletme (rutin, backlog sırası — yeni içerik): 3.-5. grup kelime çeşitliliği artırıldı — `yıldız⭐`/`dondurma🍦`/`deniz🌊` (3. grup), `güneş☀️`/`çiçek🌸`/`balık🐟` (4. grup), `top⚽`/`fırın🥖`/`kağıt📄` (5. grup). Her kelime elle kendi grubunun kümülatif ses havuzuyla (mufredat.json sesGruplari.tymm) doğrulandı — bir üst gruba sızmıyor, yeni sesleri pekiştiriyor. WORDBANK 46'dan 55 kelimeye çıktı. Smoke test'e 8 yeni kontrol (518 test toplamda). Sıradaki öncelik: Okuma Kulübü ikinci metin / Kafiye Bulma yeni oyunu / onboarding profil seçimi.
 
+- 2026-09-04 — Okuma Kulübü ikinci metin (rutin, backlog sırası — tekrar oynanabilirlik): 3./4./5. grup için birer alternatif metin eklendi (`els-3b`/`els-4b`/`els-5b`, `data/metinler.json` + `TEXTS`) — artık bir grubu tamamlayan çocuk her Okuma Kulübü ziyaretinde aynı metni değil, iki metinden birini okuyor. Yeni metinler WORDBANK genişletmesindeki kelimeleri kullanıyor (yıldız/dondurma/deniz, güneş/çiçek/balık, top/vazo). Mühendislik: `TEXTS`'e `tier` alanı eklendi, `pickText()` artık "en son eşleşen" yerine en yüksek `tier`'daki metinler arasından (birden fazlaysa) `Math.random()` ile seçiyor — tek metinli tier'larda (1,2) davranış değişmedi. Smoke test'e 3 yeni kontrol + 6 mevcut kontrol `Math.random` mock'lu deterministik hale getirildi (521 test toplamda). Sıradaki öncelik: Kafiye Bulma yeni oyunu / onboarding profil seçimi.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

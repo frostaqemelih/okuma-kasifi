@@ -34,6 +34,16 @@
       ]
     },
     {
+      "id": "els-3b",
+      "gerekli": ["k", "u", "z", "o", "r", "m", "a", "n", "d", "y", "ü", "ö", "t", "i", "l", "e", "s", "ı"],
+      "aciklama": "3. grup için alternatif metin (aynı seviye, tekrar oynanabilirlik) — pickText() aynı tier'da rastgele seçer.",
+      "metin": "Deniz sakin. Kum sarı. Ela yıldız arar. Dondurma yer, mutlu olur.",
+      "anlamaSorulari": [
+        { "soru": "Ela ne arıyor?", "secenekler": ["Yıldız", "Kuzu", "Kuş"], "dogru": "Yıldız" },
+        { "soru": "Ela ne yiyor?", "secenekler": ["Dondurma", "Elma", "Süt"], "dogru": "Dondurma" }
+      ]
+    },
+    {
       "id": "els-4",
       "gerekli": ["k", "ı", "z", "b", "i", "r", "u", "ş", "g", "ö", "ü", "d", "a", "l", "o", "n", "e"],
       "aciklama": "4. grup sesleri (ç,b,g,c,ş) açılınca açılır — ders 25 (Kâşif Gösterisi 3) seviyesi.",
@@ -44,6 +54,16 @@
       ]
     },
     {
+      "id": "els-4b",
+      "gerekli": ["k", "ı", "z", "b", "i", "r", "u", "ş", "g", "ö", "ü", "d", "a", "l", "o", "n", "e", "ç", "t", "s", "y", "m"],
+      "aciklama": "4. grup için alternatif metin (aynı seviye, tekrar oynanabilirlik).",
+      "metin": "Güneş çıktı. Çiçekler açtı. Balık suda yüzer, mutlu.",
+      "anlamaSorulari": [
+        { "soru": "Balık nerede yüzüyor?", "secenekler": ["Suda", "Havada", "Karda"], "dogru": "Suda" },
+        { "soru": "Bahçede ne açtı?", "secenekler": ["Çiçekler", "Kapılar", "Pencereler"], "dogru": "Çiçekler" }
+      ]
+    },
+    {
       "id": "els-5",
       "gerekli": ["b", "a", "p", "z", "r", "g", "i", "t", "o", "k", "l", "v", "e", "f", "ı", "n", "d", "ü", "ö"],
       "aciklama": "5. grup sesleri (p,h,v,ğ,f,j) açılınca açılır — Türk alfabesinin tüm 29 sesi artık öğrenilmiş; ders 32 (Kâşif Gösterisi 4) seviyesi.",
@@ -51,6 +71,16 @@
       "anlamaSorulari": [
         { "soru": "Baba nereye gitti?", "secenekler": ["Pazara", "Okula", "Bahçeye"], "dogru": "Pazara" },
         { "soru": "Baba ne aldı?", "secenekler": ["Portakal ve fındık", "Elma ve armut", "Süt ve ekmek"], "dogru": "Portakal ve fındık" }
+      ]
+    },
+    {
+      "id": "els-5b",
+      "gerekli": ["b", "a", "p", "z", "r", "g", "i", "t", "o", "k", "l", "v", "e", "f", "ı", "n", "d", "ü", "ö", "y"],
+      "aciklama": "5. grup için alternatif metin (aynı seviye, tekrar oynanabilirlik) — tüm alfabe tamamlanınca da tek metin tekrarı yerine çeşitlilik.",
+      "metin": "Fil parkta yürüdü. Top ile oynadı. Vazo devrildi, fil üzüldü.",
+      "anlamaSorulari": [
+        { "soru": "Fil parkta ne yaptı?", "secenekler": ["Top ile oynadı", "Uyudu", "Yüzdü"], "dogru": "Top ile oynadı" },
+        { "soru": "Vazo ne oldu?", "secenekler": ["Devrildi", "Uçtu", "Kayboldu"], "dogru": "Devrildi" }
       ]
     }
   ]

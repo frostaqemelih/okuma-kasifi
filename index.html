@@ -1105,40 +1105,64 @@ const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','
    soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı
    seslere (unlockedPool) göre en ileri uygun metni seçer. */
 const TEXTS=[
-  { id:'els-1', gerekli:['a','n','e','t','i','l'],
+  { id:'els-1', tier:1, gerekli:['a','n','e','t','i','l'],
     metin:'At al. El ele. Nine anlat!',
     sorular:[
       {soru:'Metinde ne alınıyor?', secenekler:['At','Tel','Anne'], dogru:'At'},
       {soru:'Kim anlatıyor?', secenekler:['Nine','Anne','Tel'], dogru:'Nine'}
     ]},
-  { id:'els-2', gerekli:['a','e','l','m','r','k','t','n','u'],
+  { id:'els-2', tier:2, gerekli:['a','e','l','m','r','k','t','n','u'],
     metin:'Ela markette. Elma al. Anne mutlu.',
     sorular:[
       {soru:'Ela nerede?', secenekler:['Market','Otel','Kule'], dogru:'Market'},
       {soru:'Anne nasıl?', secenekler:['Mutlu','Kral','Roket'], dogru:'Mutlu'}
     ]},
-  { id:'els-3', gerekli:['k','u','z','o','r','m','a','n','d','y','ü','ö','t','i','l','e','s'],
+  { id:'els-3', tier:3, gerekli:['k','u','z','o','r','m','a','n','d','y','ü','ö','t','i','l','e','s'],
     metin:'Kuzu ormanda yürür. Tilki kuzuyu arar. Kuzu korkar, annesine döner.',
     sorular:[
       {soru:'Kuzu nerede?', secenekler:['Ormanda','Evde','Suda'], dogru:'Ormanda'},
       {soru:'Kuzu kimden korkuyor?', secenekler:['Tilkiden','Kurttan','Kediden'], dogru:'Tilkiden'}
     ]},
-  { id:'els-4', gerekli:['k','ı','z','b','i','r','u','ş','g','ö','ü','d','a','l','o','n','e'],
+  /* Okuma Kulübü ikinci metin (rutin): 3. grup için alternatif metin, tekrar oynanabilirlik için pickText() tier eşitliğinde rastgele seçer. */
+  { id:'els-3b', tier:3, gerekli:['k','u','z','o','r','m','a','n','d','y','ü','ö','t','i','l','e','s','ı'],
+    metin:'Deniz sakin. Kum sarı. Ela yıldız arar. Dondurma yer, mutlu olur.',
+    sorular:[
+      {soru:'Ela ne arıyor?', secenekler:['Yıldız','Kuzu','Kuş'], dogru:'Yıldız'},
+      {soru:'Ela ne yiyor?', secenekler:['Dondurma','Elma','Süt'], dogru:'Dondurma'}
+    ]},
+  { id:'els-4', tier:4, gerekli:['k','ı','z','b','i','r','u','ş','g','ö','ü','d','a','l','o','n','e'],
     metin:'Kız bir kuş gördü. Kuş dala kondu. Kız kuşu izler.',
     sorular:[
       {soru:'Kız neyi gördü?', secenekler:['Kuş','Kedi','Köpek'], dogru:'Kuş'},
       {soru:'Kuş nereye kondu?', secenekler:['Dala','Suya','Çatıya'], dogru:'Dala'}
     ]},
-  { id:'els-5', gerekli:['b','a','p','z','r','g','i','t','o','k','l','v','e','f','ı','n','d','ü','ö'],
+  /* Okuma Kulübü ikinci metin (rutin): 4. grup için alternatif metin. */
+  { id:'els-4b', tier:4, gerekli:['k','ı','z','b','i','r','u','ş','g','ö','ü','d','a','l','o','n','e','ç','t','s','y','m'],
+    metin:'Güneş çıktı. Çiçekler açtı. Balık suda yüzer, mutlu.',
+    sorular:[
+      {soru:'Balık nerede yüzüyor?', secenekler:['Suda','Havada','Karda'], dogru:'Suda'},
+      {soru:'Bahçede ne açtı?', secenekler:['Çiçekler','Kapılar','Pencereler'], dogru:'Çiçekler'}
+    ]},
+  { id:'els-5', tier:5, gerekli:['b','a','p','z','r','g','i','t','o','k','l','v','e','f','ı','n','d','ü','ö'],
     metin:'Baba pazara gitti. Portakal ve fındık aldı. Eve gülerek döndü.',
     sorular:[
       {soru:'Baba nereye gitti?', secenekler:['Pazara','Okula','Bahçeye'], dogru:'Pazara'},
       {soru:'Baba ne aldı?', secenekler:['Portakal ve fındık','Elma ve armut','Süt ve ekmek'], dogru:'Portakal ve fındık'}
+    ]},
+  /* Okuma Kulübü ikinci metin (rutin): 5. grup için alternatif metin — tüm alfabe tamamlanınca da tek metin tekrarı yerine çeşitlilik. */
+  { id:'els-5b', tier:5, gerekli:['b','a','p','z','r','g','i','t','o','k','l','v','e','f','ı','n','d','ü','ö','y'],
+    metin:'Fil parkta yürüdü. Top ile oynadı. Vazo devrildi, fil üzüldü.',
+    sorular:[
+      {soru:'Fil parkta ne yaptı?', secenekler:['Top ile oynadı','Uyudu','Yüzdü'], dogru:'Top ile oynadı'},
+      {soru:'Vazo ne oldu?', secenekler:['Devrildi','Uçtu','Kayboldu'], dogru:'Devrildi'}
     ]}
 ];
 function pickText(pool){
   const fits=TEXTS.filter(t=>t.gerekli.every(c=>pool.includes(c)));
-  return fits.length ? fits[fits.length-1] : TEXTS[0];
+  if(!fits.length) return TEXTS[0];
+  const maxTier=Math.max(...fits.map(t=>t.tier));
+  const top=fits.filter(t=>t.tier===maxTier);
+  return top.length>1 ? top[Math.floor(Math.random()*top.length)] : top[0];
 }
 let READING=TEXTS[0];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
