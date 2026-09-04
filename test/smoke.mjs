@@ -1083,6 +1083,64 @@ const testDriver = `
     check('E4.7 rakam mini-modülü hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E4.6: Büyük/küçük harf farkındalığı (cümle başı + özel ad) ---
+  try {
+    check('capitalize() normal harfi büyütüyor', capitalize('ali') === 'Ali');
+    check('capitalize() Türkçe ı/I kuralını uyguluyor', capitalize('ışık') === 'Işık');
+    check('capitalize() Türkçe i/İ kuralını uyguluyor', capitalize('iğne') === 'İğne');
+    check('PROPER_NAMES en az 3 isim içeriyor', Array.isArray(PROPER_NAMES) && PROPER_NAMES.length >= 3);
+
+    const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    state = fresh();
+    recentRounds = [];
+    play = null;
+    const origRandom2 = Math.random;
+
+    Math.random = () => 0.1; // (b) özel ad varyantı (wantName true, ilk aday seçilir)
+    roundBuyuk(fullPool2);
+    Math.random = origRandom2;
+    check('roundBuyuk() (b) özel ad varyantı doğru soru metnini gösteriyor', qtext.textContent === 'Hangisi bir kişi adı? (Büyük harfle başlar)');
+    check('roundBuyuk() (b) varyantında tam 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    const rightGlyphB = document.querySelector('#choices .choice[data-right="1"] .glyph').textContent;
+    check('roundBuyuk() (b) doğru şık ismin büyük harfle başlayan hali', rightGlyphB[0] === rightGlyphB[0].toUpperCase() && PROPER_NAMES.some(p => capitalize(p.name) === rightGlyphB));
+
+    Math.random = () => 0.9; // (a) cümle başı varyantı
+    roundBuyuk(fullPool2);
+    Math.random = origRandom2;
+    check('roundBuyuk() (a) cümle başı varyantı doğru soru metnini gösteriyor', /cümlesi hangisiyle başlamalı\\?$/.test(qtext.textContent));
+    check('roundBuyuk() (a) varyantında 2 şık sunuluyor (c2)', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundBuyuk() (a) varyantında tam 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    const rightGlyphA = document.querySelector('#choices .choice[data-right="1"] .glyph').textContent;
+    const wrongGlyphA = document.querySelector('#choices .choice:not([data-right="1"]) .glyph').textContent;
+    check('roundBuyuk() (a) doğru şık, yanlış şıkkın büyük harfli hali', capitalize(wrongGlyphA) === rightGlyphA);
+
+    const rBtnBuyuk = document.querySelector('#choices .choice[data-right="1"]');
+    curWrongCount = 0;
+    const correctBefore2 = state.correct;
+    choose(rBtnBuyuk, true);
+    check('roundBuyuk() doğru cevapta doğru sayacını artırıyor', state.correct === correctBefore2 + 1);
+
+    state = fresh();
+    play = null;
+    roundBuyuk(['a']); // yetersiz pool -> güvenli şekilde roundBul içine düşmeli
+    check('roundBuyuk() yetersiz pool ile hatasız roundBul icine düşüyor', document.querySelectorAll('#choices .choice').length > 0);
+
+    go('s-mode'); setMode('kesif');
+    go('s-free');
+    check('Keşif modunda "Büyük mü Küçük mü?" kartı gizli', document.getElementById('freeBuyuk').style.display === 'none');
+    setMode('cozumleme');
+    go('s-free');
+    check('Çözümleme modunda "Büyük mü Küçük mü?" kartı görünür', document.getElementById('freeBuyuk').style.display !== 'none');
+
+    state = fresh();
+    play = null;
+    freeGame = 'buyuk';
+    startFree('buyuk');
+    check('startFree("buyuk") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('E4.6 büyük/küçük harf farkındalığı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1102,6 +1160,8 @@ pushCheck('CSS: .choice.wrong icin koseye sabit konumlu ikon rozeti tanimli', /\
 pushCheck('CSS: .choice ust eleman position:relative (ikon konumlandirmasi icin)', /\.choice\{position:relative;/.test(html));
 // --- E4.7: Serbest oyun menüsünde "Sayılar" kartı mevcut ---
 pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("startFree('rakam')") && html.includes('>Sayılar<'));
+// --- E4.6: Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut ---
+pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', html.includes("startFree('buyuk')") && html.includes('Büyük mü Küçük mü?'));
 
 let failed = 0;
 for (const { name, pass } of results) {

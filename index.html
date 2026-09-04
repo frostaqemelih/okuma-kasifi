@@ -363,6 +363,7 @@
       <div class="age-card" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
       <div class="age-card" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
       <div class="age-card" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
+      <div class="age-card" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
     </div>
   </section>
 
@@ -822,6 +823,16 @@ const NUMBERS=[
   {n:7,tr:'yedi',emoji:'7️⃣'},{n:8,tr:'sekiz',emoji:'8️⃣'},{n:9,tr:'dokuz',emoji:'9️⃣'},
   {n:10,tr:'on',emoji:'🔟'}
 ];
+/* E4.6: Büyük/küçük harf farkındalığı — özel adlar (kişi isimleri), yalnız pool'daki seslerden. */
+const PROPER_NAMES=[
+  {name:'ali',   emoji:'🧒'}, {name:'ela',  emoji:'👧'}, {name:'nur',  emoji:'👧'},
+  {name:'tuna',  emoji:'🧒'}, {name:'kerem',emoji:'🧒'}, {name:'umut', emoji:'🧒'}
+];
+function capitalize(w){
+  if(!w) return w;
+  const first=w[0];
+  return (UPPER_MAP[first]||first.toUpperCase())+w.slice(1);
+}
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
   {w:['el','ele'],       t:'El ele.'},
@@ -981,6 +992,7 @@ function go(id){
     document.getElementById('freeKelime').style.display=h;
     document.getElementById('freeCumle').style.display=h;
     document.getElementById('freeOkuma').style.display=h; // E3.4: Okuma Kulübü de Çözümleme moduna özel
+    document.getElementById('freeBuyuk').style.display=h; // E4.6: Büyük/küçük harf kuralları da Çözümleme moduna özel
   }
 }
 function onStart(){
@@ -1183,7 +1195,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward');
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1453,6 +1465,38 @@ function roundRakam(){
     playArea.innerHTML=stageHTML(`<span>${'⭐'.repeat(t.n)}</span>`);
     paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===t.n);
     sayPrompt('Kaç tane yıldız var? Say ve bul.');
+  }
+}
+/* E4.6: Büyük/küçük harf farkındalığı — 2 varyant, ikisi de KURAL öğretir (harf şekli değil):
+   (a) cümle başı her zaman büyük harfle başlar, (b) kişi adları (özel ad) her zaman büyük harfle başlar. */
+function roundBuyuk(pool){
+  locked=false; curWrongCount=0; curTargets=[];
+  const nameCands=PROPER_NAMES.filter(x=>x.name.split('').every(c=>pool.includes(c)));
+  const sentCands=SENTENCES.filter(x=>x.w.every(w=>w.split('').every(c=>pool.includes(c))));
+  const wantName = Math.random()<0.5 && nameCands.length;
+  if(wantName || !sentCands.length){
+    if(!nameCands.length){ roundBul(pool); return; }
+    // (b) özel ad: bir isim + birkaç sıradan kelime arasından ismin DOĞRU (büyük harfli) yazımını bul.
+    const person=rnd(nameCands);
+    const commons=shuffle(allKnownWords().filter(w=>w.w!==person.name && w.w.split('').every(c=>pool.includes(c)))).slice(0,2);
+    if(!commons.length){ roundBul(pool); return; }
+    const opts=shuffle([
+      {glyph:capitalize(person.name), key:'right'},
+      ...commons.map((w,i)=>({glyph:w.w, key:'c'+i}))
+    ]);
+    qtext.textContent='Hangisi bir kişi adı? (Büyük harfle başlar)';
+    playArea.innerHTML=stageHTML(`<span>${person.emoji}</span>`);
+    paint(opts,'c3',o=>o.key==='right');
+    sayPrompt(`${capitalize(person.name)} bir kişi adı, büyük harfle başlar. Hangisi bir kişi adı?`);
+  }else{
+    // (a) cümle başı: cümlenin ilk kelimesi doğru mu yazılmış?
+    const it=rnd(sentCands);
+    const first=it.w[0];
+    const opts=shuffle([{glyph:capitalize(first),key:'right'},{glyph:first,key:'wrong'}]);
+    qtext.textContent=`«${it.t}» cümlesi hangisiyle başlamalı?`;
+    playArea.innerHTML=stageHTML(`<span class="glyph">✍️</span>`);
+    paint(opts,'c2',o=>o.key==='right');
+    sayPrompt(`Cümle başı her zaman büyük harfle yazılır. ${it.t} Bu cümle hangisiyle başlamalı?`);
   }
 }
 function roundHece(pool){
