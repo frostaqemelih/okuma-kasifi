@@ -1571,6 +1571,31 @@ const testDriver = `
     check('E9.7 Yenilikler sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- Kendi Hikayeni Kur (Fikir havuzu, premium): serbest kelime seçimiyle açık uçlu cümle kurma ---
+  try {
+    check('FEATURES.hikaye premium olarak isaretli', FEATURES.hikaye === 'premium');
+    state = fresh();
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    startFree('hikaye');
+    check('roundHikaye() en az 2 kelime karosu sunuyor', storyState && storyState.tiles.length >= 2);
+    check('Bitti dugmesi bos hikayede pasif', document.getElementById('storyDoneBtn').disabled === true);
+    storyState.chosen.push(storyState.tiles[0], storyState.tiles[1]);
+    renderStory();
+    check('Bitti dugmesi 2 kelime secilince aktif', document.getElementById('storyDoneBtn').disabled === false);
+    const origSayHikaye = say;
+    say = (text, cb) => { if (cb) cb(); };
+    const before = state.stars;
+    finishStory();
+    check('finishStory() hikayeyi fbMsg icinde gosteriyor', document.getElementById('fbMsg').textContent.includes('Hikayen:'));
+    check('finishStory() "Ilk Hikayeni Kurdun" rozetini veriyor', state.badges.includes('İlk Hikayeni Kurdun 📖✨'));
+    check('finishStory() yildiz kazandiriyor (award() cagrildi)', state.stars > before);
+    say = origSayHikaye;
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('Kendi Hikayeni Kur hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1602,7 +1627,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (12 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 12);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (13 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 13);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));

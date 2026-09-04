@@ -411,6 +411,7 @@
       <div class="age-card" tabindex="0" role="button" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
     </div>
   </section>
 
@@ -676,7 +677,8 @@ const FEATURES={
   lessonsGroup2plus:'premium', // ders 7 ve sonrası (2.–5. ses grupları)
   okumaKulubu:'premium',
   reviewRound:'premium',     // E3.3 "zayıf seslere odak turu"
-  harfDefteri:'premium'      // Kâşif'in Defteri: harf ustalık galerisi (Fikir havuzu)
+  harfDefteri:'premium',     // Kâşif'in Defteri: harf ustalık galerisi (Fikir havuzu)
+  hikaye:'premium'           // Kendi Hikayeni Kur: serbest kelime seçip cümle/hikaye kurma (Fikir havuzu)
 };
 function lessonNeedsPremium(id){ return FEATURES.lessonsGroup2plus==='premium' && id>=7; }
 
@@ -1318,6 +1320,7 @@ function go(id){
     document.getElementById('freeOkuma').style.display=h; // E3.4: Okuma Kulübü de Çözümleme moduna özel
     document.getElementById('freeBuyuk').style.display=h; // E4.6: Büyük/küçük harf kuralları da Çözümleme moduna özel
     document.getElementById('freeCizBuyuk').style.display=h; // E6.5: Büyük harf çizimi de Çözümleme moduna özel
+    document.getElementById('freeHikaye').style.display=h; // Kendi Hikayeni Kur de Çözümleme moduna özel
   }
 }
 function onStart(){
@@ -1566,7 +1569,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1609,6 +1612,7 @@ const MILESTONE_BADGES=[
   {text:'İlk Kelimeni Kurdun 📝', desc:'Kelime Kur\'da bir kelimeyi doğru sırala.'},
   {text:'İlk Cümleni Kurdun 🌱', desc:'Cümle Bahçesi\'nde bir cümleyi doğru sırala.'},
   {text:'İlk Metnini Okudun 📖', desc:'Okuma Kulübü\'nde bir metni tamamla.'},
+  {text:'İlk Hikayeni Kurdun 📖✨', desc:'Kendi Hikayeni Kur\'da kelimelerden kendi cümleni oluştur.'},
   {text:'Kâşif\'in Yıldız Pelerini 🦸', desc:'Premium\'u aç.'} // E8.8: satın alma teşekkürü + koleksiyon ödülü
 ];
 function awardBadge(text){
@@ -2063,6 +2067,63 @@ function roundCumle(pool){
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
   renderWord();
   sayPrompt(`${it.t} Kelimeleri sırala.`);
+}
+
+/* --- Kendi Hikayeni Kur (Fikir havuzu, premium, Çözümleme modu) ---
+   Sabit bir hedef YOK: çocuk bilinen kelime havuzundan istediğini seçip kendi cümlesini/hikayesini
+   kurar, "yanlış" diye bir şey olmaz — Kâşif kurulan cümleyi sesli okur. */
+let storyState=null;
+function roundHikaye(pool){
+  locked=false; curTargets=[];
+  const wordCands=WORDBANK.filter(x=>x.w.split('').every(c=>pool.includes(c))).map(x=>x.w);
+  const connectorCands=SENT_WORDS.filter(w=>!wordCands.includes(w) && w.split('').every(c=>pool.includes(c)));
+  storyState={tiles:shuffle([...new Set([...wordCands,...connectorCands])]).slice(0,10), chosen:[]};
+  qtext.textContent='Kendi hikayeni kur';
+  playArea.innerHTML=`
+    <div class="stage" style="aspect-ratio:16/7; font-size:38px"><span>📖</span></div>
+    <div class="word-slots" id="storyLine" aria-live="polite"></div>
+    <div class="tiles" id="storyTiles"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost tiny" onclick="clearStory()">↺ Temizle</button>
+      <button class="btn ok tiny" id="storyDoneBtn" onclick="finishStory()" disabled>Bitti, oku! 📖</button>
+    </div>`;
+  renderStory();
+  const msg='İstediğin kelimeleri seç, kendi hikayeni kur.';
+  showFeedback(msg); sayPrompt(msg);
+}
+function renderStory(){
+  const {tiles,chosen}=storyState;
+  const sl=document.getElementById('storyLine'), tl=document.getElementById('storyTiles');
+  sl.innerHTML=''; tl.innerHTML='';
+  if(!chosen.length){
+    const ph=document.createElement('div'); ph.className='slot word'; ph.style.opacity='.5'; ph.textContent='…';
+    sl.appendChild(ph);
+  }
+  chosen.forEach((w,k)=>{
+    const d=document.createElement('div');
+    d.className='slot word filled'; d.textContent=w;
+    d.tabIndex=0; d.setAttribute('role','button'); d.setAttribute('aria-label', w+' kelimesini çıkar');
+    d.onclick=()=>{ if(locked) return; chosen.splice(k,1); renderStory(); };
+    sl.appendChild(d);
+  });
+  tiles.forEach((w,ti)=>{
+    const b=document.createElement('button');
+    b.className='tile word'; b.textContent=w;
+    b.disabled=locked||chosen.length>=8;
+    b.onclick=()=>{ if(locked||chosen.length>=8) return; chosen.push(w); renderStory(); };
+    tl.appendChild(b);
+  });
+  const db=document.getElementById('storyDoneBtn'); if(db) db.disabled=locked||chosen.length<2;
+}
+function clearStory(){ if(locked||!storyState) return; storyState.chosen=[]; renderStory(); }
+function finishStory(){
+  if(!storyState || storyState.chosen.length<2 || locked) return;
+  locked=true; renderStory();
+  const sentence=capitalize(storyState.chosen.join(' '))+'.';
+  state.correct++; creditSounds(true);
+  awardBadge('İlk Hikayeni Kurdun 📖✨');
+  showFeedback('Hikayen: '+sentence);
+  say(sentence, award);
 }
 
 /* --- Okuma Kulübü (E3.4, Çözümleme modu) --- */
