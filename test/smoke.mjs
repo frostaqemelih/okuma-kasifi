@@ -716,6 +716,21 @@ const testDriver = `
     check('Ebeveyn yazdir/PDF raporu (E1.12) hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- Yazdırılabilir çalışma sayfaları (E8 premium kapsamında vaat edilmiş, önceden yapılmamıştı) ---
+  try {
+    check('FEATURES.calismaSayfalari premium olarak isaretli', FEATURES.calismaSayfalari === 'premium');
+    state = fresh();
+    printWorksheet();
+    const ws = document.getElementById('printReport').innerHTML;
+    check('printWorksheet() baslik iceriyor', ws.includes('Çalışma Sayfası'));
+    check('printWorksheet() erisilebilir ilk grup harfi (a) icin satir olusturuyor', ws.includes(WORDS.a.word) && ws.includes(WORDS.a.emoji));
+    check('printWorksheet() henuz acilmamis ileri grup harfini (p) icermiyor', !ws.includes(WORDS.p.word));
+    check('printWorksheet() iz satiri + bos yazma satiri iceriyor', ws.includes('wstrace') && ws.includes('wsblank'));
+    state = fresh();
+  } catch (e) {
+    check('Yazdirilabilir calisma sayfalari hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   // --- 37) E8.1 entitlement katmani: state.entitlement, isPremium(), requirePremium() ---
   try {
     check('KEY okuma-kasifi-v3 olarak tanimli', KEY === 'okuma-kasifi-v3');

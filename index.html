@@ -254,6 +254,12 @@
   #printReport h1{font-family:var(--font-display); font-size:24px; margin-bottom:2px}
   #printReport h2.ph{margin-top:22px}
   #printReport .print-date{color:#555; font-size:13px; margin-bottom:10px}
+  /* Yazdırılabilir çalışma sayfaları (E8 premium kapsamı) — harf izleme + kelime yazma satırları */
+  #printReport .wsrow{margin:14px 0 20px; page-break-inside:avoid}
+  #printReport .wsletter{font-family:var(--font-display); font-weight:800; font-size:26px; margin-bottom:4px}
+  #printReport .wstrace{font-size:32px; letter-spacing:10px; color:#bbb; border:1px dashed #999; border-radius:8px; padding:10px 14px; margin-bottom:4px}
+  #printReport .wsblank{height:34px; border-bottom:1px dashed #999; margin-bottom:6px}
+  #printReport .wsword{font-size:14px; color:#555}
   @media print{
     body *{visibility:hidden}
     #printReport, #printReport *{visibility:visible}
@@ -490,6 +496,7 @@
     </div>
     <div class="pbody" id="pbody"></div>
     <button class="btn ghost tiny" style="margin-top:14px" onclick="printReport()">🖨️&nbsp; Yazdır / PDF olarak kaydet</button>
+    <button class="btn ghost tiny" style="margin-top:10px" onclick="requirePremium('calismaSayfalari', printWorksheet)">✏️&nbsp; Çalışma sayfaları (yazdır)</button>
     <p class="mini" style="text-align:center; margin-top:18px">Tüm veriler yalnızca bu cihazda. Hiçbir şey buluta gönderilmez.</p>
   </section>
 
@@ -678,14 +685,15 @@ const FEATURES={
   okumaKulubu:'premium',
   reviewRound:'premium',     // E3.3 "zayıf seslere odak turu"
   harfDefteri:'premium',     // Kâşif'in Defteri: harf ustalık galerisi (Fikir havuzu)
-  hikaye:'premium'           // Kendi Hikayeni Kur: serbest kelime seçip cümle/hikaye kurma (Fikir havuzu)
+  hikaye:'premium',          // Kendi Hikayeni Kur: serbest kelime seçip cümle/hikaye kurma (Fikir havuzu)
+  calismaSayfalari:'premium' // Yazdırılabilir çalışma sayfaları (E8 premium kapsamında vaat edilmişti)
 };
 function lessonNeedsPremium(id){ return FEATURES.lessonsGroup2plus==='premium' && id>=7; }
 
 /* E8.9: fiyatlandırma verisi — data/plans.json ile senkron tutulur (elle, mufredat.json deseni). */
 const PLANS=[
   {id:'aylik', ad:'Aylık', fiyat:179, periyot:'ay', entitlementSuresiGun:30, vurgu:null,
-    kapsam:['2.–5. ses grupları (ders 7 ve sonrası)','Okuma Kulübü ve metin bankası','Ayrıntılı ebeveyn raporu + yazdır/PDF','Zayıf seslere odak turu']},
+    kapsam:['2.–5. ses grupları (ders 7 ve sonrası)','Okuma Kulübü ve metin bankası','Ayrıntılı ebeveyn raporu + yazdır/PDF','Zayıf seslere odak turu','Yazdırılabilir çalışma sayfaları']},
   {id:'yillik', ad:'Yıllık', fiyat:1199, periyot:'yıl', entitlementSuresiGun:365, vurgu:'2 ay bedava',
     kapsam:['Aylık plandaki her şey','En avantajlı fiyat','Aile planı: 3 çocuk profiline kadar']},
   {id:'tekseferlik', ad:'Tek Seferlik', fiyat:349, periyot:'tek seferlik', entitlementSuresiGun:null, vurgu:'kalıcı, abonelik yok',
@@ -2726,6 +2734,29 @@ function printReport(){
     <h2 class="ph">Dersler</h2>${pDersler()}
     <h2 class="ph">Ses Karnesi</h2>${pKarne()}
     <h2 class="ph">Öneriler</h2>${pOneri()}`;
+  const rep=document.getElementById('printReport');
+  if(rep) rep.innerHTML=html;
+  if(typeof window.print==='function') window.print();
+}
+/* E8 premium kapsamı: yazdırılabilir çalışma sayfaları — çocuğun şu an erişebildiği harfler için
+   kalemle üzerinden geçilecek iz + boş satır, evde kâğıt-kalem pratiği için. printReport() ile
+   aynı #printReport hedefini ve @media print kalıbını kullanır (ekranda gizli, yalnız yazdırmada görünür). */
+function printWorksheet(){
+  const pool=unlockedPool().filter(l=>WORDS[l]);
+  const rows=pool.map(l=>{
+    const w=WORDS[l], upper=UPPER_MAP[l]||l.toUpperCase();
+    const trace=Array(6).fill(upper+l).join('  ');
+    return `<div class="wsrow">
+      <div class="wsletter">${upper} ${l} — <span class="wsword">${w.emoji} ${w.word}</span></div>
+      <div class="wstrace">${trace}</div>
+      <div class="wsblank"></div>
+    </div>`;
+  }).join('');
+  const dateStr=new Date().toLocaleDateString('tr-TR',{year:'numeric',month:'long',day:'numeric'});
+  const html=`
+    <h1>Çalışma Sayfası — Harf Yazma Alıştırması</h1>
+    <p class="print-date">${dateStr} tarihinde Okuma Kâşifi'nde oluşturuldu. Kalemle üzerinden geçin, sonra boş satıra kendiniz yazın.</p>
+    ${rows}`;
   const rep=document.getElementById('printReport');
   if(rep) rep.innerHTML=html;
   if(typeof window.print==='function') window.print();
