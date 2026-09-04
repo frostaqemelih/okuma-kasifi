@@ -719,6 +719,43 @@ const testDriver = `
     check('E8.9/E8.3/E8.4 paywall + stub satin alma hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 39) E8.2 FEATURES bayraklari: 2. gruptan itibaren premium kilidi haritada ---
+  try {
+    check('lessonNeedsPremium(6) false (1. grup ucretsiz)', lessonNeedsPremium(6) === false);
+    check('lessonNeedsPremium(7) true (2. grup premium)', lessonNeedsPremium(7) === true);
+
+    state = fresh();
+    state.mode = 'cozumleme';
+    state.done = [0, 1, 2, 3, 4, 5, 6];
+    go('s-map');
+    const node7 = document.querySelectorAll('#path .node')[7];
+    check('ders 7 dugmesi premium-lock sinifinda', node7.classList.contains('premium-lock'));
+    check('ders 7 dugmesinde kilit simgesi gosteriliyor', node7.textContent === '🔒');
+    check('ders 7 dugmesi tiklana bilir (paywall acmak icin disabled degil)', node7.disabled === false);
+
+    node7.onclick();
+    check('kilitli derse tiklayinca ebeveyn kapisi aciliyor', document.getElementById('gate').classList.contains('active'));
+    check('bekleyen kilit acma islemi (ders 7 acacak) kaydedildi', typeof pendingPaywallGrant === 'function');
+
+    gateOnSuccess();
+    check('kapi gecilince paywall aciliyor', document.getElementById('s-paywall').classList.contains('active'));
+    check('paywall kapatilinca haritaya donecek sekilde ayarlandi', paywallReturn === 's-map');
+
+    buy('aylik');
+    confirmStubPurchase();
+    check('satin alma sonrasi isPremium() true', isPremium() === true);
+    pendingPaywallGrant = null; closeOverlay('pwSuccess'); // openLesson()'ı jsdom canvas'sız ortamda tetiklemeden testi tamamla
+
+    go('s-map');
+    const node7b = document.querySelectorAll('#path .node')[7];
+    check('premium acildiktan sonra ders 7 artik kilitli gorunmuyor', !node7b.classList.contains('premium-lock'));
+
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('E8.2 FEATURES/harita premium kilidi hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

@@ -117,6 +117,7 @@
   .node.done{background:var(--ok); border-color:var(--ok); color:#fff}
   .node.now{background:var(--primary); border-color:var(--primary); color:#fff; animation:pulse 1.8s ease-in-out infinite}
   .node.locked{opacity:.55}
+  .node.premium-lock{opacity:1; background:var(--surface); border-color:var(--sun); color:var(--sun)}
   .node.flag::after{content:'🔁'; position:absolute; top:-8px; right:-8px; font-size:15px;
     filter:drop-shadow(0 1px 1px rgba(0,0,0,.25))}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 55%, transparent)}50%{box-shadow:0 0 0 12px transparent}}
@@ -507,6 +508,17 @@ function requirePremium(feature, onGranted){
   return false;
 }
 
+/* E8.2: özellik bayrakları — hangi özellik ücretsiz, hangisi premium gerektiriyor.
+   Ücretsiz kapsam: 1. ses grubu (ders 0–6, a,n,e,t,i,l), 6 oyun tipi kısıtsız,
+   temel ebeveyn izleme, Ses Karnesi. Gerisi premium. */
+const FEATURES={
+  lessonsGroup1:'free',      // ders 0–6
+  lessonsGroup2plus:'premium', // ders 7 ve sonrası (2.–5. ses grupları)
+  okumaKulubu:'premium',
+  reviewRound:'premium'      // E3.3 "zayıf seslere odak turu"
+};
+function lessonNeedsPremium(id){ return FEATURES.lessonsGroup2plus==='premium' && id>=7; }
+
 /* E8.9: fiyatlandırma verisi — data/plans.json ile senkron tutulur (elle, mufredat.json deseni). */
 const PLANS=[
   {id:'aylik', ad:'Aylık', fiyat:179, periyot:'ay', entitlementSuresiGun:30, vurgu:null,
@@ -857,14 +869,19 @@ function renderMap(){
     const row=document.createElement('div');
     row.className='node-row'+(idx%2? ' r':'');
     const done=state.done.includes(L.id);
-    const now=!done && available(L.id);
+    const seqAvailable=!done && available(L.id);
+    // E8.2: sıradaki ders premium gerektiriyorsa (daha önce hiç açılmadıysa) 🔒 rozetiyle göster,
+    // tıklanınca ebeveyn kapısı + paywall açılır. Zaten tamamlanmış dersler her zaman erişilebilir.
+    const premiumLocked=seqAvailable && !done && lessonNeedsPremium(L.id) && !isPremium();
+    const now=seqAvailable && !premiumLocked;
     const needsReview=!!(state.lessonLog[L.id] && state.lessonLog[L.id].needsReview);
     const n=document.createElement('button');
-    n.className='node '+(done?'done':now?'now':'locked')+(needsReview?' flag':'');
-    n.textContent = done?'✓' : (L.id===0?'★':L.id);
-    n.disabled = !done && !now;
+    n.className='node '+(done?'done':now?'now':'locked')+(needsReview?' flag':'')+(premiumLocked?' premium-lock':'');
+    n.textContent = done?'✓' : premiumLocked?'🔒' : (L.id===0?'★':L.id);
+    n.disabled = !done && !now && !premiumLocked;
     if(needsReview) n.setAttribute('aria-label', L.ad+' — tekrar önerilir');
-    n.onclick=()=>openLesson(L.id);
+    if(premiumLocked) n.setAttribute('aria-label', L.ad+' — premium gerekir');
+    n.onclick=()=>{ if(premiumLocked) requirePremium('lessonsGroup2plus', ()=>openLesson(L.id)); else openLesson(L.id); };
     const lbl=document.createElement('span');
     lbl.className='node-lbl'; lbl.textContent=L.ad;
     row.appendChild(n); row.appendChild(lbl);
