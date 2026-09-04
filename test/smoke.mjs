@@ -41,7 +41,7 @@ const testDriver = `
   function check(name, cond){ results.push({name, pass: !!cond}); }
 
   // --- 1) Temel ekranlar DOM'da mevcut mu? ---
-  ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent','s-collection'].forEach(id=>{
+  ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent','s-collection','s-defter'].forEach(id=>{
     check("#" + id + " ekranı DOM'da", !!document.getElementById(id));
   });
   check('7 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 7);
@@ -943,6 +943,24 @@ const testDriver = `
     play = null;
   } catch (e) {
     check('E3.6 ilerleme rozeti sistemi hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
+  // --- Defter (harf ustalık galerisi, premium): FEATURES bayrağı + kilitli/ustalaşılmış görünüm ---
+  try {
+    check('FEATURES.harfDefteri premium olarak isaretli', FEATURES.harfDefteri === 'premium');
+    state = fresh();
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    go('s-defter');
+    check('Defter acilmamis harfi kilitli gosteriyor', document.getElementById('defterGrid').innerHTML.includes('🔒'));
+    check('Defter sayaci 0 ile basliyor', document.getElementById('defterCount').textContent.includes('0 / ' + ALL_LETTERS.length));
+    state.soundStats.a = state.soundStats.a || {};
+    state.soundStats.a.cizLevel = 5;
+    go('s-defter');
+    check('Defter ustalasilan harfi yildizla gosteriyor', document.getElementById('defterGrid').innerHTML.includes('🌟'));
+    check('Defter sayaci ustalasilan harfle guncelleniyor', document.getElementById('defterCount').textContent.includes('1 / ' + ALL_LETTERS.length));
+    state = fresh();
+  } catch (e) {
+    check('Defter hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
   // --- 43) E4.4 (a) 5. grup başlangıcı: p sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---

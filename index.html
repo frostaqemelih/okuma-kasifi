@@ -386,6 +386,7 @@
     <span class="group-chip" style="margin-bottom:6px">Mod: <b id="modeChip">—</b> · <a href="#" onclick="event.preventDefault();go('s-mode')" style="color:var(--primary-d)">değiştir</a></span>
     <div class="badges" id="badges" style="margin-bottom:10px"></div>
     <button class="btn ghost tiny" style="margin-bottom:10px" onclick="go('s-collection')">🏆 Koleksiyon</button>
+    <button class="btn ghost tiny" style="margin-bottom:10px" onclick="requirePremium('harfDefteri', ()=>go('s-defter'))">📓 Kâşif'in Defteri</button>
     <button class="btn tiny" id="reviewBtn" style="margin-bottom:12px; background:var(--nope)" onclick="startReviewRound()" hidden></button>
     <div class="path" id="path"></div>
     <button class="btn grape tiny" style="margin-top:20px" onclick="openFreeMenu()">🎲 Serbest oyun</button>
@@ -455,6 +456,18 @@
     <h1 style="font-size:clamp(20px,5vw,28px); margin-bottom:2px">Kâşif Rozetleri</h1>
     <p class="sub" id="collectionCount" style="margin-bottom:10px"></p>
     <div class="coll-grid" id="collectionGrid"></div>
+  </section>
+
+  <!-- KÂŞİF'İN DEFTERİ: harf ustalık galerisi (premium) -->
+  <section id="s-defter" class="screen scroll">
+    <div class="topbar">
+      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön">🏠</button>
+      <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Defter</span>
+      <span style="width:50px"></span>
+    </div>
+    <h1 style="font-size:clamp(20px,5vw,28px); margin-bottom:2px">Kâşif'in Defteri</h1>
+    <p class="sub" id="defterCount" style="margin-bottom:10px"></p>
+    <div class="coll-grid" id="defterGrid"></div>
   </section>
 
   <!-- EBEVEYN İZLEME SAYFASI -->
@@ -660,7 +673,8 @@ const FEATURES={
   lessonsGroup1:'free',      // ders 0–6
   lessonsGroup2plus:'premium', // ders 7 ve sonrası (2.–5. ses grupları)
   okumaKulubu:'premium',
-  reviewRound:'premium'      // E3.3 "zayıf seslere odak turu"
+  reviewRound:'premium',     // E3.3 "zayıf seslere odak turu"
+  harfDefteri:'premium'      // Kâşif'in Defteri: harf ustalık galerisi (Fikir havuzu)
 };
 function lessonNeedsPremium(id){ return FEATURES.lessonsGroup2plus==='premium' && id>=7; }
 
@@ -1280,6 +1294,7 @@ function go(id){
   if(id==='s-mode'){ const ci=document.getElementById('childNameInput'); if(ci) ci.value=state.childName||''; }
   if(id==='s-map') renderMap();
   if(id==='s-collection') renderCollection();
+  if(id==='s-defter') renderDefter();
   if(id==='s-free'){
     const h=(state.mode==='kesif')?'none':'';
     document.getElementById('freeHece').style.display=h;
@@ -1572,6 +1587,26 @@ function renderCollection(){
       <span class="coll-emoji">${has?emoji:'❔'}</span>
       <span class="coll-name">${has?name:'???'}</span>
       <span class="coll-desc">${has?'Kazanıldı!':b.desc}</span>
+    </div>`;
+  }).join('');
+}
+/* Kâşif'in Defteri: her harfin Harf Çiz ustalık düzeyini (cizLevel 1-5) galeri olarak gösterir.
+   Henüz açılmamış (unlockedPool dışı) harfler kilitli görünür; kademe 5 (bellekten) = ustalaştı. */
+function letterMastery(l){ return cizLevel(l); }
+function renderDefter(){
+  const pool=unlockedPool();
+  const mastered=ALL_LETTERS.filter(l=>pool.includes(l) && letterMastery(l)>=5).length;
+  document.getElementById('defterCount').textContent=`${mastered} / ${ALL_LETTERS.length} harf ustalaştı`;
+  document.getElementById('defterGrid').innerHTML=ALL_LETTERS.map(l=>{
+    const known=pool.includes(l);
+    if(!known) return `<div class="coll-card locked"><span class="coll-emoji">🔒</span><span class="coll-name">???</span><span class="coll-desc">Henüz açılmadı</span></div>`;
+    const lvl=letterMastery(l);
+    const done=lvl>=5;
+    const stars='⭐'.repeat(Math.min(lvl,5))+'☆'.repeat(Math.max(0,5-lvl));
+    return `<div class="coll-card">
+      <span class="coll-emoji">${done?'🌟':l}</span>
+      <span class="coll-name">${l.toLocaleUpperCase('tr-TR')}</span>
+      <span class="coll-desc">${done?'Ustalaştın!':stars}</span>
     </div>`;
   }).join('');
 }
