@@ -1056,6 +1056,12 @@ try {
   process.exit(1);
 }
 
+// --- E5.6: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (renk körlüğü desteği). ---
+function pushCheck(name, cond) { results.push({ name, pass: !!cond }); }
+pushCheck('CSS: .choice.right icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.right::after\{[^}]*content:'✓'/.test(html));
+pushCheck('CSS: .choice.wrong icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.wrong::after\{[^}]*content:'✕'/.test(html));
+pushCheck('CSS: .choice ust eleman position:relative (ikon konumlandirmasi icin)', /\.choice\{position:relative;/.test(html));
+
 let failed = 0;
 for (const { name, pass } of results) {
   console.log(`  ${pass ? '✓' : '✗'} ${name}`);

@@ -144,16 +144,23 @@
   .choices.c3{grid-template-columns:repeat(3,1fr)}
   .choices.c4{grid-template-columns:repeat(2,1fr)}
   @media (max-width:420px){ .choices.c3{grid-template-columns:repeat(2,1fr)} }
-  .choice{background:var(--surface); border:5px solid transparent; border-radius:22px; box-shadow:var(--shadow-sm);
+  .choice{position:relative; background:var(--surface); border:5px solid transparent; border-radius:22px; box-shadow:var(--shadow-sm);
     cursor:pointer; padding:16px 8px; min-height:96px; display:flex; flex-direction:column;
     align-items:center; justify-content:center; gap:4px; font-size:clamp(32px,7.5vw,50px); color:var(--ink);
     transition:transform .09s ease, border-color .12s ease}
   .choice .glyph{font-family:var(--font-display); font-weight:800; text-transform:lowercase}
   .choice .cap{font-family:var(--font-body); font-weight:700; font-size:13.5px; color:var(--ink-soft)}
   .choice:active{transform:scale(.95)}
+  /* E5.6: doğru/yanlış yalnız renkle değil, köşede sabit konumlu ikon rozetiyle de belli olsun (renk körlüğü desteği). */
   .choice.right{border-color:var(--ok); animation:cheer .5s}
   .choice.wrong{border-color:var(--nope); animation:shake .38s}
   .choice.hint{border-color:var(--primary); animation:hintPulse 1s ease-in-out infinite}
+  .choice.right::after,.choice.wrong::after{position:absolute; top:-10px; right:-10px; width:30px; height:30px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:900;
+    box-shadow:var(--shadow-sm); font-family:var(--font-body)}
+  .choice.right::after{content:'✓'; background:var(--ok); color:#fff}
+  .choice.wrong::after{content:'✕'; background:var(--nope); color:#fff}
+  .choice.hint::after{content:'💡'; position:absolute; top:-12px; right:-8px; font-size:22px}
   @keyframes cheer{50%{transform:scale(1.1)}}
   @keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
   @keyframes hintPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--primary) 55%, transparent)}50%{box-shadow:0 0 0 10px transparent}}

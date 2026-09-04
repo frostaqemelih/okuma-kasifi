@@ -153,7 +153,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 - [ ] **E5.3** Ses hız/tekrar kontrolü: yavaş/normal, "bir daha" her ekranda tutarlı.
 - [ ] **E5.4** Erişilebilirlik geçişi: her interaktif öğede görünür `:focus-visible`, `role`/`aria-label`, klavye ile tam oynanabilirlik, `prefers-reduced-motion` tüm animasyonlarda.
 - [ ] **E5.5** Disleksi-dostu görünüm toggle'ı (ebeveyn ayarı): geniş harf/satır aralığı, düşük kontrast yerine sıcak zemin, tüm metin sola hizalı, serif değil.
-- [ ] **E5.6** Renk körlüğü kontrolü: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (zaten kısmen var — tamamla).
+- [x] **E5.6** Renk körlüğü kontrolü: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (zaten kısmen var — tamamla). — 2026-09-04
 - [ ] **E5.7** "Sessiz mod" (kütüphanede/uyku öncesi): TTS kapalı, tüm yönergeler görsel + yazılı.
 
 ### E6 — Harf Çiz Derinleştirme  → uzman: pedagoji raporu (§ Yazma, 5 kademe)
@@ -271,6 +271,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E4.4 (e)-(f) (rutin, **5. grup ve E4.4 tamamlandı**): "f" (fil🐘) ve "j" (jeton🪙) sesleri eklendi, ders 32 "Kâşif Gösterisi 4" ile 5. grup rozeti ("5. Grup Kâşifi 🏆") kazanılıyor. `mufredat.json` sesler.f/j + ders30-32; `index.html`'e `WORDS`/`STROKES`/`LESSONS`/`WORDBANK` girişleri, `ALL_LETTERS`/`UPPER_MAP` genişletildi. **Böylece 5. ses grubu (p,h,v,ğ,f,j, ders 26-32) tamamen oynanabilir ve MEB 2024 TYMM'in tüm 29 sesi/harfi artık haritada mevcut** — E4 epiğinin ses-grubu genişletme kısmı (E4.1-E4.4) tamamlandı. Smoke test'e 14 yeni kontrol (288 test toplamda). Sıradaki öncelik: E4.6 (büyük/küçük harf farkındalığı), E4.7 (rakam sesleri), veya Hafta 3/4'ün kalan maddeleri (E8.6/E8.8/E8.10 aile planı/premium rozeti/deneme süresi, E5.3-E5.7 erişilebilirlik, E6.3-E6.5 Harf Çiz derinleştirme, E7 PWA cilası).
 
 - 2026-09-04 — E8.8 (rutin, Hafta 3 kalan maddesi): premium satın alma "teşekkür" + koleksiyon ödülü — E3.6'da eklenen rozet koleksiyon sistemine yeni bir `MILESTONE_BADGES` girişi ("Kâşif'in Yıldız Pelerini 🦸") eklendi, `confirmStubPurchase()` başarılı (gerçek para karşılığı) satın almada bu rozeti veriyor ve satın alma başarı ekranına ("🎉 Premium açıldı!") bir teşekkür + rozet cümlesi (`#pwSuccessBadge`) ekleniyor. Tanıtım/hediye kodu (`redeemPromo()`, ücretsiz) bu rozeti KAZANDIRMIYOR — yalnız gerçek satın almaya özel, çocuğa asla satış gösterilmiyor (rozet sadece koleksiyon ekranında görünür). Smoke test'e 3 yeni kontrol (291 test toplamda). Sıradaki öncelik: E8.6 (aile planı/çoklu profil) veya E8.10 (7 gün deneme) ile Hafta 3'ü tamamen kapatmak, ya da Hafta 4'ün E5.4 (erişilebilirlik)/E7 (PWA cilası) maddeleri.
+
+- 2026-09-04 — E5.6 (rutin, Hafta 4 erişilebilirlik öncelik sırası): doğru/yanlış artık yalnız kenarlık rengiyle değil, `.choice` köşesine sabit konumlu ikon rozetiyle de gösteriliyor — `.choice.right::after` yeşil ✓ dairesi, `.choice.wrong::after` kırmızı ✕ dairesi, `.choice.hint::after` 💡. Tüm çoktan seçmeli oyun türleri (Harfi Bul/Sesi Eşleştir/Hece Kur, checkTrace() geri bildirimi) aynı `.choice` sınıfını paylaştığından JS değişikliği gerekmedi, saf CSS. Smoke test'e 3 yeni kontrol (294 test toplamda). Sıradaki öncelik: E4.6/E4.7 (E4 epiği kalanı) veya E5.3 (ses hız kontrolü).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
