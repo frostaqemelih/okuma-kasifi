@@ -712,7 +712,9 @@ const WORDS={
   d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'},
   /* E4.3: 4. grup (ç,b,g,c,ş) — sırayla ekleniyor. */
   'ç':{word:'çay', emoji:'☕'}, b:{word:'balon', emoji:'🎈'}, g:{word:'gemi', emoji:'🚢'}, c:{word:'ceket', emoji:'🧥'},
-  'ş':{word:'şeker', emoji:'🍬'}
+  'ş':{word:'şeker', emoji:'🍬'},
+  /* E4.4: 5. grup (p,h,v,ğ,f,j) — sırayla ekleniyor. */
+  p:{word:'para', emoji:'💵'}, h:{word:'horoz', emoji:'🐓'}, v:{word:'vazo', emoji:'🏺'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -740,7 +742,10 @@ const LESSONS=[
   {id:22, ad:'Ses g', yeni:['g']},
   {id:23, ad:'Ses c', yeni:['c']},
   {id:24, ad:'Ses ş', yeni:['ş']},
-  {id:25, ad:'Kâşif Gösterisi 3', alt:'Kısa metin', yeni:[], rozet:'4. Grup Kâşifi 🏆', tip:'gosteri'}
+  {id:25, ad:'Kâşif Gösterisi 3', alt:'Kısa metin', yeni:[], rozet:'4. Grup Kâşifi 🏆', tip:'gosteri'},
+  {id:26, ad:'Ses p', yeni:['p']},
+  {id:27, ad:'Ses h', yeni:['h']},
+  {id:28, ad:'Ses v', yeni:['v']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -775,7 +780,13 @@ const WORDBANK=[
   /* E4.3 (d): c sesi eklendi — 'ceket'/'cam' c+önceki gruplardan, hemen erişilebilir. */
   {w:'ceket',e:'🧥'},{w:'cam',e:'🪟'},
   /* E4.3 (e): ş sesi eklendi — 4. grup tamam. 'şeker'/'şal' hemen erişilebilir. */
-  {w:'şeker',e:'🍬'},{w:'şal',e:'🧣'}
+  {w:'şeker',e:'🍬'},{w:'şal',e:'🧣'},
+  /* E4.4 (a): p sesi eklendi — 5. grup başlangıcı. 'para' p+önceki gruplardan, hemen erişilebilir. */
+  {w:'para',e:'💵'},
+  /* E4.4 (b): h sesi eklendi — 'horoz' h+önceki gruplardan (o,r,z), hemen erişilebilir. */
+  {w:'horoz',e:'🐓'},
+  /* E4.4 (c): v sesi eklendi — 'vazo' v+önceki gruplardan, hemen erişilebilir. */
+  {w:'vazo',e:'🏺'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -824,9 +835,9 @@ const RETRY_MSGS=['Az kaldı, tekrar dinleyelim.','Neredeyse! Bir daha dinleyeli
 const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
   'Neredeyse buldun, ipucuna bak.','Harika deniyorsun, ipucu burada.','Az kaldı Kâşif, ipucuna bak.'];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
-const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş'];
+const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
-const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç'};
+const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç',h:'H',v:'V'};
 
 /* Normalize edilmiş harf yazım yolları (0–1). Her harf = vuruş dizisi; her vuruş = [x,y] noktaları.
    Vuruş sırası ve yönü MEB yazım kılavuzuna yakın (yeşil noktadan başla). */
@@ -864,7 +875,13 @@ const STROKES={
   /* E4.3 (d): c — tek vuruşlu açık eğri (ç'nin çengelsiz hâli). */
   c:[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]] ],
   /* E4.3 (e): ş — s'nin eğrisi + altına küçük çengel (kedilya), 4. grup tamamlandı. */
-  'ş':[ [[.60,.35],[.48,.32],[.37,.36],[.34,.44],[.40,.50],[.50,.52],[.60,.55],[.66,.62],[.63,.70],[.51,.74],[.39,.71],[.34,.64]], [[.50,.74],[.46,.80],[.51,.85]] ]
+  'ş':[ [[.60,.35],[.48,.32],[.37,.36],[.34,.44],[.40,.50],[.50,.52],[.60,.55],[.66,.62],[.63,.70],[.51,.74],[.39,.71],[.34,.64]], [[.50,.74],[.46,.80],[.51,.85]] ],
+  /* E4.4 (a): p — dik gövde (b'nin tersi: kuyruk aşağıda) + üstte sağa çıkan ilmek, 5. grup başlangıcı. */
+  p:[ [[.35,.33],[.35,.85]], [[.35,.40],[.44,.35],[.55,.36],[.62,.44],[.62,.53],[.55,.60],[.44,.60],[.35,.53]] ],
+  /* E4.4 (b): h — uzun gövde (l gibi) + sağa açılan kemer (n'nin ikinci vuruşuyla aynı desen). */
+  h:[ [[.36,.27],[.36,.73]], [[.36,.50],[.42,.41],[.53,.40],[.62,.49],[.62,.73]] ],
+  /* E4.4 (c): v — tek vuruş: aşağı-aşağı-yukarı-yukarı, V şekli. */
+  v:[ [[.35,.40],[.42,.60],[.50,.72],[.58,.60],[.65,.40]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */

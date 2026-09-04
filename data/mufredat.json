@@ -60,7 +60,10 @@
     "b": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["balon", "bal", "bebek"], "sesletim": "b", "cizimVurus": 2 },
     "g": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["gemi", "gül", "göl"], "sesletim": "g", "cizimVurus": 2, "karisir": ["k"] },
     "c": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["ceket", "cam", "civciv"], "sesletim": "c", "cizimVurus": 1, "karisir": ["ç"] },
-    "ş": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["şeker", "şal", "kuş"], "sesletim": "şşş", "cizimVurus": 2, "karisir": ["s"] }
+    "ş": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["şeker", "şal", "kuş"], "sesletim": "şşş", "cizimVurus": 2, "karisir": ["s"] },
+    "p": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["papatya", "para", "top"], "sesletim": "p", "cizimVurus": 2, "karisir": ["b"] },
+    "h": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["hava", "horoz", "hoş"], "sesletim": "hhh", "cizimVurus": 2 },
+    "v": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["vazo", "vagon", "kova"], "sesletim": "vvv", "cizimVurus": 1 }
   },
 
   "ortakIskelet": [
@@ -280,6 +283,30 @@
       "oyunlar": ["hizli-yoklama", "serbest-cizim"],
       "basariOlcutu": "1.–4. grup seslerinin (23 ses) çoğunu güvenle tanır, çizer ve okur",
       "rozet": "4. Grup Kâşif Rozeti"
+    },
+    {
+      "id": 26, "ad": "Ses p", "yeniSesler": ["p"], "yeniHarfler": ["p"],
+      "beceriler": ["/p/ ilk-ses avı", "/p/–/b/ ayırt etme (kritik, ötümlü/ötümsüz)", "p harfini çizme (gövde + üst ilmek)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/p/ ve /b/'yi ikili ayırt görevinde %80 ayırır; p harfini doğru sırayla çizer; 'para' kelimesini okur",
+      "kelimeler": ["para"], "heceler": ["pa", "pe", "pı", "po", "pu", "ap", "ep"], "cumleler": [],
+      "not": "5. grubun (p,h,v,ğ,f,j) ilk sesi. Sıradaki ses (h) ders 27'de eklenecek."
+    },
+    {
+      "id": 27, "ad": "Ses h", "yeniSesler": ["h"], "yeniHarfler": ["h"],
+      "beceriler": ["/h/ ilk-ses avı", "/hhh/ uzatma", "h harfini çizme (uzun gövde + kemer)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/h/ ile başlayan sözcükleri %80 tanır; h harfini doğru sırayla çizer; 'horoz' kelimesini okur",
+      "kelimeler": ["horoz"], "heceler": ["ha", "he", "hı", "ho", "hu", "ah", "eh"], "cumleler": [],
+      "not": "5. grubun 2. sesi. Sıradaki ses (v) ders 28'de eklenecek."
+    },
+    {
+      "id": 28, "ad": "Ses v", "yeniSesler": ["v"], "yeniHarfler": ["v"],
+      "beceriler": ["/v/ ilk-ses avı", "/vvv/ uzatma", "v harfini çizme (tek çentik vuruşu)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/v/ ile başlayan sözcükleri %80 tanır; v harfini doğru sırayla çizer; 'vazo' kelimesini okur",
+      "kelimeler": ["vazo"], "heceler": ["va", "ve", "vı", "vo", "vu", "av", "ev"], "cumleler": [],
+      "not": "5. grubun 3. sesi. Sıradaki sesler ğ (kelime başında olmaz, özel kural), f, j."
     }
   ]
 }

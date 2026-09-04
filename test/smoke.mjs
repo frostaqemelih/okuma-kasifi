@@ -913,6 +913,50 @@ const testDriver = `
     check('E3.6 ilerleme rozeti sistemi hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 43) E4.4 (a) 5. grup başlangıcı: p sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.p tanımlı ve p ile başlıyor', !!WORDS.p && WORDS.p.word[0] === 'p');
+    check('STROKES.p tanımlı (çok vuruşlu: gövde + üst ilmek)', Array.isArray(STROKES.p) && STROKES.p.length === 2);
+    const L26 = LESSONS.find(x => x.id === 26);
+    check('LESSONS içinde ders 26 "Ses p" olarak tanımlı', !!L26 && L26.yeni.includes('p'));
+    const poolWithP = poolUpTo(26);
+    check('poolUpTo(26) p sesini içeriyor', poolWithP.includes('p'));
+    const reachableP = WORDBANK.filter(it => it.w.split('').every(c => poolWithP.includes(c)));
+    check('"para" p ogrenilince WORDBANK icinde erisilebilir', reachableP.some(it => it.w === 'para'));
+  } catch (e) {
+    check('5. grup p sesi (E4.4 a) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- 44) E4.4 (b) 5. grup: h sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.h tanımlı ve h ile başlıyor', !!WORDS.h && WORDS.h.word[0] === 'h');
+    check('STROKES.h tanımlı (çok vuruşlu: gövde + kemer)', Array.isArray(STROKES.h) && STROKES.h.length === 2);
+    const L27 = LESSONS.find(x => x.id === 27);
+    check('LESSONS içinde ders 27 "Ses h" olarak tanımlı', !!L27 && L27.yeni.includes('h'));
+    const poolWithH = poolUpTo(27);
+    check('poolUpTo(27) p ve h seslerinin ikisini de içeriyor', ['p', 'h'].every(c => poolWithH.includes(c)));
+    const reachableH = WORDBANK.filter(it => it.w.split('').every(c => poolWithH.includes(c)));
+    check('"horoz" h ogrenilince WORDBANK icinde erisilebilir', reachableH.some(it => it.w === 'horoz'));
+    check('"horoz" kelimesi henuz ogrenilmemis v sesi icermiyor', !WORDS.h.word.includes('v'));
+  } catch (e) {
+    check('5. grup h sesi (E4.4 b) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- 45) E4.4 (c) 5. grup: v sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.v tanımlı ve v ile başlıyor', !!WORDS.v && WORDS.v.word[0] === 'v');
+    check('STROKES.v tanımlı (tek vuruş: V şekli)', Array.isArray(STROKES.v) && STROKES.v.length === 1);
+    const L28 = LESSONS.find(x => x.id === 28);
+    check('LESSONS içinde ders 28 "Ses v" olarak tanımlı', !!L28 && L28.yeni.includes('v'));
+    const poolWithV = poolUpTo(28);
+    check('poolUpTo(28) 5. grubun ilk 3 sesini (p,h,v) içeriyor', ['p', 'h', 'v'].every(c => poolWithV.includes(c)));
+    const reachableV = WORDBANK.filter(it => it.w.split('').every(c => poolWithV.includes(c)));
+    check('"vazo" v ogrenilince WORDBANK icinde erisilebilir', reachableV.some(it => it.w === 'vazo'));
+    check('ALL_LETTERS h ve v harflerini iceriyor (dagitici havuzu)', ['h', 'v'].every(c => ALL_LETTERS.includes(c)));
+  } catch (e) {
+    check('5. grup v sesi (E4.4 c) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
