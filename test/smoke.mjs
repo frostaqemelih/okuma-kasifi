@@ -1477,6 +1477,11 @@ pushCheck('sw.js: Google Fonts CSS de best-effort onbelleklemeye deneniyor', /FO
 pushCheck('sw.js: CACHE surumu v3 (onbellekleme mantigi degistiginden)', /const CACHE = 'okuma-kasifi-v3'/.test(swJs));
 pushCheck('HTML: "çevrimdışısın" gibi engelleyici bir gösterge YOK (sessizce calisir)', !/çevrimdışısın/i.test(html) && !/offline-indicator/i.test(html));
 
+// --- Hata düzeltmesi: `hidden` özniteliği taşıyan öğeler `display:flex` gibi bir sınıf kuralı
+// yüzünden görünür kalabiliyordu (author CSS her zaman UA varsayılanını geçersiz kılar) — gerçek
+// tarayıcıda çekilen ekran görüntüsüyle keşfedildi (#updateBar/#trialBox/#a2hsBar hep görünüyordu).
+pushCheck('CSS: global [hidden] kuralı display:none!important ile korunuyor (hidden ATTR override edilemiyor)', /\[hidden\]\{display:none!important\}/.test(html));
+
 let failed = 0;
 for (const { name, pass } of results) {
   console.log(`  ${pass ? '✓' : '✗'} ${name}`);

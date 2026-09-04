@@ -45,6 +45,12 @@
     --shadow-sm:0 4px 0 rgba(0,0,0,.32), 0 8px 16px rgba(0,0,0,.4);
   }
   *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent}
+  /* E7.1 hata düzeltmesi: bir öğenin sınıfı `display:flex` gibi bir kural taşıyorsa, bu tarayıcının
+     varsayılan `[hidden]{display:none}` kuralını GEÇERSİZ KILAR (author CSS her zaman UA stiline
+     üstün gelir) — yani `hidden` özniteliği çalışmaz, öğe gizli olması gerekirken görünür kalır.
+     Gerçek tarayıcıda çekilen ekran görüntüsüyle keşfedildi (#updateBar/#trialBox/#a2hsBar hep
+     görünüyordu). Tek global kural tüm mevcut ve gelecekteki `hidden` kullanımlarını güvence altına alır. */
+  [hidden]{display:none!important}
   html,body{height:100%}
   body{
     background:radial-gradient(120% 70% at 50% -10%, color-mix(in srgb, var(--sun) 26%, var(--bg)) 0%, var(--bg) 62%);
