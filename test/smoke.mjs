@@ -452,14 +452,20 @@ const testDriver = `
 
   // --- 22) E3.5 Okuma Kulübü metin bankası: birden çok metin, pool'a göre seçim ---
   try {
-    check('TEXTS en az 2 metin içeriyor', TEXTS.length >= 2);
+    check('TEXTS en az 5 metin içeriyor (5 ses grubunun hepsi)', TEXTS.length >= 5);
     const lettersOf = s => Array.from(new Set(s.toLowerCase().replace(/[^a-zçğıöşü]/g, '').split('')));
     const allValid = TEXTS.every(t => lettersOf(t.metin).every(c => t.gerekli.includes(c)));
     check('Her metin yalnız kendi gerekli seslerinden kurulu', allValid);
     check('pickText() dar pool için en basit metni seçiyor',
-      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === TEXTS[0].id);
-    check('pickText() geniş pool için en ileri uygun metni seçiyor',
-      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === TEXTS[TEXTS.length - 1].id);
+      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === 'els-1');
+    check('pickText() 1.+2. grup pool için els-2 seçiyor (3. grup sesleri henüz yok)',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === 'els-2');
+    check('pickText() 3. grup dahil pool için els-3 seçiyor',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i', 'ü', 's', 'ö', 'y', 'd', 'z']).id === 'els-3');
+    check('pickText() 4. grup dahil pool için els-4 seçiyor',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i', 'ü', 's', 'ö', 'y', 'd', 'z', 'ç', 'b', 'g', 'c', 'ş']).id === 'els-4');
+    check('pickText() tüm alfabe (5. grup) pool için els-5 seçiyor',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i', 'ü', 's', 'ö', 'y', 'd', 'z', 'ç', 'b', 'g', 'c', 'ş', 'p', 'h', 'v', 'ğ', 'f', 'j']).id === 'els-5');
 
     const origSay2 = say;
     say = (text, cb) => { if (cb) cb(); };
