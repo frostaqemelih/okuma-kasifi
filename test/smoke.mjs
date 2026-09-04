@@ -37,7 +37,7 @@ const testDriver = `
   function check(name, cond){ results.push({name, pass: !!cond}); }
 
   // --- 1) Temel ekranlar DOM'da mevcut mu? ---
-  ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent'].forEach(id=>{
+  ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent','s-collection'].forEach(id=>{
     check("#" + id + " ekranı DOM'da", !!document.getElementById(id));
   });
   check('5 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 5);
@@ -835,6 +835,82 @@ const testDriver = `
     play = null;
   } catch (e) {
     check('E8.7 premium tesvik hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
+  // --- 42) E3.6: ilerleme rozeti sistemi (ses ustaligi, gun serisi, ilk kelime/cumle/metin, koleksiyon ekrani) ---
+  try {
+    state = fresh();
+    play = null;
+
+    check('awardBadge() yeni rozeti state.badges e ekliyor', (() => {
+      state.badges = [];
+      awardBadge('Test Rozeti X');
+      return state.badges.includes('Test Rozeti X');
+    })());
+    check('awardBadge() ayni rozeti tekrar eklemiyor (dedup)', (() => {
+      awardBadge('Test Rozeti X');
+      return state.badges.filter(b => b === 'Test Rozeti X').length === 1;
+    })());
+
+    state.soundStats = { a: { c: 5, w: 0, strength: 5 }, n: { c: 5, w: 0, strength: 3 } };
+    check('masteredSoundCount() sadece strength>=5 olanlari sayiyor', masteredSoundCount() === 1);
+
+    state.badges = [];
+    checkMilestoneBadges();
+    check('1 seste ustalik rozeti kazandiriyor', state.badges.includes('İlk Sesini Ustaca Söyledin 🎯'));
+    check('henuz 10 seste ustalik rozeti yok', !state.badges.includes('10 Seste Usta Oldun 🎯✨'));
+
+    const st10 = {};
+    'anetilokurı'.split('').forEach(s => { st10[s] = { c: 5, w: 0, strength: 5 }; });
+    state.soundStats = st10;
+    state.badges = [];
+    checkMilestoneBadges();
+    check('10+ seste ustalik rozeti kazandiriyor', state.badges.includes('10 Seste Usta Oldun 🎯✨'));
+
+    state.soundStats = {};
+    state.daily = {};
+    const d = new Date();
+    for (let i = 0; i < 3; i++) { const k = new Date(d); k.setDate(d.getDate() - i); state.daily[k.toISOString().slice(0, 10)] = 90; }
+    state.badges = [];
+    checkMilestoneBadges();
+    check('3 gun ust uste calisma rozeti kazandiriyor', state.badges.includes('3 Gün Üst Üste Kâşif 🔥'));
+    check('henuz 7 gun rozeti yok', !state.badges.includes('7 Gün Üst Üste Kâşif 🔥🔥'));
+
+    state = fresh();
+    play = null;
+    wordState = { kind: 'kelime', sep: '', target: ['a', 't'], tiles: [], filled: [{ l: 'a' }, { l: 't' }] };
+    checkWord();
+    check('ilk kelime kurulunca rozet kazandiriyor', state.badges.includes('İlk Kelimeni Kurdun 📝'));
+    check('cumle rozeti henuz yok (kelime kuruldu)', !state.badges.includes('İlk Cümleni Kurdun 🌱'));
+
+    wordState = { kind: 'cumle', sep: ' ', target: ['O', 'al'], tiles: [], filled: [{ l: 'O' }, { l: 'al' }] };
+    checkWord();
+    check('ilk cumle kurulunca rozet kazandiriyor', state.badges.includes('İlk Cümleni Kurdun 🌱'));
+
+    const origSay2 = say;
+    say = (text, cb) => { if (cb) cb(); };
+    state = fresh();
+    play = null;
+    roundOkuma();
+    startOkumaQuestions();
+    let rb = document.querySelector('#choices .choice[data-right="1"]');
+    answerOkuma(rb, true);
+    rb = document.querySelector('#choices .choice[data-right="1"]');
+    answerOkuma(rb, true);
+    check('Okuma Kulubu tamamlaninca ilk metin rozeti kazandiriyor', state.badges.includes('İlk Metnini Okudun 📖'));
+    say = origSay2;
+
+    const cat = badgeCatalog();
+    check('badgeCatalog() ders-grubu + kilometre tasi rozetlerini birlestiriyor', cat.length >= LESSONS.filter(L => L.rozet).length + MILESTONE_BADGES.length);
+    state.badges = [cat[0].text];
+    go('s-collection');
+    check('renderCollection() kazanilan/toplam sayisini gosteriyor', document.getElementById('collectionCount').textContent.includes('1 / ' + cat.length));
+    check('renderCollection() kazanilmamis rozeti gizli (???) gosteriyor', document.getElementById('collectionGrid').innerHTML.includes('???'));
+
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('E3.6 ilerleme rozeti sistemi hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
   return results;

@@ -259,6 +259,16 @@
   .badge{background:var(--surface); border:2px solid var(--sun); border-radius:999px; padding:6px 12px;
     font-family:var(--font-display); font-weight:700; font-size:13px}
 
+  /* E3.6: rozet koleksiyon ekranı */
+  .coll-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px;
+    width:min(560px,94vw)}
+  .coll-card{background:var(--surface); border:2px solid var(--sun); border-radius:16px; padding:14px 10px;
+    text-align:center; display:flex; flex-direction:column; gap:6px; box-shadow:var(--shadow-sm)}
+  .coll-card.locked{opacity:.45; border-color:var(--line); filter:grayscale(.6)}
+  .coll-card .coll-emoji{font-size:30px}
+  .coll-card .coll-name{font-family:var(--font-display); font-weight:800; font-size:12.5px; line-height:1.25}
+  .coll-card .coll-desc{font-size:11px; color:var(--ink-soft,#777)}
+
   /* premium paywall (E8.3) */
   .paywall-benefits{list-style:none; width:min(420px,92vw); text-align:left; display:flex; flex-direction:column; gap:8px}
   .paywall-benefits li{font-size:15px; color:var(--ink); padding-left:26px; position:relative}
@@ -324,6 +334,7 @@
     <h1 style="font-size:clamp(22px,5vw,30px); margin-bottom:2px">Keşif Haritası</h1>
     <span class="group-chip" style="margin-bottom:6px">Mod: <b id="modeChip">—</b> · <a href="#" onclick="event.preventDefault();go('s-mode')" style="color:var(--primary-d)">değiştir</a></span>
     <div class="badges" id="badges" style="margin-bottom:10px"></div>
+    <button class="btn ghost tiny" style="margin-bottom:10px" onclick="go('s-collection')">🏆 Koleksiyon</button>
     <button class="btn tiny" id="reviewBtn" style="margin-bottom:12px; background:var(--nope)" onclick="startReviewRound()" hidden></button>
     <div class="path" id="path"></div>
     <button class="btn grape tiny" style="margin-top:20px" onclick="openFreeMenu()">🎲 Serbest oyun</button>
@@ -369,6 +380,18 @@
     <p class="sub" id="doneBreakMsg" hidden>Bugün epey çalıştın! Kısa bir mola vermek ister misin? 🌤️</p>
     <button class="btn ok" onclick="go('s-map')">Haritaya dön</button>
     <button class="btn ghost tiny" id="doneBreakBtn" onclick="acceptBreak()" hidden>☕ Mola ver, yarın devam</button>
+  </section>
+
+  <!-- ROZET KOLEKSİYONU (E3.6) -->
+  <section id="s-collection" class="screen scroll">
+    <div class="topbar">
+      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön">🏠</button>
+      <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Koleksiyon</span>
+      <span style="width:50px"></span>
+    </div>
+    <h1 style="font-size:clamp(20px,5vw,28px); margin-bottom:2px">Kâşif Rozetleri</h1>
+    <p class="sub" id="collectionCount" style="margin-bottom:10px"></p>
+    <div class="coll-grid" id="collectionGrid"></div>
   </section>
 
   <!-- EBEVEYN İZLEME SAYFASI -->
@@ -892,6 +915,7 @@ function go(id){
   if('speechSynthesis' in window) speechSynthesis.cancel();
   if(id==='s-mode'){ const ci=document.getElementById('childNameInput'); if(ci) ci.value=state.childName||''; }
   if(id==='s-map') renderMap();
+  if(id==='s-collection') renderCollection();
   if(id==='s-free'){
     const h=(state.mode==='kesif')?'none':'';
     document.getElementById('freeHece').style.display=h;
@@ -1123,6 +1147,58 @@ function creditSounds(ok){
     st.lastSeen=today();
   });
   save();
+  checkMilestoneBadges();
+}
+
+/* ================= İLERLEME ROZETLERİ (E3.6) ================= */
+// Ders-grubu rozetleri LESSONS[].rozet üzerinden zaten award()/finishLesson() tarafında
+// veriliyor (state.badges'a itiliyor); burada ek "kilometre taşı" rozetleri tanımlanır:
+// ses ustalığı, gün serisi, ilk kelime/cümle/metin. Aynı `state.badges` dizisini paylaşır.
+const MILESTONE_BADGES=[
+  {text:'İlk Sesini Ustaca Söyledin 🎯', desc:'Bir sesi tam öğren (Ses Karnesi\'nde ustalaş).'},
+  {text:'10 Seste Usta Oldun 🎯✨', desc:'10 farklı seste ustalaş.'},
+  {text:'3 Gün Üst Üste Kâşif 🔥', desc:'3 gün arka arkaya çalış.'},
+  {text:'7 Gün Üst Üste Kâşif 🔥🔥', desc:'7 gün arka arkaya çalış.'},
+  {text:'14 Gün Üst Üste Kâşif 🔥🔥🔥', desc:'14 gün arka arkaya çalış.'},
+  {text:'İlk Kelimeni Kurdun 📝', desc:'Kelime Kur\'da bir kelimeyi doğru sırala.'},
+  {text:'İlk Cümleni Kurdun 🌱', desc:'Cümle Bahçesi\'nde bir cümleyi doğru sırala.'},
+  {text:'İlk Metnini Okudun 📖', desc:'Okuma Kulübü\'nde bir metni tamamla.'}
+];
+function awardBadge(text){
+  if(!state.badges.includes(text)){ state.badges.push(text); save(); }
+}
+function masteredSoundCount(){
+  return Object.values(state.soundStats).filter(s=>s && s.strength>=5).length;
+}
+function checkMilestoneBadges(){
+  const m=masteredSoundCount();
+  if(m>=1) awardBadge(MILESTONE_BADGES[0].text);
+  if(m>=10) awardBadge(MILESTONE_BADGES[1].text);
+  const sd=streakDays();
+  if(sd>=3) awardBadge(MILESTONE_BADGES[2].text);
+  if(sd>=7) awardBadge(MILESTONE_BADGES[3].text);
+  if(sd>=14) awardBadge(MILESTONE_BADGES[4].text);
+}
+// Ders-grubu rozetleri (LESSONS[].rozet) + kilometre taşı rozetleri birleşik katalog.
+function badgeCatalog(){
+  const groupBadges=LESSONS.filter(L=>L.rozet).map(L=>({text:L.rozet, desc:'Bir ses grubunu tamamla.'}));
+  return [...groupBadges, ...MILESTONE_BADGES];
+}
+function renderCollection(){
+  const cat=badgeCatalog();
+  const earned=cat.filter(b=>state.badges.includes(b.text)).length;
+  document.getElementById('collectionCount').textContent=`${earned} / ${cat.length} rozet kazandın`;
+  document.getElementById('collectionGrid').innerHTML=cat.map(b=>{
+    const has=state.badges.includes(b.text);
+    const parts=b.text.split(' ');
+    const emoji=parts[parts.length-1];
+    const name=parts.slice(0,-1).join(' ');
+    return `<div class="coll-card${has?'':' locked'}">
+      <span class="coll-emoji">${has?emoji:'❔'}</span>
+      <span class="coll-name">${has?name:'???'}</span>
+      <span class="coll-desc">${has?'Kazanıldı!':b.desc}</span>
+    </div>`;
+  }).join('');
 }
 /* E2.3: Aralıklı tekrar — düşük "strength" veya uzun süredir görülmemiş, öğrenilmiş sesleri seç. */
 function daysSince(dateStr){
@@ -1423,6 +1499,7 @@ function checkWord(){
   const ok = filled.map(f=>f.l).join(sep||'')===target.join(sep||'');
   if(ok){
     locked=true; state.correct++; creditSounds(true); save();
+    awardBadge(kind==='cumle' ? 'İlk Cümleni Kurdun 🌱' : 'İlk Kelimeni Kurdun 📝');
     document.querySelectorAll('#slots .slot').forEach(s=>{s.style.borderColor='var(--ok)';s.style.borderStyle='solid';});
     const praise = kind==='cumle'
       ? rnd(['Cümleyi kurdun! Harika!','Aferin, doğru sırada!','Süper bir okuyucusun!',
@@ -1506,6 +1583,7 @@ function answerOkuma(el,right){
   });
 }
 function finishOkuma(){
+  awardBadge('İlk Metnini Okudun 📖');
   say('Okuma Kulübü\'nü tamamladın! Harika bir okuyucusun!', award);
 }
 
@@ -1731,6 +1809,7 @@ function trackTime(){
   if(play){ const lg=state.lessonLog[play.lessonId]||(state.lessonLog[play.lessonId]={attempts:0,seconds:0,first:t,last:t});
     lg.seconds+=d; lg.last=t; }
   sessionStart=Date.now(); save();
+  checkMilestoneBadges();
 }
 /* E2.6: oturum ritmi — pedagoji raporundaki önerilen süreye göre nazik mola önerisi.
    Keşif (4–5 yaş) 6–10 dk, Çözümleme (6–7 yaş) 12–18 dk aralığının orta noktası eşik alınır. */
