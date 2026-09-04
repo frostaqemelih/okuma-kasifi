@@ -1464,12 +1464,18 @@ pushCheck('manifest.json: icon-192/512 hem "any" hem "maskable" purpose ile tan�
   } catch { return false; }
 })());
 pushCheck('HTML: apple-touch-icon ve favicon linkleri tanımlı', /rel="apple-touch-icon" href="icon-192.png"/.test(html) && /rel="icon" href="icon-192.png"/.test(html));
-pushCheck('sw.js: CACHE surumu ikon eklenmesiyle guncellendi (v2)', /const CACHE = 'okuma-kasifi-v2'/.test(swJs));
+pushCheck('sw.js: CACHE surumu ikon eklenmesiyle guncellendi (en az v2)', /const CACHE = 'okuma-kasifi-v(2|3)'/.test(swJs));
 pushCheck('sw.js: ASSETS onbellek listesi ikon dosyalarini iceriyor', /icon-192\.png/.test(swJs) && /icon-512\.png/.test(swJs));
 pushCheck('HTML: #a2hsBar "ana ekrana ekle" ipucu cubugu tanımlı', /id="a2hsBar" class="a2hs-bar" hidden/.test(html) && /id="a2hsInstallBtn"/.test(html));
 pushCheck('JS: showA2HSBar/dismissA2HS/promptA2HS fonksiyonları tanımlı', /function showA2HSBar\(\)/.test(html) && /function dismissA2HS\(\)/.test(html) && /function promptA2HS\(\)/.test(html));
 pushCheck('JS: beforeinstallprompt dinleyicisi kayıtlı (Android/Chrome kurulum istemi)', /addEventListener\('beforeinstallprompt'/.test(html));
 pushCheck('settings.a2hsDismissed varsayılan false ile şemada tanımlı', /a2hsDismissed:false/.test(html));
+
+// --- E7.6: çevrimdışı sağlamlık — install sırasında tek bir asset başarısız olsa bile hepsi denenir ---
+pushCheck('sw.js: install her asset icin ayrı deneniyor (c.addAll yerine, tek hata hepsini iptal etmesin)', !/c\.addAll\(ASSETS\)/.test(swJs) && /\.map\(a => c\.add\(a\)\.catch\(/.test(swJs));
+pushCheck('sw.js: Google Fonts CSS de best-effort onbelleklemeye deneniyor', /FONT_CSS/.test(swJs) && /fonts\.googleapis\.com\/css2/.test(swJs));
+pushCheck('sw.js: CACHE surumu v3 (onbellekleme mantigi degistiginden)', /const CACHE = 'okuma-kasifi-v3'/.test(swJs));
+pushCheck('HTML: "çevrimdışısın" gibi engelleyici bir gösterge YOK (sessizce calisir)', !/çevrimdışısın/i.test(html) && !/offline-indicator/i.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {
