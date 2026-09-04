@@ -1236,6 +1236,42 @@ const testDriver = `
     check('E5.7 sessiz mod yazili geri bildirim hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- E6.5: Büyük harf çizimi (STROKES_UPPER ayrı kılavuz + ayrı ilerleme) ---
+  try {
+    const lowerKeys = Object.keys(STROKES).sort();
+    const upperKeys = Object.keys(STROKES_UPPER).sort();
+    check('STROKES_UPPER, STROKES ile aynı 29 anahtara (küçük harf) sahip', lowerKeys.length === 29 && JSON.stringify(lowerKeys) === JSON.stringify(upperKeys));
+    const allCoordsValid = Object.values(STROKES_UPPER).every(strokes =>
+      strokes.length > 0 && strokes.every(s => s.length >= 2 && s.every(([x, y]) => x >= 0 && x <= 1 && y >= 0 && y <= 1)));
+    check('STROKES_UPPER her vuruşta ≥2 nokta, tüm koordinatlar 0-1 arasında', allCoordsValid);
+
+    check('cizLevelUpper() ses hiç çizilmemişken varsayılan 1', cizLevelUpper('a') === 1);
+    state.soundStats = { a: { c: 0, w: 0, cizLevelUpper: 3 } };
+    check('cizLevelUpper() kayıtlı kademeyi döndürüyor', cizLevelUpper('a') === 3);
+
+    check('multiStrokeGuideOn() STROKES_UPPER ile çok vuruşlu BÜYÜK t için true döner', multiStrokeGuideOn('t', 1, STROKES_UPPER) === true);
+    check('multiStrokeGuideOn() STROKES_UPPER ile tek vuruşlu BÜYÜK ı için false döner', multiStrokeGuideOn('ı', 1, STROKES_UPPER) === false);
+
+    // checkTrace() büyük harf modunda (trace.upper) yalnız cizLevelUpper'ı ilerletir, cizLevel'a dokunmaz
+    state = fresh();
+    curTargets = ['a'];
+    const pts = Array.from({ length: 15 }, (_, i) => [i, i]);
+    trace = { letter: 'a', upper: true, strokes: [pts], maskPts: [[1, 1], [5, 5], [10, 10]], size: 100 };
+    checkTrace();
+    check('checkTrace() büyük harf modunda cizLevelUpper 1→2 ilerliyor', state.soundStats.a.cizLevelUpper === 2);
+    check('checkTrace() büyük harf modunda cizLevel (küçük harf) etkilenmiyor', !state.soundStats.a.cizLevel);
+
+    // Serbest oyun menüsü kartı + Çözümleme moduna özel görünürlük
+    go('s-mode'); setMode('kesif');
+    go('s-free');
+    check('Keşif modunda "Büyük Harf Çiz" kartı gizli', document.getElementById('freeCizBuyuk').style.display === 'none');
+    setMode('cozumleme');
+    go('s-free');
+    check('Çözümleme modunda "Büyük Harf Çiz" kartı görünür', document.getElementById('freeCizBuyuk').style.display !== 'none');
+  } catch (e) {
+    check('E6.5 büyük harf çizimi hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1257,6 +1293,8 @@ pushCheck('CSS: .choice ust eleman position:relative (ikon konumlandirmasi icin)
 pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("startFree('rakam')") && html.includes('>Sayılar<'));
 // --- E4.6: Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut ---
 pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', html.includes("startFree('buyuk')") && html.includes('Büyük mü Küçük mü?'));
+// --- E6.5: Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut ---
+pushCheck('Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut', html.includes("startFree('cizBuyuk')") && html.includes('Büyük Harf Çiz'));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---

@@ -373,6 +373,7 @@
       <div class="age-card" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
       <div class="age-card" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
       <div class="age-card" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
+      <div class="age-card" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
     </div>
   </section>
 
@@ -948,9 +949,44 @@ const STROKES={
   j:[ [[.52,.28],[.53,.29]], [[.52,.42],[.52,.68],[.48,.76],[.40,.79]] ]
 };
 
+/* E6.5: büyük harf çizimi — STROKES ile aynı anahtar (küçük harf), Türk alfabesinin 29 BÜYÜK
+   hâli için ayrı vuruş yolları (bkz. UPPER_MAP glyph eşlemesi). */
+const STROKES_UPPER={
+  a:[ [[.50,.22],[.32,.75]], [[.50,.22],[.68,.75]], [[.38,.55],[.62,.55]] ],
+  e:[ [[.35,.22],[.35,.75]], [[.35,.22],[.62,.22]], [[.35,.48],[.58,.48]], [[.35,.75],[.62,.75]] ],
+  i:[ [[.50,.18],[.50,.19]], [[.50,.28],[.50,.75]] ],
+  'ı':[ [[.50,.24],[.50,.75]] ],
+  l:[ [[.38,.22],[.38,.75]], [[.38,.75],[.62,.75]] ],
+  t:[ [[.32,.25],[.68,.25]], [[.50,.25],[.50,.75]] ],
+  n:[ [[.35,.22],[.35,.75]], [[.35,.22],[.65,.75]], [[.65,.22],[.65,.75]] ],
+  o:[ [[.50,.22],[.36,.30],[.30,.48],[.34,.66],[.50,.75],[.66,.66],[.70,.48],[.64,.30],[.50,.22]] ],
+  k:[ [[.35,.22],[.35,.75]], [[.62,.22],[.35,.50]], [[.40,.46],[.65,.75]] ],
+  u:[ [[.35,.22],[.35,.58],[.42,.72],[.55,.74],[.63,.65],[.65,.22]] ],
+  r:[ [[.35,.22],[.35,.75]], [[.35,.22],[.55,.22],[.63,.30],[.60,.42],[.50,.46],[.35,.46]], [[.48,.46],[.65,.75]] ],
+  m:[ [[.30,.22],[.30,.75]], [[.30,.22],[.50,.55]], [[.50,.55],[.70,.22]], [[.70,.22],[.70,.75]] ],
+  'ü':[ [[.40,.14],[.41,.15]], [[.58,.14],[.59,.15]], [[.35,.22],[.35,.58],[.42,.72],[.55,.74],[.63,.65],[.65,.22]] ],
+  s:[ [[.62,.28],[.48,.24],[.36,.28],[.33,.38],[.42,.46],[.55,.50],[.65,.58],[.62,.68],[.50,.75],[.38,.71],[.34,.62]] ],
+  'ö':[ [[.40,.14],[.41,.15]], [[.58,.14],[.59,.15]], [[.50,.22],[.36,.30],[.30,.48],[.34,.66],[.50,.75],[.66,.66],[.70,.48],[.64,.30],[.50,.22]] ],
+  y:[ [[.33,.22],[.50,.48]], [[.67,.22],[.50,.48]], [[.50,.48],[.50,.75]] ],
+  d:[ [[.35,.22],[.35,.75]], [[.35,.22],[.55,.24],[.65,.35],[.68,.48],[.65,.61],[.55,.72],[.35,.75]] ],
+  z:[ [[.34,.24],[.66,.24]], [[.66,.24],[.34,.75]], [[.34,.75],[.66,.75]] ],
+  'ç':[ [[.65,.30],[.50,.22],[.36,.28],[.30,.45],[.34,.62],[.46,.72],[.60,.68]], [[.50,.76],[.46,.82],[.51,.87]] ],
+  b:[ [[.35,.22],[.35,.75]], [[.35,.22],[.55,.24],[.62,.32],[.60,.42],[.50,.46],[.35,.46]], [[.35,.46],[.52,.46],[.63,.52],[.65,.63],[.58,.72],[.45,.75],[.35,.75]] ],
+  g:[ [[.66,.32],[.55,.24],[.42,.24],[.32,.36],[.30,.52],[.36,.66],[.50,.74],[.62,.70],[.67,.58]], [[.67,.58],[.52,.58]] ],
+  c:[ [[.66,.30],[.50,.22],[.36,.28],[.30,.45],[.34,.62],[.46,.72],[.60,.68]] ],
+  'ş':[ [[.62,.28],[.48,.24],[.36,.28],[.33,.38],[.42,.46],[.55,.50],[.65,.58],[.62,.68],[.50,.75],[.38,.71],[.34,.62]], [[.50,.77],[.46,.83],[.51,.88]] ],
+  p:[ [[.35,.22],[.35,.75]], [[.35,.22],[.55,.24],[.62,.32],[.60,.42],[.50,.46],[.35,.46]] ],
+  h:[ [[.34,.22],[.34,.75]], [[.66,.22],[.66,.75]], [[.34,.48],[.66,.48]] ],
+  v:[ [[.32,.22],[.50,.75]], [[.68,.22],[.50,.75]] ],
+  'ğ':[ [[.38,.10],[.44,.15],[.50,.16],[.56,.15],[.62,.10]], [[.66,.32],[.55,.24],[.42,.24],[.32,.36],[.30,.52],[.36,.66],[.50,.74],[.62,.70],[.67,.58]], [[.67,.58],[.52,.58]] ],
+  f:[ [[.35,.22],[.35,.75]], [[.35,.22],[.62,.22]], [[.35,.48],[.58,.48]] ],
+  j:[ [[.60,.22],[.60,.62],[.52,.74],[.40,.76],[.32,.68]] ]
+};
+
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
-function multiStrokeGuideOn(letter,level){
-  return !!(letter && STROKES[letter] && STROKES[letter].length>1 && level<=4);
+function multiStrokeGuideOn(letter,level,strokesMap){
+  strokesMap=strokesMap||STROKES;
+  return !!(letter && strokesMap[letter] && strokesMap[letter].length>1 && level<=4);
 }
 function strokeMatchRatio(userPts,strokePath,size){
   if(!userPts||!userPts.length||!strokePath||!strokePath.length) return 0;
@@ -1037,6 +1073,7 @@ function go(id){
     document.getElementById('freeCumle').style.display=h;
     document.getElementById('freeOkuma').style.display=h; // E3.4: Okuma Kulübü de Çözümleme moduna özel
     document.getElementById('freeBuyuk').style.display=h; // E4.6: Büyük/küçük harf kuralları da Çözümleme moduna özel
+    document.getElementById('freeCizBuyuk').style.display=h; // E6.5: Büyük harf çizimi de Çözümleme moduna özel
   }
 }
 function onStart(){
@@ -1239,7 +1276,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1774,6 +1811,7 @@ function finishOkuma(){
 let trace={};
 /* E6.2: harf çizim kademesi (1 kılavuzlu iz → 5 bellekten), her başarılı çizimde ilerler. */
 function cizLevel(s){ const st=state.soundStats[s]; return (st && st.cizLevel) || 1; }
+function cizLevelUpper(s){ const st=state.soundStats[s]; return (st && st.cizLevelUpper) || 1; } // E6.5
 function roundCiz(sounds){
   locked=false;
   const t=rnd(sounds); curTargets=[t];
@@ -1791,6 +1829,28 @@ function roundCiz(sounds){
   roundPrompt=`${t} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
   say(`${t} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
+    if(trace.hint) trace.hint(()=>{ locked=false; }); else locked=false;
+  });
+}
+/* E6.5: Büyük harf çizimi — roundCiz ile aynı akış, STROKES_UPPER + BÜYÜK glyph kullanır. */
+function roundCizBuyuk(sounds){
+  locked=false;
+  const t=rnd(sounds); curTargets=[t];
+  const T=UPPER_MAP[t]||t.toUpperCase();
+  qtext.textContent=`«${T}» BÜYÜK harfini yaz`;
+  playArea.innerHTML=`
+    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <div class="trace-actions">
+      <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
+      <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
+    </div>
+    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
+  setupTrace(t,cizLevelUpper(t),true);
+  roundPrompt=`Büyük ${T} harfini yaz. Yeşil noktadan başla.`;
+  locked=true;
+  say(`Büyük ${T} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
     if(trace.hint) trace.hint(()=>{ locked=false; }); else locked=false;
   });
 }
@@ -1814,9 +1874,12 @@ function checkHazirlik(){
   locked=true; traceMsg('Harika! ✨');
   say('Çok güzel! Ellerin hazır.', award);
 }
-function setupTrace(letter,level){
+function setupTrace(letter,level,upper){
   // E6.2: 5 kademe — (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) yalnız başlangıç noktası, (5) bellekten.
+  // E6.5: upper=true iken STROKES_UPPER + BÜYÜK glyph kullanılır (state.soundStats[letter] anahtarı hâlâ küçük harf).
   level=level||1;
+  const strokesMap=upper?STROKES_UPPER:STROKES;
+  const glyph=upper?(UPPER_MAP[letter]||(letter?letter.toUpperCase():letter)):letter;
   const wrap=document.getElementById('traceWrap');
   const cv=document.getElementById('traceCanvas');
   const dpr=Math.min(window.devicePixelRatio||1,2);
@@ -1829,9 +1892,9 @@ function setupTrace(letter,level){
 
   const ok=css.getPropertyValue('--ok').trim()||'#3fae6b';
   const sun=css.getPropertyValue('--sun').trim()||'#ffc24b';
-  const path=(letter && STROKES[letter]) ? STROKES[letter].map(s=>s.map(([x,y])=>[x*size,y*size])) : null;
+  const path=(letter && strokesMap[letter]) ? strokesMap[letter].map(s=>s.map(([x,y])=>[x*size,y*size])) : null;
   let maskPts=[];
-  const multiStroke=multiStrokeGuideOn(letter,level);
+  const multiStroke=multiStrokeGuideOn(letter,level,strokesMap);
   let activeStroke=0;
   function drawActiveHighlight(){
     if(!multiStroke || activeStroke>=path.length) return;
@@ -1852,11 +1915,11 @@ function setupTrace(letter,level){
       if(level===2){
         ctx.strokeStyle=guide; ctx.lineWidth=Math.max(1,size*0.012);
         ctx.setLineDash([size*0.022, size*0.02]);
-        ctx.strokeText(letter, size/2, size/2+size*0.02);
+        ctx.strokeText(glyph, size/2, size/2+size*0.02);
       }else{
         ctx.globalAlpha = level===3 ? 0.28 : 1;
         ctx.fillStyle=guide;
-        ctx.fillText(letter, size/2, size/2+size*0.02);
+        ctx.fillText(glyph, size/2, size/2+size*0.02);
       }
       ctx.restore();
     }
@@ -1901,7 +1964,7 @@ function setupTrace(letter,level){
     const mc=mk.getContext('2d');
     mc.fillStyle='#000'; mc.textAlign='center'; mc.textBaseline='middle';
     mc.font=`800 ${size*0.78}px "Baloo 2", sans-serif`;
-    mc.fillText(letter, size/2, size/2+size*0.02);
+    mc.fillText(glyph, size/2, size/2+size*0.02);
     const md=mc.getImageData(0,0,size,size).data;
     for(let y=0;y<size;y+=3){ for(let x=0;x<size;x+=3){ if(md[(y*size+x)*4+3]>90) maskPts.push([x,y]); } }
   }
@@ -1940,7 +2003,7 @@ function setupTrace(letter,level){
     cv.addEventListener('mousedown',start); cv.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
     cv.addEventListener('touchstart',start,{passive:false}); cv.addEventListener('touchmove',move,{passive:false}); cv.addEventListener('touchend',end);
   }
-  trace={letter,size,strokes,maskPts,
+  trace={letter,upper:!!upper,size,strokes,maskPts,
     activeStroke(){ return activeStroke; },
     reset(){ strokes.length=0; activeStroke=0; drawGuide(true); },
     hint(cb){ strokes.length=0; activeStroke=0; playHint(cb); }};
@@ -1961,8 +2024,12 @@ function checkTrace(){
   if(coverage>0.5 && accuracy>0.4){
     locked=true; traceMsg('Harika! 🌟'); creditSounds(true);
     // E6.2: başarılı çizimde kademe ilerler (kılavuz azalır); sınır 5 (bellekten)
+    // E6.5: büyük harf modundaysa (trace.upper) ayrı cizLevelUpper alanı ilerler, küçük harf ilerlemesine dokunmaz
     const cst=state.soundStats[trace.letter];
-    if(cst){ cst.cizLevel=Math.min(5,(cst.cizLevel||1)+1); save(); }
+    if(cst){
+      const field=trace.upper?'cizLevelUpper':'cizLevel';
+      cst[field]=Math.min(5,(cst[field]||1)+1); save();
+    }
     say(rnd(['Çok güzel yazdın!','Harika bir '+trace.letter+' oldu!','Aferin, tam üstünden geçtin!',
              'Çok iyi denedin, harika oldu!','Elin çok güzel çalıştı!','Bir Kâşif gibi yazdın!']), award);
   }else{
