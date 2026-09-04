@@ -6,9 +6,10 @@
 // kapsamını alır (önceki çağrılardaki lexical bağlamlar görünmez olur), bu yüzden
 // betiği yükleme ve test adımlarının TAMAMI TEK bir eval çağrısında birleştirilir.
 import { JSDOM } from 'jsdom';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
@@ -1711,6 +1712,24 @@ pushCheck('site/index.html: "Fiyatları gör" artık ayrıntılı fiyat sayfası
 pushCheck('index.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(html) && /<noscript><link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?/.test(html));
 pushCheck('site/index.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(siteHtml) && /<noscript><link rel="stylesheet"/.test(siteHtml));
 pushCheck('site/fiyatlar.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(pricesHtml) && /<noscript><link rel="stylesheet"/.test(pricesHtml));
+
+// --- E9.4: Capacitor iskeleti — kod (index.html) değişmeden native sarmal hazırlığı ---
+{
+  const capConfigPath = join(__dirname, '..', 'capacitor.config.json');
+  const capConfig = existsSync(capConfigPath) ? JSON.parse(readFileSync(capConfigPath, 'utf8')) : null;
+  pushCheck('capacitor.config.json var, appId + webDir="www" tanımlı', !!capConfig && typeof capConfig.appId === 'string' && capConfig.webDir === 'www');
+  const pkgJson = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf8'));
+  pushCheck('package.json: "cap:prepare" betiği tanımlı', pkgJson.scripts && pkgJson.scripts['cap:prepare'] === 'node scripts/cap-prepare.mjs');
+  const wwwDir = join(__dirname, '..', 'www');
+  try {
+    execFileSync('node', ['scripts/cap-prepare.mjs'], { cwd: join(__dirname, '..'), stdio: 'pipe' });
+    pushCheck('cap:prepare index.html\'i www/ klasörüne kopyalıyor', existsSync(join(wwwDir, 'index.html')));
+    pushCheck('cap:prepare data/ klasörünü de kopyalıyor', existsSync(join(wwwDir, 'data', 'mufredat.json')));
+  } finally {
+    if (existsSync(wwwDir)) rmSync(wwwDir, { recursive: true, force: true });
+  }
+  pushCheck('.gitignore: www/, ios/, android/ (Capacitor üretilmiş dosyaları) yok sayılıyor', /^www\/$/m.test(readFileSync(join(__dirname, '..', '.gitignore'), 'utf8')));
+}
 
 let failed = 0;
 for (const { name, pass } of results) {

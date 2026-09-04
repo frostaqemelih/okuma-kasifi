@@ -21,6 +21,25 @@ python -m http.server 8000
 
 Sonra `http://localhost:8000` adresini aç.
 
+## Mobil mağaza sarmalı (Capacitor)
+
+Uygulama hâlâ tek dosya (`index.html`) mimarisiyle geliştiriliyor; [Capacitor](https://capacitorjs.com)
+bu kodu **değiştirmeden** iOS/Android native proje olarak sarar (App Store/Play Store'a gönderilebilir
+`.ipa`/`.aab`). `capacitor.config.json` zaten repoda hazır. Gerçek native build (Apple Developer /
+Google Play hesabı, imzalama sertifikaları) kullanıcıda yapılır — ajan bunları repoya eklemez.
+
+```bash
+npm i -D @capacitor/core @capacitor/cli @capacitor/ios @capacitor/android
+npm run cap:prepare        # index.html + data/ + manifest/sw/ikonları www/ klasörüne kopyalar
+npx cap add ios            # ve/veya: npx cap add android
+npx cap sync
+npx cap open ios           # Xcode'da açar — imzalama + build orada
+npx cap open android       # Android Studio'da açar
+```
+
+`www/`, `ios/`, `android/` klasörleri üretilmiş dosyalardır, `.gitignore`'da — kaynak her zaman
+`index.html` kalır. Kod değiştikçe tekrar build almadan önce `npm run cap:prepare && npx cap sync`.
+
 ## Bu sürümde ne var (Faz 0)
 
 - **Onboarding:** yaş/mod seçimi — Keşif (4–5, okuma yok) / Çözümleme (6–7, ses→hece→kelime)

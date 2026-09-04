@@ -1,0 +1,10 @@
+{
+  "appId": "app.okumakasifi.mobile",
+  "appName": "Okuma Kâşifi",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#fff8f0",
+  "server": {
+    "androidScheme": "https"
+  }
+}
