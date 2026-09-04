@@ -15,6 +15,7 @@ const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 const swJs = readFileSync(join(__dirname, '..', 'sw.js'), 'utf8');
 const manifestJson = readFileSync(join(__dirname, '..', 'manifest.json'), 'utf8');
 const siteHtml = readFileSync(join(__dirname, '..', 'site', 'index.html'), 'utf8');
+const pricesHtml = readFileSync(join(__dirname, '..', 'site', 'fiyatlar.html'), 'utf8');
 
 const dom = new JSDOM(html, { url: 'http://localhost/', runScripts: 'outside-only' });
 const { window } = dom;
@@ -1526,6 +1527,16 @@ pushCheck('HTML: Ayarlar sekmesinde "Geri bildirim gönder" düğmesi feedbackMa
 
 // --- E9.7: sürüm notları ekranı — ebeveyn panelinde "Yenilikler" sekmesi ---
 pushCheck('HTML: "Yenilikler" ptab düğmesi tanımlı', /data-tab="surum" onclick="parentTab\('surum'\)">Yenilikler</.test(html));
+
+// --- E9.2: fiyat sayfası (site/fiyatlar.html) ---
+pushCheck('site/fiyatlar.html: harici <script> yok, tek istisna Google Fonts (mimari kuralı)', !/<script/.test(pricesHtml) && (pricesHtml.match(/(?:href|src)="(https?:\/\/[^"]+)"/g) || []).every(m => /fonts\.(googleapis|gstatic)\.com/.test(m)));
+pushCheck('site/fiyatlar.html: 3 plan kartı PLANS ile aynı fiyatları içeriyor (179/1199/349 TL)', /179 TL/.test(pricesHtml) && /1199 TL/.test(pricesHtml) && /349 TL/.test(pricesHtml));
+pushCheck('site/fiyatlar.html: ücretsiz/premium karşılaştırma tablosu var', /<table class="cmp">/.test(pricesHtml) && (pricesHtml.match(/<tr>/g) || []).length >= 8);
+pushCheck('site/fiyatlar.html: okul/kurum için iletişim bölümü var', /okul[- ]kurum|Kurum lisansı/i.test(pricesHtml) && /mailto:destek@okumakasifi\.app/.test(pricesHtml));
+pushCheck('site/fiyatlar.html: KVKK/gizlilik bilgisine değiniyor', /KVKK/.test(pricesHtml));
+pushCheck('site/fiyatlar.html: aynı marka renk token\'larını kullanıyor (--primary:#f2795b)', /--primary:#f2795b/.test(pricesHtml));
+pushCheck('site/fiyatlar.html: koyu tema desteği var (prefers-color-scheme:dark)', /prefers-color-scheme:dark/.test(pricesHtml));
+pushCheck('site/index.html: "Fiyatları gör" artık ayrıntılı fiyat sayfasına bağlanıyor', /href="fiyatlar\.html"/.test(siteHtml));
 
 let failed = 0;
 for (const { name, pass } of results) {
