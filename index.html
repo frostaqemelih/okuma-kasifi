@@ -602,8 +602,14 @@ function fresh(){return{
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
   purchaseHistory:[],    // E8.5: geri yükleme için cihazdaki satın alma kayıtları
-  trialUsed:false        // E8.10: 7 günlük deneme cihaz başına yalnız bir kez başlatılabilir
+  trialUsed:false,       // E8.10: 7 günlük deneme cihaz başına yalnız bir kez başlatılabilir
+  profiles:[],           // E8.6: aile planı — [{id,name}]; boşsa tek-profil (eski) davranış aynen sürer
+  activeProfileId:null,  // E8.6: profiles doluysa aktif profilin id'si
+  profileData:{}         // E8.6: { id: {mode,childName,done,badges,stars,freePlays,correct,wrong,seconds,last,soundStats,daily,lessonLog,reviewQueue} } — pasif profillerin ilerleme kaydı
 }}
+// E8.6: aktif oynanış sırasında kökte (state.mode, state.done, ...) tutulan alanlar — profil değişince bunlar
+// state.profileData[eski/yeni id]'ye taşınır/oradan yüklenir. Hesap-geneli alanlar (settings/entitlement/...) ortaktır.
+const PROFILE_FIELDS=['mode','childName','done','badges','stars','freePlays','correct','wrong','seconds','last','soundStats','daily','lessonLog','reviewQueue'];
 function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
 try{
@@ -618,7 +624,8 @@ try{
       settings:Object.assign(f.settings,s.settings||{}),
       entitlement:Object.assign(f.entitlement,s.entitlement||{}),
       daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{},
-      reviewQueue:s.reviewQueue||[], promoUsed:s.promoUsed||[], purchaseHistory:s.purchaseHistory||[]
+      reviewQueue:s.reviewQueue||[], promoUsed:s.promoUsed||[], purchaseHistory:s.purchaseHistory||[],
+      profiles:s.profiles||[], activeProfileId:s.activeProfileId||null, profileData:s.profileData||{}
     });
     if(migratingFromV2) save(); // v3 anahtarına taşı; eski v2 kaydı dokunulmadan kalır
   }
@@ -781,6 +788,95 @@ function redeemPromo(){
   if(input) input.value='';
   if(msgEl) msgEl.textContent='Kod uygulandı: '+promo.aciklama+' 🎉';
   renderPaywallPlans();
+}
+
+/* ================= AİLE PLANI / ÇOKLU ÇOCUK PROFİLİ (E8.6) =================
+   Yalnızca yıllık plan satın alındıysa (source==='stub:yillik') kullanılabilir — pazarlama metniyle
+   ("Aile planı: 3 çocuk profiline kadar") birebir. En fazla 3 profil. Aktif profilin ilerlemesi
+   kökte (state.mode/state.done/...) tutulur — böylece uygulamanın geri kalanı (yüzlerce referans)
+   değişmeden çalışır; profil değişince kök alanlar profileData'ya kaydedilir/oradan yüklenir. */
+function familyPlanEligible(){ return isPremium() && state.entitlement.source==='stub:yillik'; }
+function blankProfileData(name){
+  return {mode:null, childName:name||'', done:[], badges:[], stars:0,
+    freePlays:{bul:0,ses:0,hece:0,kelime:0,cumle:0,ciz:0}, correct:0, wrong:0, seconds:0, last:null,
+    soundStats:{}, daily:{}, lessonLog:{}, reviewQueue:[]};
+}
+function snapshotActiveProfile(){
+  const snap={}; PROFILE_FIELDS.forEach(k=>{ snap[k]=JSON.parse(JSON.stringify(state[k])); });
+  return snap;
+}
+function loadProfileIntoRoot(data){
+  PROFILE_FIELDS.forEach(k=>{ state[k]=JSON.parse(JSON.stringify(data[k])); });
+}
+// İlk kez aile planı kullanılınca: mevcut (kökteki) ilerleme "1. çocuk" profili olarak kaydedilir.
+function ensureProfilesInit(){
+  if(state.profiles.length) return;
+  const id='p1';
+  state.profileData[id]=snapshotActiveProfile();
+  state.profiles=[{id, name:state.childName||'1. çocuk'}];
+  state.activeProfileId=id;
+}
+function addProfile(){
+  if(!familyPlanEligible() || state.profiles.length>=3) return;
+  const name=(prompt('Yeni çocuğun adı (opsiyonel):')||'').trim().slice(0,20);
+  ensureProfilesInit();
+  const id='p'+(Date.now());
+  state.profiles.push({id, name:name||('Çocuk '+(state.profiles.length+1))});
+  state.profileData[id]=blankProfileData(name);
+  save();
+  switchProfile(id);
+}
+function switchProfile(id){
+  if(!state.profiles.some(p=>p.id===id) || id===state.activeProfileId) { if(document.getElementById('pbody')) parentTab('ayar'); return; }
+  if(state.activeProfileId) state.profileData[state.activeProfileId]=snapshotActiveProfile();
+  loadProfileIntoRoot(state.profileData[id]);
+  state.activeProfileId=id;
+  save();
+  applySettings();
+  go(state.mode?'s-map':'s-mode');
+}
+function renameProfile(id){
+  const p=state.profiles.find(x=>x.id===id); if(!p) return;
+  const name=(prompt('Yeni ad:', p.name)||'').trim().slice(0,20);
+  if(!name) return;
+  p.name=name;
+  if(id===state.activeProfileId) state.childName=name;
+  save();
+  parentTab('ayar');
+}
+function removeProfile(id){
+  if(state.profiles.length<=1) return;
+  const p=state.profiles.find(x=>x.id===id); if(!p) return;
+  if(!confirm(`"${p.name}" profilini ve ilerlemesini silmek istediğinize emin misiniz?`)) return;
+  state.profiles=state.profiles.filter(x=>x.id!==id);
+  delete state.profileData[id];
+  if(id===state.activeProfileId){
+    const next=state.profiles[0];
+    state.activeProfileId=next.id;
+    loadProfileIntoRoot(state.profileData[next.id]);
+  }
+  save();
+  parentTab('ayar');
+}
+function familyBlock(){
+  if(!familyPlanEligible()){
+    return `<div class="advice"><h4>👨‍👩‍👧‍👦 Aile Planı</h4>
+      <p>Yıllık planla 3 çocuk profiline kadar ekleyebilirsiniz — her çocuğun kendi ilerlemesi, rozetleri ve Ses Karnesi ayrı tutulur.</p>
+      <button class="btn ghost tiny" onclick="openPaywall('ayarlar','s-parent')">Yıllık planı keşfet</button>
+    </div>`;
+  }
+  ensureProfilesInit();
+  const rows=state.profiles.map(p=>`
+    <div class="prow"><span>${p.name}${p.id===state.activeProfileId?' · <b>aktif</b>':''}</span>
+      <span style="display:flex; gap:6px">
+        ${p.id!==state.activeProfileId?`<button class="btn ghost tiny" onclick="switchProfile('${p.id}')">Seç</button>`:''}
+        <button class="btn ghost tiny" onclick="renameProfile('${p.id}')">Ad değiştir</button>
+        ${state.profiles.length>1?`<button class="btn ghost tiny" style="color:var(--nope)" onclick="removeProfile('${p.id}')">Sil</button>`:''}
+      </span></div>`).join('');
+  return `<div class="advice"><h4>👨‍👩‍👧‍👦 Aile Planı (${state.profiles.length}/3)</h4>
+    <p>Her profilin ilerlemesi, rozetleri ve Ses Karnesi ayrı tutulur.</p></div>
+    ${rows}
+    ${state.profiles.length<3?`<button class="btn ghost tiny" style="margin-top:8px" onclick="addProfile()">+ Yeni çocuk ekle</button>`:''}`;
 }
 function syncStars(){ document.querySelectorAll('#stars1,#stars2,#stars3').forEach(el=>el.textContent=state.stars); }
 
@@ -2469,6 +2565,7 @@ function pAyar(){
       </div>`;
   return `
     ${premiumBox}
+    ${familyBlock()}
     <div class="prow"><span>Yaş modu</span>
       <button class="btn ghost tiny" onclick="go('s-mode')">${state.mode==='kesif'?'Keşif 4–5':'Çözümleme 6–7'} · değiştir</button></div>
     <div class="prow"><span>Günlük hedef</span>

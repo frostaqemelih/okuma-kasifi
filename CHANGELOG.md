@@ -54,6 +54,9 @@ yeni sürümde en üste eklenen tarihli bir bölümle güncellenecek.
   daha fazlası — arayüz ve satın alma akışı hazır; gerçek ödeme sağlayıcısı
   (ör. iyzico) ilk halka açık sürümde bağlanacak.
 - Satın alımları geri yükleme, tanıtım/hediye kodu desteği.
+- **Aile Planı** (yıllık planda): 3 çocuk profiline kadar ekleyip aralarında
+  geçiş yapabilirsiniz — her çocuğun ilerlemesi, rozetleri ve Ses Karnesi
+  ayrı tutulur. Ebeveyn köşesi → Ayarlar bölümünden yönetilir.
 
 ### Teknik
 - Tamamı tek dosyada (`index.html`) çalışan, kurulum gerektirmeyen bir web

@@ -1416,6 +1416,55 @@ const testDriver = `
     check('E9.5 feedbackMailto()/Ayarlar sekmesi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E8.6: Aile Planı — çoklu çocuk profili (yalnız yıllık plan) ---
+  try {
+    state = fresh();
+    check('familyPlanEligible() ücretsizken false', familyPlanEligible() === false);
+    const ayarHtmlFree = pAyar();
+    check('pAyar() premium degilken Aile Plani teaser gosteriyor', ayarHtmlFree.includes('Aile Planı') && ayarHtmlFree.includes('Yıllık planı keşfet'));
+
+    buy('yillik');
+    confirmStubPurchase();
+    check('yıllık satın alma sonrası familyPlanEligible() true', familyPlanEligible() === true);
+
+    state.childName = 'Ela'; state.mode = 'kesif'; state.done = ['0'];
+    ensureProfilesInit();
+    check('ensureProfilesInit() mevcut ilerlemeyi 1. profil olarak kaydediyor', state.profiles.length === 1 && state.profiles[0].name === 'Ela' && state.activeProfileId === 'p1');
+    check('ensureProfilesInit() kok alanlari profileData icine kopyaliyor', state.profileData['p1'].done.includes('0'));
+
+    window.prompt = () => 'Kaan';
+    addProfile();
+    check('addProfile() yeni profil ekliyor (2/3)', state.profiles.length === 2 && state.profiles[1].name === 'Kaan');
+    check('addProfile() otomatik yeni profile geçiyor (kök artık boş)', state.activeProfileId === state.profiles[1].id && state.mode === null && state.done.length === 0);
+
+    const p1Id = state.profiles[0].id;
+    switchProfile(p1Id);
+    check('switchProfile() eski profilin ilerlemesini geri yüklüyor', state.mode === 'kesif' && state.done.includes('0') && state.childName === 'Ela');
+
+    window.prompt = () => 'Elif';
+    renameProfile(p1Id);
+    check('renameProfile() aktif profilin adini ve state.childName degerini gunceller', state.profiles.find(p => p.id === p1Id).name === 'Elif' && state.childName === 'Elif');
+
+    window.prompt = () => '';
+    addProfile();
+    check('addProfile() 3. profili boş isimle de "Çocuk N" adıyla ekliyor', state.profiles.length === 3);
+    window.prompt = () => 'Fazla';
+    addProfile();
+    check('addProfile() 3 profil limitini aşmıyor', state.profiles.length === 3);
+
+    const secondId = state.profiles[1].id;
+    window.confirm = () => true;
+    removeProfile(secondId);
+    check('removeProfile() profili siliyor', state.profiles.length === 2 && !state.profiles.some(p => p.id === secondId));
+
+    const familyHtml = familyBlock();
+    check('familyBlock() premiumken profil satırlarını + "Yeni çocuk ekle" düğmesini gösteriyor', familyHtml.includes('Yeni çocuk ekle') && familyHtml.includes('Elif'));
+
+    state = fresh();
+  } catch (e) {
+    check('E8.6 Aile Planı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E9.7: "Yenilikler" (sürüm notları) sekmesi ebeveyn panelinde ---
   try {
     check('RELEASE_NOTES dizisi tanımlı ve dolu', Array.isArray(RELEASE_NOTES) && RELEASE_NOTES.length >= 2);
