@@ -49,10 +49,13 @@
 4–7 yaş Türk çocuklara okuma-yazmanın temellerini, yapay zekâ destekli "Kâşif" rehberi eşliğinde,
 oyunlaştırılmış ve sese dayalı öğreten uygulama. Ayrıntı: `TASLAK.md`, `arastirma/`.
 
-**Şu anki durum (v0):** onboarding + yaş modu (Keşif 4–5 / Çözümleme 6–7) · 12 derslik keşif
-haritası (kilit + rozet) · 6 mini oyun (Harfi Bul, Sesi Eşleştir, Hece Kur, Kelime Kur, Cümle
-Bahçesi, Harf Çiz) · Ses Karnesi (per-ses tanısal rapor) · serbest oyun · ebeveyn izleme sayfası
-(5 sekme) · tarayıcı TTS · yerel ilerleme.
+**Şu anki durum (v0):** onboarding + yaş modu (Keşif 4–5 / Çözümleme 6–7) · 25 derslik keşif
+haritası (4 ses grubu, kilit + rozet) · 6 mini oyun (Harfi Bul, Sesi Eşleştir, Hece Kur, Kelime Kur,
+Cümle Bahçesi, Harf Çiz) her biri 2–3 varyantlı · Ses Karnesi (per-ses tanısal rapor) + zayıf seslere
+otomatik tekrar turu · aralıklı tekrar (Leitner) · Okuma Kulübü + metin bankası · serbest oyun ·
+ebeveyn izleme sayfası (5 sekme) + yazdır/PDF rapor · tarayıcı TTS · yerel ilerleme ·
+**freemium/premium katmanı** (entitlement + `v3` şema, paywall, stub satın alma, geri yükleme,
+tanıtım kodu, nazik premium teşviki — 1. grup ücretsiz, 2.–5. grup premium).
 
 ---
 
@@ -178,15 +181,15 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 **KURAL:** Ödeme sağlayıcısı entegrasyonu STUB ile yapılır. Gerçek anahtar/hesap (Stripe, RevenueCat, iyzico, App Store/Play faturalama) **repoya girmez** — kullanıcıdan gelir, `.env` / build-time. Ajan yalnızca arayüz + entitlement mantığı + stub sağlayıcı yazar, "premium'u aç" düğmesi test modunda entitlement'ı açar.
 
-- [ ] **E8.1** Entitlement katmanı: `state.entitlement = { plan:'free'|'premium', source, since, expires }` + `isPremium()` yardımcı + `requirePremium(feature)` (premium değilse paywall aç). `localStorage` şeması `v3` + göç.
-- [ ] **E8.2** Özellik bayrakları: `FEATURES` haritası (her premium özellik → `free`/`premium`). Kilitli içerik haritada/menüde 🔒 rozetiyle görünür ama tıklayınca paywall.
-- [ ] **E8.3** Paywall ekranı (`s-paywall`): ne kazanılıyor (3–4 madde, çocuk değil ebeveyn diliyle), 3 plan kartı (aylık/yıllık/tek seferlik), "yıllık = 2 ay bedava" vurgusu, küçük "belki sonra". Ebeveyn kapısının arkasında.
-- [ ] **E8.4** Stub satın alma akışı: "Satın Al" → ebeveyn kapısı → sahte sağlayıcı ekranı ("bu bir test sürümüdür") → başarı → `entitlement.plan='premium'`. Gerçek entegrasyon noktası `buy(planId)` fonksiyonu, `// TODO: gerçek sağlayıcı` ile işaretli.
-- [ ] **E8.5** "Satın alımları geri yükle" (aynı cihazda entitlement kaybolursa) + tanıtım/hediye kodu alanı (`PROMO` haritası, stub).
+- [x] **E8.1** Entitlement katmanı: `state.entitlement = { plan:'free'|'premium', source, since, expires }` + `isPremium()` yardımcı + `requirePremium(feature)` (premium değilse paywall aç). `localStorage` şeması `v3` + göç. — 2026-09-04
+- [x] **E8.2** Özellik bayrakları: `FEATURES` haritası (her premium özellik → `free`/`premium`). Kilitli içerik haritada/menüde 🔒 rozetiyle görünür ama tıklayınca paywall. — 2026-09-04
+- [x] **E8.3** Paywall ekranı (`s-paywall`): ne kazanılıyor (3–4 madde, çocuk değil ebeveyn diliyle), 3 plan kartı (aylık/yıllık/tek seferlik), "yıllık = 2 ay bedava" vurgusu, küçük "belki sonra". Ebeveyn kapısının arkasında. — 2026-09-04
+- [x] **E8.4** Stub satın alma akışı: "Satın Al" → ebeveyn kapısı → sahte sağlayıcı ekranı ("bu bir test sürümüdür") → başarı → `entitlement.plan='premium'`. Gerçek entegrasyon noktası `buy(planId)` fonksiyonu, `// TODO: gerçek sağlayıcı` ile işaretli. — 2026-09-04
+- [x] **E8.5** "Satın alımları geri yükle" (aynı cihazda entitlement kaybolursa) + tanıtım/hediye kodu alanı (`PROMO` haritası, stub). — 2026-09-04
 - [ ] **E8.6** Aile planı / çoklu çocuk profili: premium'da 3'e kadar çocuk profili (`state.profiles[]`, aktif profil seçimi), her profilin ayrı ilerlemesi. Onboarding'de "kimin için?" ekranı.
-- [ ] **E8.7** Ücretsiz kullanıcıya nazik premium teşviki: ders 6 bitince "2. grubu keşfet" kartı (baskı yok, kapatılabilir), ebeveyn panelinde "premium'da neler var" bölümü. Çocuğa ASLA satış göstermez.
+- [x] **E8.7** Ücretsiz kullanıcıya nazik premium teşviki: ders 6 bitince "2. grubu keşfet" kartı (baskı yok, kapatılabilir), ebeveyn panelinde "premium'da neler var" bölümü. Çocuğa ASLA satış göstermez. — 2026-09-04
 - [ ] **E8.8** Premium rozeti/teşekkür: satın alan ebeveyne "teşekkürler" + çocuğa özel Kâşif kıyafeti/eşya (koleksiyon).
-- [ ] **E8.9** Fiyatlandırma verisi: `data/plans.json` (plan id, ad, TL fiyat, periyot, özellik listesi) — hem paywall hem landing sayfası buradan okur.
+- [x] **E8.9** Fiyatlandırma verisi: `data/plans.json` (plan id, ad, TL fiyat, periyot, özellik listesi) — hem paywall hem landing sayfası buradan okur. — 2026-09-04
 - [ ] **E8.10** Deneme süresi: 7 gün premium deneme (ebeveyn başlatır, tek sefer), bitiminde nazik hatırlatma, otomatik ücret YOK (deneme = sadece kilit açık, süre bitince kilitlenir).
 
 ### E9 — Yayın & Dağıtım  → uzman: App Store Optimizer, Growth Hacker
@@ -250,6 +253,11 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E1.11 (rutin, Hafta 2 kilometre taşı tamamlandıktan sonra, backlog sırası): "Yaş modu" (`s-mode`) ekranına opsiyonel "Adı" metin girişi eklendi (`#childNameInput`, `state.childName`, `setChildName()` — 20 karaktere kadar, boşluklar kırpılır, boşsa boş dizeye döner). `go()` ekran geçişinde girişi mevcut değerle dolduruyor. Ebeveyn "Genel" sekmesindeki haftalık özet cümlesi artık sabit "Kâşif" yerine `state.childName||'Kâşif'` kullanıyor. `okuma-kasifi-v2` şemasına `childName` alanı eklendi (geriye uyumlu — `fresh()` varsayılanı boş dize, mevcut kayıtlarda `Object.assign` ile otomatik dolduruluyor). Smoke test'e 6 yeni kontrol.
 
 - 2026-09-04 — E1.12 (rutin, backlog sırası): Ebeveyn panelinde "🖨️ Yazdır / PDF olarak kaydet" düğmesi eklendi (`printReport()`) — mevcut Genel/Dersler/Ses Karnesi/Öneriler sekmelerinin HTML'lerini (`pGenel()`/`pDersler()`/`pKarne()`/`pOneri()`, kod tekrarı yok) çocuğun adı+tarih başlığıyla `#printReport` konteynerine yazıp `window.print()` çağırıyor; `@media print` kuralı yalnız bu konteyneri görünür bırakıp gerisini (uygulama arayüzü, düğmeler, sekmeler) gizliyor, tarayıcının "PDF olarak kaydet" seçeneği ayrı bir kurulum gerektirmiyor. Smoke test'e 5 yeni kontrol.
+- 2026-09-04 — E8.1 (rutin, Hafta 3 kilometre taşı başlangıcı — Hafta 1+2 kilometre taşları zaten tamamlanmıştı): Freemium/premium temel katmanı — `state.entitlement={plan,source,since,expires}` (varsayılan `free`), `isPremium()` (süre kontrollü), `requirePremium(feature,onGranted)` (premiumsa direkt callback, değilse ebeveyn kapısı+paywall'a yönlendirir). `openGate(onSuccess)` artık parametreli (varsayılan yine `openParent`, mevcut "Ebeveyn köşesi" akışı değişmedi). `localStorage` anahtarı `okuma-kasifi-v2`→`okuma-kasifi-v3` (ilk açılışta otomatik göç, eski kayıt silinmiyor). `resetProgress()` artık satın alınmış entitlement'ı koruyor. Smoke test'e 6 yeni kontrol.
+- 2026-09-04 — E8.9+E8.3+E8.4 (rutin, Hafta 3 kilometre taşı): `data/plans.json` (referans) + `PLANS` sabiti (aylık 179 TL/yıllık 1199 TL "2 ay bedava"/tek seferlik 349 TL kalıcı). Yeni `s-paywall` ekranı — ebeveyn dilinde fayda listesi + `PLANS`'tan render edilen 3 plan kartı + "belki sonra"; yalnızca `openPaywall()` ile açılır, çocuk akışında hiçbir doğrudan erişim yok. `buy(planId)` → "test ödeme ekranı" (`stubPay` overlay, açıkça "bu bir test sürümüdür", gerçek sağlayıcı yok) → `confirmStubPurchase()` `entitlement.plan='premium'` yapar (gerçek entegrasyon noktası `// TODO: gerçek sağlayıcı` ile işaretli), plana göre `expires` hesaplanır. Başarı ekranı sonrası `finishPurchaseFlow()` varsa bekleyen kilidi otomatik açar. Smoke test'e 14 yeni kontrol.
+- 2026-09-04 — E8.2 (rutin, Hafta 3 kilometre taşı): `FEATURES` haritası + `lessonNeedsPremium(id)` (ders 7 ve sonrası = 2.–5. ses grupları premium, ders 0–6 ücretsiz). `renderMap()` sıradaki ders premium gerektiriyorsa 🔒 rozetiyle gösteriyor, tıklanınca `requirePremium()` ile kapı+paywall açılıyor; tamamlanmış dersler her zaman erişilebilir kalıyor. Smoke test'e 9 yeni kontrol.
+- 2026-09-04 — E8.5 (rutin, Hafta 3 kilometre taşı — **E8 çekirdeği tamamlandı**): Paywall'a "tanıtım/hediye kodu" alanı (`redeemPromo()`, `PROMO` haritası — stub `KASIF30`=30 gün/`AILEDENE`=7 gün, cihaz başına tek kullanım `state.promoUsed`) ve "↺ Satın alımları geri yükle" düğmesi (`restorePurchases()` — gerçek mağaza sorgusu yok/`// TODO`, cihaz-içi `state.purchaseHistory`'den son geçerli satın almayı geri yükler) eklendi. Her satın alma/kod artık `purchaseHistory`'ye kaydediliyor. Smoke test'e 12 yeni kontrol.
+- 2026-09-04 — E8.7 (rutin, Hafta 3 kilometre taşı): Ücretsiz kullanıcı 1. grubu (ders 0–6) bitirince ders-tamam ekranında baskısız/kapatılabilir "🔍 2. grubu keşfet" kartı+düğmesi (yalnız ders 6, premiumda hiç görünmüyor, düğme kapı→paywall açıyor — çocuğa asla doğrudan satış yok). Ebeveyn "Ayarlar" sekmesine `entitlementLabel()` ile durum kutusu eklendi: ücretsizken "Premium'da neler var?" özeti+"Premium'u keşfet" düğmesi, premiumken kalan gün/kalıcılık bilgisi. Smoke test'e 10 yeni kontrol (toplam 231 test). **Hafta 3 kilometre taşının çekirdeği (E8: entitlement, paywall, stub satın alma, geri yükleme/promo, nazik teşvik) tamamlandı** — kalan E8.6 (aile planı/çoklu profil), E8.8 (premium rozeti/teşekkür), E8.10 (7 gün deneme) sonraki çalışmalara bırakıldı. Sıradaki öncelik: bu üçü veya Hafta 4'ün E5.4 (erişilebilirlik) / E7 (PWA cilası) maddeleri.
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
