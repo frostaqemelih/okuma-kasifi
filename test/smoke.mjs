@@ -1572,6 +1572,25 @@ const testDriver = `
     check('E9.7 Yenilikler sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- Kelime Kur çeşitliliği (yeni içerik/varyant): (a) resim→kelime, (b) yalnız dinle→kelime ---
+  try {
+    const origRandomKelime = Math.random;
+    state = fresh();
+    Math.random = () => 0.9; // (a) resim ipucuyla (listenOnly = r<0.5 => false)
+    roundKelime(unlockedPool());
+    check('roundKelime (a) resim varyantı emoji ipucu gösteriyor', playArea.querySelector('.stage span').textContent !== '🎧' && qtext.textContent === 'Harfleri sırayla koy');
+    Math.random = () => 0.1; // (b) yalnız dinle (listenOnly = r<0.5 => true)
+    roundKelime(unlockedPool());
+    check('roundKelime (b) dinle varyantı resim yerine 🎧 gösteriyor', playArea.querySelector('.stage span').textContent === '🎧');
+    check('roundKelime (b) dinle varyantı soru metnini gösteriyor', qtext.textContent === 'Dinle ve kelimeyi kur');
+    check('roundKelime (b) varyantında da kelime taşları/karesi kurulu', wordState && wordState.target.length > 0 && wordState.tiles.length >= wordState.target.length);
+    Math.random = origRandomKelime;
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('Kelime Kur çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- Kendi Hikayeni Kur (Fikir havuzu, premium): serbest kelime seçimiyle açık uçlu cümle kurma ---
   try {
     check('FEATURES.hikaye premium olarak isaretli', FEATURES.hikaye === 'premium');

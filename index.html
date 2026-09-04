@@ -1980,7 +1980,9 @@ function choose(el,right){
   }
 }
 
-/* --- Kelime Kur --- */
+/* --- Kelime Kur ---
+   2 varyant: (a) resim→kelime kur (görsel ipucuyla), (b) yalnız dinle→kelime kur (resim yok,
+   yalnız Kâşif'in söylediği kelimeden kurulur — işitsel/fonolojik farkındalık pratiği). Rastgele seçilir. */
 let wordState=null;
 function roundKelime(pool){
   locked=false;
@@ -1990,9 +1992,10 @@ function roundKelime(pool){
   const target=it.w.split(''); curTargets=[...new Set(target)];
   const distr=shuffle(pool.filter(c=>!target.includes(c))).slice(0, target.length<=3?1:2);
   wordState={target, tiles:shuffle([...target,...distr]), filled:[]};
-  qtext.textContent='Harfleri sırayla koy';
+  const listenOnly=Math.random()<0.5;
+  qtext.textContent=listenOnly?'Dinle ve kelimeyi kur':'Harfleri sırayla koy';
   playArea.innerHTML=`
-    <div class="stage" style="aspect-ratio:16/9"><span>${it.e}</span></div>
+    <div class="stage" style="aspect-ratio:16/9"><span>${listenOnly?'🎧':it.e}</span></div>
     <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
     <div class="word-slots" id="slots"></div>
     <div class="tiles" id="tiles"></div>
