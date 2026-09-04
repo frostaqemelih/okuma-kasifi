@@ -1416,6 +1416,27 @@ const testDriver = `
     check('E9.5 feedbackMailto()/Ayarlar sekmesi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E9.6: hafif kullanım ölçümü — gizlilik-dostu, opsiyonel, varsayılan KAPALI ---
+  try {
+    state = fresh();
+    check('settings.usageMetrics varsayılan olarak false', state.settings.usageMetrics === false);
+    const ayarHtmlOff = pAyar();
+    check('usageMetrics kapalıyken "özeti gönder" düğmesi gösterilmiyor', !ayarHtmlOff.includes('Kullanım özetini gönder'));
+
+    state.settings.usageMetrics = true;
+    state.correct = 8; state.wrong = 2; state.done = [1, 2]; state.badges = ['a', 'b']; state.childName = 'Ela';
+    const summaryUrl = usageSummaryMailto();
+    check('usageSummaryMailto() mailto: ile başlıyor', summaryUrl.startsWith('mailto:destek@okumakasifi.app'));
+    check('usageSummaryMailto() body parametresi içeriyor (anonim özet)', summaryUrl.includes('body='));
+    check('usageSummaryMailto() kisisel veri (childName) icermiyor', !decodeURIComponent(summaryUrl).includes('Ela'));
+    const ayarHtmlOn = pAyar();
+    check('usageMetrics açıkken "özeti gönder" düğmesi gösteriliyor', ayarHtmlOn.includes('Kullanım özetini gönder'));
+
+    state = fresh();
+  } catch (e) {
+    check('E9.6 kullanım ölçümü hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E8.6: Aile Planı — çoklu çocuk profili (yalnız yıllık plan) ---
   try {
     state = fresh();

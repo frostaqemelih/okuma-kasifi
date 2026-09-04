@@ -36,6 +36,10 @@ yeni sürümde en üste eklenen tarihli bir bölümle güncellenecek.
 - İlerlemeyi JSON olarak dışa/içe aktarma.
 - Yeni bir **"Yenilikler" sekmesi**: her güncellemede uygulamada neyin
   değiştiğini kısaca burada görebilirsiniz (çocuğunuza gösterilmez).
+- İsteğe bağlı, **varsayılan kapalı** bir "kullanım özeti paylaşımı" ayarı:
+  açarsanız isim/tarih içermeyen anonim bir özeti e-posta taslağı olarak
+  hazırlayıp size gösterir — hiçbir şey otomatik/arka planda gönderilmez,
+  üçüncü taraf analiz yoktur.
 
 ### Erişilebilirlik
 - Açık/koyu tema, disleksi-dostu sıcak zemin seçeneği.

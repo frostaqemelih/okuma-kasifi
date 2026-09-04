@@ -602,7 +602,7 @@ function fresh(){return{
   daily:{},             // { 'YYYY-MM-DD': saniye }
   lessonLog:{},         // { id: {attempts, seconds, first, last} }
   reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
-  settings:{dailyGoalMin:15, speechRate:'normal', a2hsDismissed:false}, // E5.3: speechRate 'normal'|'yavas'; E7.1: a2hsDismissed
+  settings:{dailyGoalMin:15, speechRate:'normal', a2hsDismissed:false, usageMetrics:false}, // E5.3: speechRate 'normal'|'yavas'; E7.1: a2hsDismissed; E9.6: usageMetrics (varsayılan KAPALI)
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
   purchaseHistory:[],    // E8.5: geri yükleme için cihazdaki satın alma kayıtları
@@ -2583,11 +2583,14 @@ function pAyar(){
       <input type="checkbox" id="setDys" ${s.dyslexia?'checked':''}></div>
     <div class="prow"><span>Sessiz mod (TTS kapalı)</span>
       <input type="checkbox" id="setMute" ${s.mute?'checked':''}></div>
+    <div class="prow"><span>Kullanım özeti paylaşımı <span class="mini" style="display:block; opacity:.75">isteğe bağlı, varsayılan kapalı — üçüncü taraf analiz yok</span></span>
+      <input type="checkbox" id="setUsage" ${s.usageMetrics?'checked':''}></div>
     <div class="prow" style="border:none; margin-top:14px; flex-direction:column; align-items:stretch; gap:8px">
       <button class="btn ghost tiny" onclick="exportProgress()">İlerlemeyi dışa aktar (JSON)</button>
       <button class="btn ghost tiny" onclick="importProgress()">İçe aktar</button>
       <button class="btn ghost tiny" style="color:var(--nope)" onclick="resetProgress()">İlerlemeyi sıfırla</button>
       <a class="btn ghost tiny" href="${feedbackMailto()}">📮 Geri bildirim gönder</a>
+      ${s.usageMetrics?`<a class="btn ghost tiny" href="${usageSummaryMailto()}">📊 Kullanım özetini gönder</a>`:''}
     </div>`;
 }
 function wireParentSettings(){
@@ -2595,6 +2598,7 @@ function wireParentSettings(){
   const rt=document.getElementById('setRate'); if(rt) rt.onchange=()=>{ state.settings.speechRate=rt.value; save(); };
   const dy=document.getElementById('setDys'); if(dy) dy.onchange=()=>{ state.settings.dyslexia=dy.checked; save(); applySettings(); };
   const mu=document.getElementById('setMute'); if(mu) mu.onchange=()=>{ state.settings.mute=mu.checked; save(); };
+  const us=document.getElementById('setUsage'); if(us) us.onchange=()=>{ state.settings.usageMetrics=us.checked; save(); parentTab('ayar'); };
 }
 function applySettings(){
   document.documentElement.classList.toggle('dys', !!state.settings.dyslexia);
@@ -2610,6 +2614,27 @@ function exportProgress(){
 function feedbackMailto(){
   const subject=encodeURIComponent('Okuma Kâşifi - Geri Bildirim');
   return `mailto:destek@okumakasifi.app?subject=${subject}`;
+}
+// E9.6: hafif kullanım ölçümü — gizlilik-dostu, opsiyonel, varsayılan KAPALI (settings.usageMetrics).
+// Üçüncü taraf analiz/otomatik gönderim YOK: yalnızca cihazda zaten var olan toplu/anonim sayaçlardan
+// (isim/e-posta/tarih yok) bir özet metni üretilir; ebeveyn açarsa mailto: taslağı olarak açılır,
+// göndermek isteyip istemediğine kendi karar verir (posta uygulamasında elle gönderilir).
+function usageSummaryMailto(){
+  const total=state.correct+state.wrong;
+  const acc=total? Math.round(state.correct/total*100):0;
+  const lessons=state.done.filter(x=>x>0).length;
+  const body=[
+    'Okuma Kâşifi — anonim kullanım özeti (isim/e-posta/tarih içermez):',
+    `- Yaş modu: ${state.mode||'—'}`,
+    `- Tamamlanan ders: ${lessons}`,
+    `- Toplam rozet: ${state.badges.length}`,
+    `- Başarı oranı: %${acc}`,
+    `- Gün serisi (streak): ${streakDays()}`,
+    `- Bu hafta dakika: ${weekMinutes()}`,
+    `- Plan: ${state.entitlement.plan}`
+  ].join('\n');
+  const subject=encodeURIComponent('Okuma Kâşifi - Kullanım Özeti');
+  return `mailto:destek@okumakasifi.app?subject=${subject}&body=${encodeURIComponent(body)}`;
 }
 // E9.7: "Bu sürümde yeni neler var" — ebeveyn için, çocuk asla görmez. En yeni en üstte, elle güncellenir
 // (CHANGELOG.md ile aynı emsal ama burada teknik olmayan, kısa/ebeveyn diliyle özetlenmiş madde listesi).
