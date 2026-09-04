@@ -364,6 +364,8 @@
     <h1 id="doneTitle">Ders tamam!</h1>
     <p class="sub" id="doneText">Yeni bir sesi öğrendin.</p>
     <div class="badge" id="doneBadge" hidden></div>
+    <p class="sub" id="doneDiscover" hidden>Bu harika bir başlangıç! 2.–5. gruplarda daha da fazla ses, kelime ve oyun seni bekliyor.</p>
+    <button class="btn grape tiny" id="doneDiscoverBtn" onclick="openGate(()=>openPaywall('lessonsGroup2plus','s-map'))" hidden>🔍 2. grubu keşfet</button>
     <p class="sub" id="doneBreakMsg" hidden>Bugün epey çalıştın! Kısa bir mola vermek ister misin? 🌤️</p>
     <button class="btn ok" onclick="go('s-map')">Haritaya dön</button>
     <button class="btn ghost tiny" id="doneBreakBtn" onclick="acceptBreak()" hidden>☕ Mola ver, yarın devam</button>
@@ -1053,6 +1055,10 @@ function finishLesson(){
   }
   const b=document.getElementById('doneBadge');
   if(L.rozet){ b.textContent='🎖️ '+L.rozet; b.hidden=false; } else b.hidden=true;
+  // E8.7: 1. grup biter bitmez (ders 6), henüz premium değilse nazik keşif daveti — baskısız, kapatılabilir
+  const showDiscover = id===6 && !isPremium();
+  document.getElementById('doneDiscover').hidden=!showDiscover;
+  document.getElementById('doneDiscoverBtn').hidden=!showDiscover;
   const suggestBreak=maybeSuggestBreak();
   document.getElementById('doneBreakMsg').hidden=!suggestBreak;
   document.getElementById('doneBreakBtn').hidden=!suggestBreak;
@@ -1067,6 +1073,8 @@ function finishReviewRound(){
   document.getElementById('doneTitle').textContent='Tekrar turu tamam!';
   document.getElementById('doneText').textContent='Zorlandığın seslerde harika pratik yaptın.';
   document.getElementById('doneBadge').hidden=true;
+  document.getElementById('doneDiscover').hidden=true;
+  document.getElementById('doneDiscoverBtn').hidden=true;
   const suggestBreak=maybeSuggestBreak();
   document.getElementById('doneBreakMsg').hidden=!suggestBreak;
   document.getElementById('doneBreakBtn').hidden=!suggestBreak;
@@ -1925,9 +1933,24 @@ function printReport(){
   if(rep) rep.innerHTML=html;
   if(typeof window.print==='function') window.print();
 }
+function entitlementLabel(){
+  const e=state.entitlement;
+  if(!e || e.plan!=='premium') return 'Ücretsiz';
+  if(!e.expires) return 'Premium — kalıcı';
+  const days=Math.max(0, Math.ceil((e.expires-Date.now())/86400000));
+  return `Premium — ${days} gün kaldı`;
+}
 function pAyar(){
   const s=state.settings;
+  // E8.7: ebeveyn ayarlarında nazik premium bilgisi/teşviki — çocuğa asla gösterilmez
+  const premiumBox = isPremium()
+    ? `<div class="advice"><h4>⭐ ${entitlementLabel()}</h4><p>Tüm ses grupları ve özellikler açık. Teşekkürler!</p></div>`
+    : `<div class="advice"><h4>🔓 Premium'da neler var?</h4>
+        <p>Tüm ses grupları (2.–5.), Okuma Kulübü ve metin bankası, ayrıntılı rapor + yazdır/PDF, zayıf seslere özel odak turu.</p>
+        <button class="btn grape tiny" style="margin-top:8px" onclick="openPaywall('ayarlar','s-parent')">Premium'u keşfet</button>
+      </div>`;
   return `
+    ${premiumBox}
     <div class="prow"><span>Yaş modu</span>
       <button class="btn ghost tiny" onclick="go('s-mode')">${state.mode==='kesif'?'Keşif 4–5':'Çözümleme 6–7'} · değiştir</button></div>
     <div class="prow"><span>Günlük hedef</span>

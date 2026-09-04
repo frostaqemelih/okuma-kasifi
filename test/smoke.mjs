@@ -798,6 +798,45 @@ const testDriver = `
     check('E8.5 geri yukle/tanitim kodu hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 41) E8.7: nazik premium tesviki - ders 6 sonu kesif karti + ebeveyn ayarlarinda bolum ---
+  try {
+    state = fresh();
+    state.done = [0, 1, 2, 3, 4, 5];
+    play = { lessonId: 6, steps: [], i: 0 };
+    assessResults = [];
+    finishLesson();
+    check('ucretsiz kullanicida ders 6 sonunda kesif karti gorunuyor', document.getElementById('doneDiscover').hidden === false);
+    check('kesif dugmesi de gorunur', document.getElementById('doneDiscoverBtn').hidden === false);
+
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    state.done = [0, 1, 2, 3, 4, 5];
+    play = { lessonId: 6, steps: [], i: 0 };
+    finishLesson();
+    check('premium kullaniciya kesif karti gosterilmiyor', document.getElementById('doneDiscover').hidden === true);
+
+    state.entitlement = { plan: 'free', source: null, since: null, expires: null };
+    state.done = [0, 1, 2, 3, 4, 5, 6];
+    play = { lessonId: 7, steps: [], i: 0 };
+    finishLesson();
+    check('baska derste kesif karti gorunmuyor (yalniz ders 6da)', document.getElementById('doneDiscover').hidden === true);
+
+    check('entitlementLabel() ucretsizde dogru metin donuyor', entitlementLabel() === 'Ücretsiz');
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    check('entitlementLabel() kalici premiumda dogru metin donuyor', entitlementLabel() === 'Premium — kalıcı');
+
+    state.entitlement = { plan: 'free', source: null, since: null, expires: null };
+    const ayarHtmlFree = pAyar();
+    check('pAyar() ucretsizken premium tesvik bolumunu iceriyor', ayarHtmlFree.includes("Premium'da neler var"));
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    const ayarHtmlPremium = pAyar();
+    check('pAyar() premiumken tesvik yerine durum gosteriyor', ayarHtmlPremium.includes('Premium — kalıcı') && !ayarHtmlPremium.includes("Premium'da neler var"));
+
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('E8.7 premium tesvik hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
