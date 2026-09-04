@@ -124,6 +124,11 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (e) **d** tam donanımlı eklendi: `mufredat.json` sesler.d+ders17, `WORDS.d` (davul), `STROKES.d` (gövde+dik vuruş), `LESSONS` id17, `WORDBANK`'a domates/duman. — 2026-09-03
   - [x] (f) **z** tam donanımlı eklendi + 3. grup rozeti: `mufredat.json` sesler.z+ders18+ders19, `WORDS.z` (zil), `STROKES.z` (tek zikzak vuruş), `LESSONS` id18 ("Ses z") + id19 ("Kâşif Gösterisi 2", `tip:'gosteri'`, rozet "3. Grup Kâşifi 🏆"), `WORDBANK`'a zil/kazan (ve daha önce gated olan "üzüm" artık erişilebilir). **E4.2 tamamlandı.** — 2026-09-03
 - [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
+  - [x] (a) **ç** tam donanımlı eklendi: `mufredat.json` sesler.ç+ders20, `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde+kedilya çengeli), `LESSONS` id20, `WORDBANK`'a çay☕. — 2026-09-04
+  - [ ] (b) **b** ekle (ders 21)
+  - [ ] (c) **g** ekle (ders 22)
+  - [ ] (d) **c** ekle (ders 23)
+  - [ ] (e) **ş** ekle (ders 24) + 4. grup rozeti/Kâşif Gösterisi 3 (ders 25)
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
 - [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
 - [ ] **E4.6** Büyük harf / küçük harf farkındalığı modülü (cümle başı, özel ad).
@@ -231,6 +236,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-03 — E4.2 (f) (rutin, Hafta 2 kilometre taşı — **E4.2 tamamlandı**): "z" sesi tam donanımlı eklendi ve 3. grup kapandı — `mufredat.json`'a `sesler.z` (sürtünmeli ünsüz, s ile karışır) + ders 18 ("Ses z") + ders 19 ("Kâşif Gösterisi 2", kümülatif kutlama, rozet); `index.html`'e `WORDS.z` (zil🔔), `STROKES.z` (tek zikzak vuruş: üst yatay+çapraz+alt yatay), `LESSONS` id18 + id19 (`tip:'gosteri'`, `rozet:'3. Grup Kâşifi 🏆'` — mevcut jenerik `buildSteps`/`finishLesson` gösteri mantığı ders12 ile aynı şekilde ders19'u da otomatik kapsıyor, kod değişikliği gerekmedi). `WORDBANK`'a zil🔔/kazan🍲 eklendi; ayrıca E4.2(a)'da eklenen "üzüm" (z gerektirdiği için o zaman gated'ti) artık erişilebilir hale geldi. **3. ses grubu (ü,s,ö,y,d,z, 6 ses, ders 13–19) tamamen oynanabilir.** Sıradaki öncelik: E4.3 (4. grup ç,b,g,c,ş). Smoke test'e 8 yeni kontrol (138 test toplamda).
 
 ---
+
+- 2026-09-04 — E4.3 (a) (rutin, Hafta 2 kilometre taşı — 4. grup başlangıcı): "ç" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.ç` (patlayıcı ünsüz, c ile karışır) + ders 20; `index.html`'e `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde + altında küçük kedilya çengeli), `LESSONS` id20 ("Ses ç"), `ALL_LETTERS`'a ç/ş eklendi (Harfi Bul dağıtıcı havuzu için). `WORDBANK`'a çay☕ eklendi (ç+önceki gruplardan, hemen erişilebilir). Büyük madde (E4.3, 5 ses) alt adımlara bölündü; sıradaki alt adımlar b→g→c→ş. Smoke test'e 5 yeni kontrol.
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

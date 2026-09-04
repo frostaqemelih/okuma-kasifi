@@ -445,7 +445,9 @@ const WORDS={
   r:{word:'radyo', emoji:'📻'}, 'ı':{word:'ışık',emoji:'💡'}, m:{word:'mum',  emoji:'🕯️'},
   /* E4.2: 3. grup (ü,s,ö,y,d,z) — sırayla ekleniyor. */
   'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}, y:{word:'yol', emoji:'🛣️'},
-  d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'}
+  d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'},
+  /* E4.3: 4. grup (ç,b,g,c,ş) — sırayla ekleniyor. */
+  'ç':{word:'çay', emoji:'☕'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -467,7 +469,8 @@ const LESSONS=[
   {id:16, ad:'Ses y', yeni:['y']},
   {id:17, ad:'Ses d', yeni:['d']},
   {id:18, ad:'Ses z', yeni:['z']},
-  {id:19, ad:'Kâşif Gösterisi 2', alt:'Kısa metin', yeni:[], rozet:'3. Grup Kâşifi 🏆', tip:'gosteri'}
+  {id:19, ad:'Kâşif Gösterisi 2', alt:'Kısa metin', yeni:[], rozet:'3. Grup Kâşifi 🏆', tip:'gosteri'},
+  {id:20, ad:'Ses ç', yeni:['ç']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -492,7 +495,9 @@ const WORDBANK=[
   /* E4.2 (e): d sesi eklendi — 'domates'/'duman' d+önceki gruplardan, hemen erişilebilir. */
   {w:'domates',e:'🍅'},{w:'duman',e:'💨'},
   /* E4.2 (f): z sesi eklendi — 3. grup tamam. 'zil'/'kazan' hemen erişilebilir; 'üzüm' de artık açık. */
-  {w:'zil',e:'🔔'},{w:'kazan',e:'🍲'}
+  {w:'zil',e:'🔔'},{w:'kazan',e:'🍲'},
+  /* E4.3 (a): ç sesi eklendi — 4. grup başlangıcı. 'çay' ç+önceki gruplardan, hemen erişilebilir. */
+  {w:'çay',e:'☕'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -541,7 +546,7 @@ const RETRY_MSGS=['Az kaldı, tekrar dinleyelim.','Neredeyse! Bir daha dinleyeli
 const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
   'Neredeyse buldun, ipucuna bak.','Harika deniyorsun, ipucu burada.','Az kaldı Kâşif, ipucuna bak.'];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
-const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c'];
+const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
 const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç'};
 
@@ -571,7 +576,9 @@ const STROKES={
   /* E4.2 (e): d — gövde (o gibi kapalı ilmek) + sağdan yukarı çıkan dik vuruş. */
   d:[ [[.60,.44],[.50,.41],[.40,.46],[.35,.56],[.39,.66],[.50,.71],[.60,.66],[.64,.56]], [[.64,.56],[.64,.27]] ],
   /* E4.2 (f): z — tek zikzak vuruş (üst yatay + çapraz + alt yatay), 3. grup tamamlandı. */
-  z:[ [[.34,.36],[.66,.36],[.35,.70],[.67,.70]] ]
+  z:[ [[.34,.36],[.66,.36],[.35,.70],[.67,.70]] ],
+  /* E4.3 (a): ç — açık eğri gövde (c gibi) + altına küçük çengel (kedilya). */
+  'ç':[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]], [[.50,.73],[.46,.79],[.51,.84]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */

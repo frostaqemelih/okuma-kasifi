@@ -556,6 +556,20 @@ const testDriver = `
     check('3. grup z sesi + Kâşif Gösterisi 2 (E4.2 f) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 30) E4.3 (a) 4. grup başlangıcı: ç sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.ç tanımlı ve ç ile başlıyor', !!WORDS['ç'] && WORDS['ç'].word[0] === 'ç');
+    check('STROKES.ç tanımlı (çok vuruşlu: gövde + çengel)', Array.isArray(STROKES['ç']) && STROKES['ç'].length === 2);
+    const L20 = LESSONS.find(x => x.id === 20);
+    check('LESSONS içinde ders 20 "Ses ç" olarak tanımlı', !!L20 && L20.yeni.includes('ç'));
+    const poolWithC1 = poolUpTo(20);
+    check('poolUpTo(20) ç sesini içeriyor', poolWithC1.includes('ç'));
+    const reachableC1 = WORDBANK.filter(it => it.w.split('').every(c => poolWithC1.includes(c)));
+    check('"çay" ç ogrenilince WORDBANK icinde erisilebilir', reachableC1.some(it => it.w === 'çay'));
+  } catch (e) {
+    check('4. grup ç sesi (E4.3 a) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

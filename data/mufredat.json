@@ -55,7 +55,8 @@
     "ö": { "tur": "unlu", "uzatilabilir": true, "ornek": ["ördek", "öküz", "ötücü"], "sesletim": "ööö", "cizimVurus": 1, "karisir": ["o"] },
     "y": { "tur": "surekli-unsuz", "uzatilabilir": false, "ornek": ["yol", "yumurta", "yıldız"], "sesletim": "y", "cizimVurus": 2 },
     "d": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["davul", "duman", "domates"], "sesletim": "d", "cizimVurus": 2 },
-    "z": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["zil", "kazan", "yazı"], "sesletim": "zzz", "cizimVurus": 1, "karisir": ["s"] }
+    "z": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["zil", "kazan", "yazı"], "sesletim": "zzz", "cizimVurus": 1, "karisir": ["s"] },
+    "ç": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["çilek", "çorap", "çanta"], "sesletim": "ç", "cizimVurus": 2, "karisir": ["c"] }
   },
 
   "ortakIskelet": [
@@ -228,6 +229,14 @@
       "oyunlar": ["hizli-yoklama", "serbest-cizim"],
       "basariOlcutu": "1.–3. grup seslerinin (18 ses) çoğunu güvenle tanır, çizer ve okur",
       "rozet": "3. Grup Kâşif Rozeti"
+    },
+    {
+      "id": 20, "ad": "Ses ç", "yeniSesler": ["ç"], "yeniHarfler": ["ç"],
+      "beceriler": ["/ç/ ilk-ses avı", "/ç/–/c/ ayırt etme (kritik, ötümsüz/ötümlü)", "ç harfini çizme (gövde + çengel)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur"],
+      "basariOlcutu": "/ç/ ile başlayan sözcükleri %80 tanır; ç harfini (çengeliyle) doğru sırayla çizer; 'ça, aç, uç' hecelerini sesletir",
+      "kelimeler": ["çay"], "heceler": ["ça", "çe", "çı", "ço", "çu", "aç", "uç"], "cumleler": [],
+      "not": "4. grubun (ç,b,g,c,ş) ilk sesi. Diğer 4 sesi ders 21–24'te eklenecek."
     }
   ]
 }
