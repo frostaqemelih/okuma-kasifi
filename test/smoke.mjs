@@ -40,7 +40,7 @@ const testDriver = `
   ['s-start','s-mode','s-map','s-free','s-game','s-done','s-parent','s-collection'].forEach(id=>{
     check("#" + id + " ekranı DOM'da", !!document.getElementById(id));
   });
-  check('5 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 5);
+  check('6 ebeveyn sekmesi (#ptabs .ptab) mevcut', document.querySelectorAll('#ptabs .ptab').length === 6);
 
   // --- 2) Ebeveyn sekmeleri çalışıyor ve 14 günlük grafik render ediliyor mu? ---
   try {
@@ -1335,6 +1335,18 @@ const testDriver = `
     check('age-card üzerinde Boşluk tuşu click() eylemini tetikliyor', clicked === true);
   } catch (e) {
     check('E5.4 klavye erişilebilirliği hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- E7.3: KVKK/gizlilik "Yasal / Gizlilik" sekmesi ebeveyn panelinde ---
+  try {
+    parentTab('yasal');
+    const pbody = document.getElementById('pbody').innerHTML;
+    check('Yasal sekmesi KVKK aydınlatma metnini içeriyor', pbody.includes('KVKK aydınlatma'));
+    check('Yasal sekmesi "veri toplamıyoruz" özetini içeriyor', pbody.includes('kişisel veri toplamıyoruz'));
+    check('Yasal sekmesi "İlerlemeyi sıfırla" yönergesine değiniyor', pbody.includes('İlerlemeyi sıfırla'));
+    check('Yasal sekmesi iletişim bilgisi içeriyor', pbody.includes('mailto:'));
+  } catch (e) {
+    check('E7.3 Yasal sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
   }
 
   return results;

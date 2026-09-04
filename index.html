@@ -440,6 +440,7 @@
       <button class="ptab" data-tab="karne" onclick="parentTab('karne')">Ses Karnesi</button>
       <button class="ptab" data-tab="oneri" onclick="parentTab('oneri')">Öneriler</button>
       <button class="ptab" data-tab="ayar" onclick="parentTab('ayar')">Ayarlar</button>
+      <button class="ptab" data-tab="yasal" onclick="parentTab('yasal')">Yasal / Gizlilik</button>
     </div>
     <div class="pbody" id="pbody"></div>
     <button class="btn ghost tiny" style="margin-top:14px" onclick="printReport()">🖨️&nbsp; Yazdır / PDF olarak kaydet</button>
@@ -2238,7 +2239,7 @@ function parentTab(name){
     if(on) b.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth', inline:'center', block:'nearest'});
   });
   const body=document.getElementById('pbody');
-  body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar})[name]();
+  body.innerHTML = ({genel:pGenel, dersler:pDersler, karne:pKarne, oneri:pOneri, ayar:pAyar, yasal:pYasal})[name]();
   if(name==='ayar') wireParentSettings();
 }
 
@@ -2446,6 +2447,57 @@ function importProgress(){
   if(!t) return;
   try{ const s=JSON.parse(t); if(s&&s.mode!==undefined){ localStorage.setItem(KEY,t); location.reload(); } else alert('Geçersiz veri.'); }
   catch(e){ alert('Geçersiz veri.'); }
+}
+/* E7.3: KVKK aydınlatma + gizlilik/kullanım şartları özeti — sade dille, ebeveyn bölümünde ayrı sekme.
+   Kaynak: arastirma/gizlilik-uyum.md § 0, 1.4, 8, Özet Karar Tablosu. Uygulama tasarımı gereği
+   (hesapsız, cihaz-öncelikli) kişisel veri toplamadığından metin bu gerçeği yansıtıyor.
+   NOT (geliştirme): yayın öncesi bir avukat gözden geçirmesi önerilir (bkz. kaynak belge Bölüm 9, madde 22). */
+function pYasal(){
+  return `
+    <div class="advice"><h4>🔒 Özetle: hiçbir kişisel veri toplamıyoruz</h4>
+      <p>Okuma Kâşifi hesap gerektirmez. Çocuğunuzun adı, e-posta, telefon, doğum tarihi
+      veya konumu istenmez, sunucuya gönderilmez. Tüm ilerleme (hangi ses/harf öğrenildi,
+      rozetler, süre) yalnızca <b>bu cihazda</b> saklanır. Uygulamada reklam ve üçüncü taraf
+      izleme yazılımı (analiz/reklam SDK'sı) yoktur.</p></div>
+
+    <h3>KVKK aydınlatma metni (özet)</h3>
+    <p class="mini"><b>Veri sorumlusu:</b> Okuma Kâşifi ekibi (iletişim aşağıda).<br>
+    <b>Hangi veri işlenir:</b> Uygulama içi ilerleme verisi (öğrenilen sesler, süre, rozetler) —
+    yalnızca cihazınızın tarayıcı belleğinde (<code>localStorage</code>); bize hiç ulaşmaz.<br>
+    <b>Amaç ve hukuki sebep:</b> Yalnızca çocuğunuzun kendi ilerlemesini görebilmesi; veri
+    bizim sunucularımıza aktarılmadığından ayrıca bir işleme amacı/aktarımı yoktur.<br>
+    <b>Aktarım:</b> Hiçbir kişisel veri üçüncü kişilere veya yurt dışına aktarılmaz.<br>
+    <b>Haklarınız (KVKK m.11):</b> Veri bizde tutulmadığı için silme/düzeltme talebiniz
+    genelde uygulama içindeki <b>"İlerlemeyi sıfırla"</b> düğmesiyle (Ayarlar sekmesi)
+    anında kendi kendinize karşılanır. Yine de soru/talebiniz için bize ulaşabilirsiniz.</p>
+
+    <h3>Çocuk güvenliği ilkelerimiz</h3>
+    <ul class="mini" style="padding-left:18px; line-height:1.7">
+      <li>Kâşif rehberi önceden hazırlanmış sabit cümlelerle konuşur; çocukla serbest
+        sohbet eden bir yapay zekâ (LLM/chatbot) değildir.</li>
+      <li>Çocuktan serbest metin girişi istenmez (yaş/isim gibi bilgiler isteğe bağlıdır
+        ve yalnız cihazda kalır).</li>
+      <li>Reklam yok, izleyici/analiz SDK'sı yok, uygulama içi mesajlaşma yok.</li>
+      <li>Satın alma ve dış bağlantılar yalnızca <b>ebeveyn kapısının</b> arkasındadır;
+        çocuğa hiçbir satış ekranı gösterilmez.</li>
+    </ul>
+
+    <h3>Kullanım şartları (özet)</h3>
+    <p class="mini">Okuma Kâşifi'ni indirdiğiniz/kullandığınız cihazda, ailenizin kişisel
+    kullanımı için sunuyoruz. İçerik ve kod olduğu gibi ("olduğu gibi") sağlanır; eğitim
+    amaçlı bir destek aracıdır, resmi bir müfredatın yerine geçmez. Premium abonelik
+    satın alırsanız plan koşulları (süre, yenileme, iptal) satın alma ekranında açıkça
+    gösterilir; iptal her zaman mağaza/uygulama ayarlarınızdan mümkündür.</p>
+
+    <h3>Veri sıfırlama</h3>
+    <p class="mini">Cihazınızdaki tüm ilerlemeyi ve ayarları tek dokunuşla silebilirsiniz:
+    <b>Ayarlar</b> sekmesi → <b>"İlerlemeyi sıfırla."</b></p>
+
+    <h3>Bize ulaşın</h3>
+    <p class="mini">Soru, talep veya geri bildiriminiz için: <a href="mailto:destek@okumakasifi.app">destek@okumakasifi.app</a></p>
+    <p class="mini" style="opacity:.7; margin-top:10px">Bu sayfa bilgilendirme amaçlıdır ve
+    hukuki danışmanlık yerine geçmez. Ayrıntılı gizlilik/uyum değerlendirmesi için bkz.
+    ekibimizin iç kaynak belgesi.</p>`;
 }
 function resetProgress(){
   if(confirm('Tüm ilerleme silinsin mi? Bu geri alınamaz.')){
