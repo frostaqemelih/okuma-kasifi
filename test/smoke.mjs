@@ -756,6 +756,48 @@ const testDriver = `
     check('E8.2 FEATURES/harita premium kilidi hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 40) E8.5: satin alimlari geri yukle + tanitim kodu ---
+  try {
+    state = fresh();
+    openPaywall('test', 's-map');
+
+    restorePurchases();
+    check('gecmis yokken restorePurchases() uygun mesaj veriyor', document.getElementById('restoreMsg').textContent.includes('bulunamadı'));
+    check('gecmis yokken restorePurchases() entitlement acmiyor', isPremium() === false);
+
+    buy('tekseferlik');
+    confirmStubPurchase();
+    check('stub satin alma purchaseHistory kaydi birakiyor', state.purchaseHistory.length === 1 && state.purchaseHistory[0].source === 'stub:tekseferlik');
+    closeOverlay('pwSuccess');
+
+    state.entitlement = { plan: 'free', source: null, since: null, expires: null };
+    check('entitlement elle sifirlandiktan sonra premium degil', isPremium() === false);
+    restorePurchases();
+    check('restorePurchases() gecmisten son satin almayi geri yukluyor', isPremium() === true && state.entitlement.source === 'stub:tekseferlik');
+
+    state = fresh();
+    const promoInput = document.getElementById('promoInput');
+    promoInput.value = 'GECERSIZKOD';
+    redeemPromo();
+    check('gecersiz kod uygun hata mesaji veriyor', document.getElementById('promoMsg').textContent.includes('geçersiz') || document.getElementById('promoMsg').textContent.includes('Geçersiz'));
+    check('gecersiz kod entitlement acmiyor', isPremium() === false);
+
+    promoInput.value = 'kasif30';
+    redeemPromo();
+    check('gecerli kod (kucuk harfle girilse bile) premium aciyor', isPremium() === true);
+    check('gecerli kodun suresi ~30 gun', Math.round((state.entitlement.expires - Date.now()) / 86400000) === 30);
+    check('kullanilan kod promoUsed listesine eklendi', state.promoUsed.includes('KASIF30'));
+
+    state.entitlement = { plan: 'free', source: null, since: null, expires: null };
+    promoInput.value = 'KASIF30';
+    redeemPromo();
+    check('ayni kod ikinci kez kullanilmaya calisilinca reddediliyor', isPremium() === false && document.getElementById('promoMsg').textContent.includes('daha önce'));
+
+    state = fresh();
+  } catch (e) {
+    check('E8.5 geri yukle/tanitim kodu hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

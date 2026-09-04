@@ -274,6 +274,12 @@
   .plan-feat{list-style:none; display:flex; flex-direction:column; gap:5px; flex:1}
   .plan-feat li{font-size:12.5px; color:var(--ink-soft); padding-left:16px; position:relative}
   .plan-feat li::before{content:'•'; position:absolute; left:2px; color:var(--explore)}
+  .promo-box{width:min(420px,92vw); display:flex; flex-direction:column; gap:6px; margin-top:4px}
+  .promo-row{display:flex; gap:8px}
+  .promo-row input{flex:1; font-family:var(--font-body); font-size:15px; padding:10px 14px;
+    border:2px solid var(--line); border-radius:14px; background:var(--surface); color:var(--ink);
+    text-transform:uppercase}
+  .promo-row input:focus-visible{outline:3px solid var(--primary); outline-offset:2px}
 </style>
 </head>
 <body>
@@ -399,6 +405,16 @@
       <li>Zayıf seslere özel tekrar turu</li>
     </ul>
     <div class="plan-grid" id="paywallPlans"></div>
+    <div class="promo-box">
+      <label for="promoInput" class="mini">Tanıtım / hediye kodunuz mu var?</label>
+      <div class="promo-row">
+        <input type="text" id="promoInput" placeholder="ör. KASIF30" maxlength="20">
+        <button class="btn ghost tiny" onclick="redeemPromo()">Kodu kullan</button>
+      </div>
+      <p class="mini" id="promoMsg" aria-live="polite"></p>
+    </div>
+    <button class="btn ghost tiny" onclick="restorePurchases()">↺ Satın alımları geri yükle</button>
+    <p class="mini" id="restoreMsg" aria-live="polite"></p>
     <button class="btn ghost tiny" onclick="closePaywall()">Belki sonra</button>
     <p class="mini" style="text-align:center">Bu ekran yalnızca ebeveyn kapısından açılır; çocuğa satış gösterilmez.</p>
   </section>
@@ -468,7 +484,8 @@ function fresh(){return{
   reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
   settings:{dailyGoalMin:15},
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
-  promoUsed:[]           // E8.5: kullanılan tanıtım kodları
+  promoUsed:[],          // E8.5: kullanılan tanıtım kodları
+  purchaseHistory:[]     // E8.5: geri yükleme için cihazdaki satın alma kayıtları
 }}
 function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
@@ -484,7 +501,7 @@ try{
       settings:Object.assign(f.settings,s.settings||{}),
       entitlement:Object.assign(f.entitlement,s.entitlement||{}),
       daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{},
-      reviewQueue:s.reviewQueue||[], promoUsed:s.promoUsed||[]
+      reviewQueue:s.reviewQueue||[], promoUsed:s.promoUsed||[], purchaseHistory:s.purchaseHistory||[]
     });
     if(migratingFromV2) save(); // v3 anahtarına taşı; eski v2 kaydı dokunulmadan kalır
   }
@@ -569,6 +586,7 @@ function confirmStubPurchase(){
     plan:'premium', source:'stub:'+p.id, since:now,
     expires:p.entitlementSuresiGun ? now+p.entitlementSuresiGun*86400000 : null
   };
+  state.purchaseHistory.push({...state.entitlement}); // E8.5: geri yükleme için sakla
   save();
   closeOverlay('stubPay');
   const text=document.getElementById('pwSuccessText');
@@ -579,6 +597,44 @@ function finishPurchaseFlow(){
   closeOverlay('pwSuccess');
   const g=pendingPaywallGrant; pendingPaywallGrant=null;
   if(g) g(); else closePaywall();
+}
+
+/* ================= GERİ YÜKLE + TANITIM KODU (E8.5) =================
+   Gerçek mağaza/hesap sorgusu YOK (sağlayıcı bağlanınca eklenecek — TODO). Şimdilik
+   cihazdaki purchaseHistory kaydından son satın almayı geri yükler (aynı cihazda
+   entitlement bir şekilde sıfırlansa/kaybolsa bile ilerleme silinmeden kurtarılabilsin diye). */
+function restorePurchases(){
+  const msgEl=document.getElementById('restoreMsg');
+  // TODO: gerçek sağlayıcı — burada mağaza/hesap üzerinden satın alma sorgusu yapılacak.
+  const hist=state.purchaseHistory||[];
+  if(!hist.length){ if(msgEl) msgEl.textContent='Bu cihazda kayıtlı bir satın alma bulunamadı.'; return; }
+  const last=hist[hist.length-1];
+  if(last.expires && Date.now()>last.expires){ if(msgEl) msgEl.textContent='Son satın alımınızın süresi dolmuş.'; return; }
+  state.entitlement={...last};
+  save();
+  if(msgEl) msgEl.textContent='Satın alımınız geri yüklendi ✓';
+  renderPaywallPlans();
+}
+const PROMO={ // E8.5: stub tanıtım/hediye kodları — gerçek kampanya yönetimi sonra eklenecek
+  'KASIF30':{gunSayisi:30, aciklama:'30 günlük premium hediye'},
+  'AILEDENE':{gunSayisi:7, aciklama:'7 günlük deneme hediyesi'}
+};
+function redeemPromo(){
+  const input=document.getElementById('promoInput');
+  const msgEl=document.getElementById('promoMsg');
+  const code=((input&&input.value)||'').trim().toUpperCase();
+  if(!code){ if(msgEl) msgEl.textContent='Bir kod girin.'; return; }
+  if(state.promoUsed.includes(code)){ if(msgEl) msgEl.textContent='Bu kod bu cihazda daha önce kullanıldı.'; return; }
+  const promo=PROMO[code];
+  if(!promo){ if(msgEl) msgEl.textContent='Kod geçersiz.'; return; }
+  const now=Date.now();
+  state.entitlement={plan:'premium', source:'promo:'+code, since:now, expires:now+promo.gunSayisi*86400000};
+  state.promoUsed.push(code);
+  state.purchaseHistory.push({...state.entitlement});
+  save();
+  if(input) input.value='';
+  if(msgEl) msgEl.textContent='Kod uygulandı: '+promo.aciklama+' 🎉';
+  renderPaywallPlans();
 }
 function syncStars(){ document.querySelectorAll('#stars1,#stars2,#stars3').forEach(el=>el.textContent=state.stars); }
 
