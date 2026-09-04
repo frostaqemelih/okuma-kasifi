@@ -1069,9 +1069,22 @@ const SENTENCES=[
   {w:['nine','elma','al'], t:'Nine elma al.'},
   {w:['nine','kutu','al'],  t:'Nine kutu al.'},
   {w:['kral','armut','al'], t:'Kral armut al.'},
-  {w:['o','roket','al'],    t:'O roket al.'}
+  {w:['o','roket','al'],    t:'O roket al.'},
+  /* 3. grup (ü,s,ö,y,d,z) pekiştirmesi — WORDBANK'taki su/domates/yumurta kelimeleriyle. */
+  {w:['anne','domates','al'], t:'Anne domates al.'},
+  {w:['kral','su','al'],      t:'Kral su al.'},
+  {w:['nine','yumurta','al'], t:'Nine yumurta al.'},
+  /* 4. grup (ç,b,g,c,ş) pekiştirmesi — çay/gül/şeker kelimeleriyle. */
+  {w:['nine','çay','al'],     t:'Nine çay al.'},
+  {w:['kral','gül','al'],     t:'Kral gül al.'},
+  {w:['anne','şeker','al'],   t:'Anne şeker al.'},
+  /* 5. grup (p,h,v,ğ,f,j) pekiştirmesi — Türk alfabesinin tüm 29 sesi artık cümlede kullanılabilir. */
+  {w:['baba','para','al'], t:'Baba para al.'},
+  {w:['fil','su','iç'],    t:'Fil su iç.'},
+  {w:['horoz','öter'],     t:'Horoz öter.'}
 ];
-const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne'];
+const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne',
+  'su','domates','yumurta','çay','gül','şeker','baba','fil','horoz'];
 /* E3.5: Okuma Kulübü metin bankası — data/metinler.json ile senkron. Her metin yalnız kendi
    `gerekli` seslerinden kurulu (Kâşif metni okusa da çocuk seslerini tanıyabilsin diye); anlama
    soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı

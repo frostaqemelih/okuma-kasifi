@@ -482,14 +482,37 @@ const testDriver = `
   try {
     check('SENTENCES en az 9 cümle içeriyor', SENTENCES.length >= 9);
     const pool12b = 'anetilokurım'.split('');
-    const bad = SENTENCES.filter(s => !s.w.every(w => w.split('').every(c => pool12b.includes(c))));
-    check('SENTENCES kelimeleri yalnız 1.+2. grup seslerinden kurulu', bad.length === 0);
+    const g12 = SENTENCES.filter(s => s.w.every(w => w.split('').every(c => pool12b.includes(c))));
+    check('SENTENCES en az 9 cümlesi yalnız 1.+2. grup seslerinden kurulu', g12.length >= 9);
     const usesGroup2 = SENTENCES.some(s => s.w.join('').split('').some(c => 'urm'.includes(c)));
     check('En az bir cümle r/u/m (2. grup) seslerini içeriyor', usesGroup2);
-    check('SENT_WORDS pool-güvenli kelimelerden kurulu',
-      SENT_WORDS.every(w => w.split('').every(c => pool12b.includes(c))));
+    check('SENT_WORDS eski kelimeleri hâlâ 1.+2. grup seslerinden kurulu',
+      ['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne']
+        .every(w => w.split('').every(c => pool12b.includes(c))));
+    // Tüm SENTENCES/SENT_WORDS Türk alfabesi dışına taşmıyor (yeni içerik ekleme hatasına karşı regresyon).
+    check('SENTENCES yalnız Türk alfabesindeki seslerden kurulu',
+      SENTENCES.every(s => s.w.every(w => w.split('').every(c => ALL_LETTERS.includes(c)))));
+    check('SENT_WORDS yalnız Türk alfabesindeki seslerden kurulu',
+      SENT_WORDS.every(w => w.split('').every(c => ALL_LETTERS.includes(c))));
   } catch (e) {
     check('Cümle Bahçesi genişlemesi (E4.1) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- Cumle Bahcesi 3.-5. grup pekistirmesi: roundCumle() aday havuzu pool ilerledikce genisliyor ---
+  try {
+    const g2Pool = 'anetilokurım'.split('');
+    const g3Pool = [...g2Pool, 'ü', 's', 'ö', 'y', 'd', 'z'];
+    const g4Pool = [...g3Pool, 'ç', 'b', 'g', 'c', 'ş'];
+    const g5Pool = ALL_LETTERS;
+    const candsFor = p => SENTENCES.filter(s => s.w.every(w => w.split('').every(c => p.includes(c))));
+    check('2. grup pool 3. grup cumlesini henuz icermiyor', !candsFor(g2Pool).some(s => s.t === 'Anne domates al.'));
+    check('3. grup pool kendi cumlesini iceriyor', candsFor(g3Pool).some(s => s.t === 'Anne domates al.'));
+    check('3. grup pool 4. grup cumlesini henuz icermiyor', !candsFor(g3Pool).some(s => s.t === 'Nine çay al.'));
+    check('4. grup pool kendi cumlesini iceriyor', candsFor(g4Pool).some(s => s.t === 'Nine çay al.'));
+    check('4. grup pool 5. grup cumlesini henuz icermiyor', !candsFor(g4Pool).some(s => s.t === 'Fil su iç.'));
+    check('Tam alfabe pool tum cumleleri kapsiyor', candsFor(g5Pool).length === SENTENCES.length);
+  } catch (e) {
+    check('Cumle Bahcesi 3.-5. grup pekistirmesi hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
   // --- 24) E4.2 3. grup başlangıcı: ü sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
