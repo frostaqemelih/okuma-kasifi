@@ -615,6 +615,24 @@ const testDriver = `
     check('4. grup c sesi (E4.3 d) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 34) E4.3 (e) 4. grup tamamlandı: ş sesi + "Kâşif Gösterisi 3" rozet dersi ---
+  try {
+    check('WORDS.ş tanımlı ve ş ile başlıyor', !!WORDS['ş'] && WORDS['ş'].word[0] === 'ş');
+    check('STROKES.ş tanımlı (çok vuruşlu: s eğrisi + çengel)', Array.isArray(STROKES['ş']) && STROKES['ş'].length === 2);
+    const L24 = LESSONS.find(x => x.id === 24);
+    check('LESSONS içinde ders 24 "Ses ş" olarak tanımlı', !!L24 && L24.yeni.includes('ş'));
+    const L25 = LESSONS.find(x => x.id === 25);
+    check('LESSONS içinde ders 25 "Kâşif Gösterisi 3" gosteri tipinde ve rozetli', !!L25 && L25.tip === 'gosteri' && !!L25.rozet);
+    const poolWithS2 = poolUpTo(24);
+    check('poolUpTo(24) 4. grubun tüm seslerini (ç,b,g,c,ş) içeriyor',
+      ['ç', 'b', 'g', 'c', 'ş'].every(ch => poolWithS2.includes(ch)));
+    const reachableS2 = WORDBANK.filter(it => it.w.split('').every(ch => poolWithS2.includes(ch)));
+    check('"şeker" ş ogrenilince WORDBANK icinde erisilebilir', reachableS2.some(it => it.w === 'şeker'));
+    check('"şal" ş ogrenilince WORDBANK icinde erisilebilir', reachableS2.some(it => it.w === 'şal'));
+  } catch (e) {
+    check('4. grup ş sesi + Kâşif Gösterisi 3 (E4.3 e) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

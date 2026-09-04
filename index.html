@@ -447,7 +447,8 @@ const WORDS={
   'ü':{word:'üzüm', emoji:'🍇'}, s:{word:'su', emoji:'💧'}, 'ö':{word:'ördek', emoji:'🦆'}, y:{word:'yol', emoji:'🛣️'},
   d:{word:'davul', emoji:'🥁'}, z:{word:'zil', emoji:'🔔'},
   /* E4.3: 4. grup (ç,b,g,c,ş) — sırayla ekleniyor. */
-  'ç':{word:'çay', emoji:'☕'}, b:{word:'balon', emoji:'🎈'}, g:{word:'gemi', emoji:'🚢'}, c:{word:'ceket', emoji:'🧥'}
+  'ç':{word:'çay', emoji:'☕'}, b:{word:'balon', emoji:'🎈'}, g:{word:'gemi', emoji:'🚢'}, c:{word:'ceket', emoji:'🧥'},
+  'ş':{word:'şeker', emoji:'🍬'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -473,7 +474,9 @@ const LESSONS=[
   {id:20, ad:'Ses ç', yeni:['ç']},
   {id:21, ad:'Ses b', yeni:['b']},
   {id:22, ad:'Ses g', yeni:['g']},
-  {id:23, ad:'Ses c', yeni:['c']}
+  {id:23, ad:'Ses c', yeni:['c']},
+  {id:24, ad:'Ses ş', yeni:['ş']},
+  {id:25, ad:'Kâşif Gösterisi 3', alt:'Kısa metin', yeni:[], rozet:'4. Grup Kâşifi 🏆', tip:'gosteri'}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -506,7 +509,9 @@ const WORDBANK=[
   /* E4.3 (c): g sesi eklendi — 'gemi'/'gül' g+önceki gruplardan, hemen erişilebilir. */
   {w:'gemi',e:'🚢'},{w:'gül',e:'🌹'},
   /* E4.3 (d): c sesi eklendi — 'ceket'/'cam' c+önceki gruplardan, hemen erişilebilir. */
-  {w:'ceket',e:'🧥'},{w:'cam',e:'🪟'}
+  {w:'ceket',e:'🧥'},{w:'cam',e:'🪟'},
+  /* E4.3 (e): ş sesi eklendi — 4. grup tamam. 'şeker'/'şal' hemen erişilebilir. */
+  {w:'şeker',e:'🍬'},{w:'şal',e:'🧣'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -593,7 +598,9 @@ const STROKES={
   /* E4.3 (c): g — o'nun kapalı gövdesi + alt sağdan aşağı sarkan kuyruk (deşentr). */
   g:[ [[.50,.33],[.37,.42],[.33,.55],[.40,.68],[.53,.72],[.65,.63],[.67,.49],[.60,.37],[.50,.33]], [[.60,.55],[.63,.68],[.60,.80],[.50,.85],[.40,.81]] ],
   /* E4.3 (d): c — tek vuruşlu açık eğri (ç'nin çengelsiz hâli). */
-  c:[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]] ]
+  c:[ [[.62,.42],[.50,.35],[.38,.40],[.33,.53],[.38,.66],[.50,.72],[.62,.65]] ],
+  /* E4.3 (e): ş — s'nin eğrisi + altına küçük çengel (kedilya), 4. grup tamamlandı. */
+  'ş':[ [[.60,.35],[.48,.32],[.37,.36],[.34,.44],[.40,.50],[.50,.52],[.60,.55],[.66,.62],[.63,.70],[.51,.74],[.39,.71],[.34,.64]], [[.50,.74],[.46,.80],[.51,.85]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */

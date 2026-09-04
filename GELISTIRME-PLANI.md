@@ -123,12 +123,12 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (d) **y** tam donanımlı eklendi: `mufredat.json` sesler.y+ders16, `WORDS.y` (yol), `STROKES.y` (iki eğik vuruş+kuyruk), `LESSONS` id16, `WORDBANK`'a yol/yumurta. — 2026-09-03
   - [x] (e) **d** tam donanımlı eklendi: `mufredat.json` sesler.d+ders17, `WORDS.d` (davul), `STROKES.d` (gövde+dik vuruş), `LESSONS` id17, `WORDBANK`'a domates/duman. — 2026-09-03
   - [x] (f) **z** tam donanımlı eklendi + 3. grup rozeti: `mufredat.json` sesler.z+ders18+ders19, `WORDS.z` (zil), `STROKES.z` (tek zikzak vuruş), `LESSONS` id18 ("Ses z") + id19 ("Kâşif Gösterisi 2", `tip:'gosteri'`, rozet "3. Grup Kâşifi 🏆"), `WORDBANK`'a zil/kazan (ve daha önce gated olan "üzüm" artık erişilebilir). **E4.2 tamamlandı.** — 2026-09-03
-- [ ] **E4.3** 4. grup `ç,b,g,c,ş`: benzer.
+- [x] **E4.3** 4. grup `ç,b,g,c,ş`: tamamlandı. **E4.3 tamamlandı.** — 2026-09-04
   - [x] (a) **ç** tam donanımlı eklendi: `mufredat.json` sesler.ç+ders20, `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde+kedilya çengeli), `LESSONS` id20, `WORDBANK`'a çay☕. — 2026-09-04
   - [x] (b) **b** tam donanımlı eklendi: `mufredat.json` sesler.b+ders21, `WORDS.b` (balon🎈), `STROKES.b` (2 vuruş: dik gövde+kabarcık ilmek), `LESSONS` id21, `WORDBANK`'a balon🎈/boya🎨. — 2026-09-04
   - [x] (c) **g** tam donanımlı eklendi: `mufredat.json` sesler.g+ders22, `WORDS.g` (gemi🚢), `STROKES.g` (2 vuruş: o gövdesi+alt kuyruk), `LESSONS` id22, `WORDBANK`'a gemi🚢/gül🌹. — 2026-09-04
   - [x] (d) **c** tam donanımlı eklendi: `mufredat.json` sesler.c+ders23, `WORDS.c` (ceket🧥), `STROKES.c` (1 vuruş: açık eğri, ç'nin çengelsiz hâli), `LESSONS` id23, `WORDBANK`'a ceket🧥/cam🪟. — 2026-09-04
-  - [ ] (e) **ş** ekle (ders 24) + 4. grup rozeti/Kâşif Gösterisi 3 (ders 25)
+  - [x] (e) **ş** tam donanımlı eklendi + 4. grup rozeti: `mufredat.json` sesler.ş+ders24+ders25, `WORDS.ş` (şeker🍬), `STROKES.ş` (2 vuruş: s eğrisi+çengel), `LESSONS` id24 + id25 ("Kâşif Gösterisi 3", `tip:'gosteri'`, rozet "4. Grup Kâşifi 🏆"), `WORDBANK`'a şeker🍬/şal🧣. **E4.3 tamamlandı.** — 2026-09-04
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
 - [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
 - [ ] **E4.6** Büyük harf / küçük harf farkındalığı modülü (cümle başı, özel ad).
@@ -244,6 +244,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E4.3 (c) (rutin, Hafta 2 kilometre taşı): "g" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.g` (patlayıcı ünsüz, k ile karışır) + ders 22; `index.html`'e `WORDS.g` (gemi🚢), `STROKES.g` (o'nun kapalı gövdesi + alt sağdan aşağı sarkan kuyruk deşentr), `LESSONS` id22 ("Ses g"). `WORDBANK`'a gemi🚢/gül🌹 eklendi (ikisi de g+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: c (ders 23). Smoke test'e 6 yeni kontrol.
 
 - 2026-09-04 — E4.3 (d) (rutin, Hafta 2 kilometre taşı): "c" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.c` (patlayıcı ünsüz, ç ile karışır) + ders 23; `index.html`'e `WORDS.c` (ceket🧥), `STROKES.c` (tek vuruşlu açık eğri, ç'nin çengelsiz hâli), `LESSONS` id23 ("Ses c"). `WORDBANK`'a ceket🧥/cam🪟 eklendi (ikisi de c+önceki gruplardan, hemen erişilebilir). Son ses (ş, ders 24) + 4. grup rozeti kaldı. Smoke test'e 6 yeni kontrol.
+
+- 2026-09-04 — E4.3 (e) (rutin, Hafta 2 kilometre taşı — **E4.3 tamamlandı**): "ş" sesi tam donanımlı eklendi ve 4. grup kapandı — `mufredat.json`'a `sesler.ş` (sürtünmeli ünsüz, s ile karışır) + ders 24 ("Ses ş") + ders 25 ("Kâşif Gösterisi 3", kümülatif kutlama, rozet); `index.html`'e `WORDS.ş` (şeker🍬), `STROKES.ş` (s'nin eğrisi + altına küçük kedilya çengeli), `LESSONS` id24 + id25 (`tip:'gosteri'`, `rozet:'4. Grup Kâşifi 🏆'`). `WORDBANK`'a şeker🍬/şal🧣 eklendi. **4. ses grubu (ç,b,g,c,ş, 5 ses, ders 20–25) tamamen oynanabilir — böylece Hafta 2 kilometre taşının içerik derinliği hedefi (E4.1–E4.3: 2.–4. ses grupları) tamamlandı.** Sıradaki öncelik: E4.4 (5. grup p,h,v,ğ,f,j) veya Hafta 2'nin kalan diğer maddeleri (E3.5/E4.5/E5.1 zaten tamam). Smoke test'e 9 yeni kontrol (168 test toplamda).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

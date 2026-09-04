@@ -59,7 +59,8 @@
     "ç": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["çilek", "çorap", "çanta"], "sesletim": "ç", "cizimVurus": 2, "karisir": ["c"] },
     "b": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["balon", "bal", "bebek"], "sesletim": "b", "cizimVurus": 2 },
     "g": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["gemi", "gül", "göl"], "sesletim": "g", "cizimVurus": 2, "karisir": ["k"] },
-    "c": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["ceket", "cam", "civciv"], "sesletim": "c", "cizimVurus": 1, "karisir": ["ç"] }
+    "c": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["ceket", "cam", "civciv"], "sesletim": "c", "cizimVurus": 1, "karisir": ["ç"] },
+    "ş": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["şeker", "şal", "kuş"], "sesletim": "şşş", "cizimVurus": 2, "karisir": ["s"] }
   },
 
   "ortakIskelet": [
@@ -264,6 +265,21 @@
       "basariOlcutu": "/c/ ve /ç/'yi ikili ayırt görevinde %80 ayırır; c harfini doğru sırayla çizer; 'ceket' kelimesini okur",
       "kelimeler": ["ceket", "cam"], "heceler": ["ca", "ce", "cı", "co", "cu", "ac", "ec"], "cumleler": [],
       "not": "4. grubun (ç,b,g,c,ş) 4. sesi. Son ses (ş) ders 24'te eklenecek + 4. grup rozeti."
+    },
+    {
+      "id": 24, "ad": "Ses ş", "yeniSesler": ["ş"], "yeniHarfler": ["ş"],
+      "beceriler": ["/ş/ ilk ve son ses avı", "/s/–/ş/ ayırt etme (kritik)", "ş harfini çizme (s eğrisi + çengel)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "son-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/s/ ve /ş/'yi ikili ayırt görevinde %80 ayırır; ş harfini tek vuruşlu s eğrisi + çengelle çizer; 'şeker, şal' kelimelerini okur",
+      "kelimeler": ["şeker", "şal"], "heceler": ["şa", "şe", "şı", "şo", "şu", "aş", "eş"], "cumleler": [],
+      "not": "4. grubun (ç,b,g,c,ş) son sesi. 4. grup tamamlandı — ders 25'te 'Kâşif Gösterisi 3' ile rozet kazanılacak."
+    },
+    {
+      "id": 25, "ad": "Kâşif Gösterisi 3", "yeniSesler": [], "yeniHarfler": [],
+      "beceriler": ["kümülatif ses/harf yoklaması (1.–4. grup, 23 ses)", "kelime/hece pratiği", "serbest çizim", "ebeveyn raporu"],
+      "oyunlar": ["hizli-yoklama", "serbest-cizim"],
+      "basariOlcutu": "1.–4. grup seslerinin (23 ses) çoğunu güvenle tanır, çizer ve okur",
+      "rozet": "4. Grup Kâşif Rozeti"
     }
   ]
 }
