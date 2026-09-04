@@ -650,6 +650,19 @@ const testDriver = `
     check('Cocuk adi (E1.11) hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 36) E1.12 ebeveyn yazdır/PDF raporu: printReport() rapor icerigini olusturuyor ---
+  try {
+    check('#printReport konteynerı DOM icinde mevcut', !!document.getElementById('printReport'));
+    printReport();
+    const rep=document.getElementById('printReport').innerHTML;
+    check('printReport() cocugun adini/varsayilan Kasif basligini iceriyor', rep.includes(state.childName||'Kâşif'));
+    check('printReport() Dersler bolumunu iceriyor', rep.includes('Dersler') && rep.includes('<table'));
+    check('printReport() Ses Karnesi bolumunu iceriyor', rep.includes('Ses Karnesi'));
+    check('printReport() Oneriler bolumunu iceriyor', rep.includes('Öneriler'));
+  } catch (e) {
+    check('Ebeveyn yazdir/PDF raporu (E1.12) hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

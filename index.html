@@ -220,6 +220,17 @@
   table.pdersler{font-size:13px}
   table.pdersler th{font-family:var(--font-display); font-size:12px; color:var(--ink-soft); text-align:left; padding:6px 4px}
   table.pdersler td:last-child{text-align:right; font-weight:400; color:var(--ink-soft); font-family:var(--font-body)}
+  /* E1.12: yazdır/PDF raporu — ekranda gizli, yalnız print önizleme/çıktısında görünür */
+  .print-only{display:none}
+  #printReport h1{font-family:var(--font-display); font-size:24px; margin-bottom:2px}
+  #printReport h2.ph{margin-top:22px}
+  #printReport .print-date{color:#555; font-size:13px; margin-bottom:10px}
+  @media print{
+    body *{visibility:hidden}
+    #printReport, #printReport *{visibility:visible}
+    #printReport{display:block; position:absolute; left:0; top:0; width:100%; padding:24px; color:#000; background:#fff}
+    #printReport .pcard, #printReport .pweek, #printReport .advice, #printReport .chart-wrap{border-color:#999}
+  }
   :root.dys{ --font-body:"Nunito","Segoe UI",system-ui,sans-serif; }
   :root.dys body{ letter-spacing:.03em; word-spacing:.08em; line-height:1.7; }
   :root.dys .prompt, :root.dys .sub, :root.dys .advice p, :root.dys .mini{ text-align:left; }
@@ -350,6 +361,7 @@
       <button class="ptab" data-tab="ayar" onclick="parentTab('ayar')">Ayarlar</button>
     </div>
     <div class="pbody" id="pbody"></div>
+    <button class="btn ghost tiny" style="margin-top:14px" onclick="printReport()">🖨️&nbsp; Yazdır / PDF olarak kaydet</button>
     <p class="mini" style="text-align:center; margin-top:18px">Tüm veriler yalnızca bu cihazda. Hiçbir şey buluta gönderilmez.</p>
   </section>
 
@@ -378,6 +390,7 @@
 
   <div class="confetti" id="confetti"></div>
 </div>
+<div id="printReport" class="print-only" aria-hidden="true"></div>
 
 <script>
 /* ================= DURUM ================= */
@@ -1672,6 +1685,22 @@ function pOneri(){
     return `<div class="advice"><h4>«${s}» sesi</h4>${tips}</div>`;
   }).join('');
   return `<p class="mini"><b>Tekrar önerilen sesler:</b> ${targets.join(', ')} — aşağıdaki etkinlikleri günde bir-iki kez, oyun havasında deneyin. Baskı yok, doğru söyleyince coşkuyla kutlayın.</p>${cards}`;
+}
+/* E1.12: ebeveyne yazdır/PDF haftalık rapor — mevcut sekme HTML'lerini (Genel/Dersler/Ses Karnesi/Öneriler)
+   tek bir sayfada birleştirip tarayıcının yazdır önizlemesini açar ("PDF olarak kaydet" seçeneği tarayıcıda). */
+function printReport(){
+  const name=state.childName||'Kâşif';
+  const dateStr=new Date().toLocaleDateString('tr-TR',{year:'numeric',month:'long',day:'numeric'});
+  const html=`
+    <h1>${name} — İlerleme Raporu</h1>
+    <p class="print-date">${dateStr} tarihinde Okuma Kâşifi'nde oluşturuldu.</p>
+    <h2 class="ph">Genel durum</h2>${pGenel()}
+    <h2 class="ph">Dersler</h2>${pDersler()}
+    <h2 class="ph">Ses Karnesi</h2>${pKarne()}
+    <h2 class="ph">Öneriler</h2>${pOneri()}`;
+  const rep=document.getElementById('printReport');
+  if(rep) rep.innerHTML=html;
+  if(typeof window.print==='function') window.print();
 }
 function pAyar(){
   const s=state.settings;
