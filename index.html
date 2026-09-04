@@ -967,6 +967,37 @@ function strokeMatchRatio(userPts,strokePath,size){
   let cov=0; for(const g of flat){ if(userPts.some(p=>near(p,g))) cov++; }
   return cov/flat.length;
 }
+/* E6.3: yön hatası tespiti — çocuk vuruşu kılavuzun tersi yönde çizdiyse nazikçe uyar (engellemez). */
+function pathParamPoints(strokePath,size){
+  const segs=[]; let total=0;
+  for(let k=0;k<strokePath.length-1;k++){
+    const a=strokePath[k], b=strokePath[k+1], len=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    segs.push({a,b,len}); total+=len;
+  }
+  if(!total) return strokePath.map(p=>[p[0],p[1],0]);
+  const pts=[]; let acc=0;
+  segs.forEach(seg=>{
+    const steps=Math.max(4, Math.round(seg.len/(size*0.02)));
+    for(let j=0;j<steps;j++){
+      pts.push([seg.a[0]+(seg.b[0]-seg.a[0])*j/steps, seg.a[1]+(seg.b[1]-seg.a[1])*j/steps, (acc+seg.len*j/steps)/total]);
+    }
+    acc+=seg.len;
+  });
+  const last=strokePath[strokePath.length-1];
+  pts.push([last[0],last[1],1]);
+  return pts;
+}
+function strokeDirectionOk(userPts,strokePath,size){
+  if(!userPts||userPts.length<4||!strokePath||strokePath.length<2) return true;
+  const pathPts=pathParamPoints(strokePath,size);
+  const nearestT=p=>{ let best=0,bd=Infinity;
+    for(const q of pathPts){ const dx=p[0]-q[0],dy=p[1]-q[1],d=dx*dx+dy*dy; if(d<bd){bd=d;best=q[2];} }
+    return best; };
+  const n=userPts.length, seg=Math.max(1,Math.round(n*0.25));
+  let headSum=0; for(let i=0;i<seg;i++) headSum+=nearestT(userPts[i]);
+  let tailSum=0; for(let i=n-seg;i<n;i++) tailSum+=nearestT(userPts[i]);
+  return (tailSum/seg) >= (headSum/seg)-0.15;
+}
 
 function poolUpTo(lessonId){
   const out=[];
@@ -1890,7 +1921,10 @@ function setupTrace(letter,level){
     // E6.1: vuruş bitince — hedef vuruşla eşleşiyorsa sıradakine geç, eşleşmiyorsa nazikçe uyar (engellemez).
     if(multiStroke && activeStroke<path.length && cur && cur.length>2){
       const ratio=strokeMatchRatio(cur,path[activeStroke],size);
-      if(ratio>=0.4){
+      if(ratio>=0.4 && !strokeDirectionOk(cur,path[activeStroke],size)){
+        // E6.3: yön hatası — üstünden geçti ama tersten başlamış; kılavuzun yönünü nazikçe hatırlat
+        traceMsg('Yönü ters çevirmişsin, yeşil noktadan başlayıp okun gösterdiği yöne gidelim 👉');
+      }else if(ratio>=0.4){
         activeStroke++;
         if(activeStroke<path.length){ drawActiveHighlight(); traceMsg((activeStroke+1)+'. vuruşa geç 👉'); }
         else traceMsg('Tüm vuruşlar tamam! Şimdi Bitti\'ye bas ✅');

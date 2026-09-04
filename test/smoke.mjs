@@ -373,6 +373,25 @@ const testDriver = `
     check('Vuruş vuruş kılavuz (E6.1) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 19) E6.3 Yön hatası tespiti ---
+  try {
+    // t'nin ilk vuruşu yukarıdan aşağı iner: [[50,30],[50,68],[55,73]] (size=100 ölçeğinde)
+    const strokePath = STROKES.t[0].map(([x, y]) => [x * 100, y * 100]);
+    // strokeDirectionOk en az 4 nokta bekler; kılavuzu 10 ara noktaya bölerek dinamik bir çizim taklit et
+    const denseGuide = Array.from({ length: 10 }, (_, i) => {
+      const tt = i / 9, [x0, y0] = strokePath[0], [x1, y1] = strokePath[strokePath.length - 1];
+      return [x0 + (x1 - x0) * tt, y0 + (y1 - y0) * tt];
+    });
+    const forwardPts = denseGuide; // kılavuzla aynı yönde (yukarıdan aşağı)
+    const reversedPts = [...denseGuide].reverse(); // ters yönde (aşağıdan yukarı)
+    check('strokeDirectionOk() dogru yonde (yukaridan asagi) true doner', strokeDirectionOk(forwardPts, strokePath, 100) === true);
+    check('strokeDirectionOk() ters yonde (asagidan yukari) false doner', strokeDirectionOk(reversedPts, strokePath, 100) === false);
+    check('strokeDirectionOk() yetersiz nokta ile guvenli true doner', strokeDirectionOk([[1, 1]], strokePath, 100) === true);
+    check('strokeDirectionOk() bos vurus yolunda guvenli true doner', strokeDirectionOk(forwardPts, [], 100) === true);
+  } catch (e) {
+    check('Yön hatası tespiti (E6.3) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- 19) E3.4 Okuma Kulübü: metin + 2 anlama sorusu ---
   try {
     const origSay = say;
