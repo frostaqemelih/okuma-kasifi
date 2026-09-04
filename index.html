@@ -387,6 +387,7 @@
     <div class="badges" id="badges" style="margin-bottom:10px"></div>
     <button class="btn ghost tiny" style="margin-bottom:10px" onclick="go('s-collection')">🏆 Koleksiyon</button>
     <button class="btn ghost tiny" style="margin-bottom:10px" onclick="requirePremium('harfDefteri', ()=>go('s-defter'))">📓 Kâşif'in Defteri</button>
+    <button class="btn tiny" id="questBtn" style="margin-bottom:12px" onclick="startDailyQuest()"></button>
     <button class="btn tiny" id="reviewBtn" style="margin-bottom:12px; background:var(--nope)" onclick="startReviewRound()" hidden></button>
     <div class="path" id="path"></div>
     <button class="btn grape tiny" style="margin-top:20px" onclick="openFreeMenu()">🎲 Serbest oyun</button>
@@ -620,13 +621,14 @@ function fresh(){return{
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
   purchaseHistory:[],    // E8.5: geri yükleme için cihazdaki satın alma kayıtları
   trialUsed:false,       // E8.10: 7 günlük deneme cihaz başına yalnız bir kez başlatılabilir
+  questDates:[],         // günlük "Kâşif Görevi" tamamlanan günler (YYYY-MM-DD) — gün serisi ödülü için
   profiles:[],           // E8.6: aile planı — [{id,name}]; boşsa tek-profil (eski) davranış aynen sürer
   activeProfileId:null,  // E8.6: profiles doluysa aktif profilin id'si
   profileData:{}         // E8.6: { id: {mode,childName,done,badges,stars,freePlays,correct,wrong,seconds,last,soundStats,daily,lessonLog,reviewQueue} } — pasif profillerin ilerleme kaydı
 }}
 // E8.6: aktif oynanış sırasında kökte (state.mode, state.done, ...) tutulan alanlar — profil değişince bunlar
 // state.profileData[eski/yeni id]'ye taşınır/oradan yüklenir. Hesap-geneli alanlar (settings/entitlement/...) ortaktır.
-const PROFILE_FIELDS=['mode','childName','done','badges','stars','freePlays','correct','wrong','seconds','last','soundStats','daily','lessonLog','reviewQueue'];
+const PROFILE_FIELDS=['mode','childName','done','badges','stars','freePlays','correct','wrong','seconds','last','soundStats','daily','lessonLog','reviewQueue','questDates'];
 function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
 try{
@@ -817,7 +819,7 @@ function familyPlanEligible(){ return isPremium() && state.entitlement.source===
 function blankProfileData(name){
   return {mode:null, childName:name||'', done:[], badges:[], stars:0,
     freePlays:{bul:0,ses:0,hece:0,kelime:0,cumle:0,ciz:0}, correct:0, wrong:0, seconds:0, last:null,
-    soundStats:{}, daily:{}, lessonLog:{}, reviewQueue:[]};
+    soundStats:{}, daily:{}, lessonLog:{}, reviewQueue:[], questDates:[]};
 }
 function snapshotActiveProfile(){
   const snap={}; PROFILE_FIELDS.forEach(k=>{ snap[k]=JSON.parse(JSON.stringify(state[k])); });
@@ -1321,6 +1323,10 @@ function renderMap(){
   document.getElementById('modeChip').textContent = state.mode==='kesif'?'Keşif (4–5)':'Çözümleme (6–7)';
   const bx=document.getElementById('badges');
   bx.innerHTML = state.badges.map(b=>`<span class="badge">${b}</span>`).join('');
+  // Günün Kâşif Görevi: bugün bitmişse pasif "tamamlandı" durumu göster, bitmemişse davet et
+  const qb=document.getElementById('questBtn');
+  if(questDoneToday()){ qb.textContent='✅ Bugünkü görev tamam'; qb.disabled=true; qb.style.opacity='.6'; }
+  else{ qb.textContent='🌞 Günün Kâşif Görevi'; qb.disabled=false; qb.style.opacity='1'; }
   // E3.3: Ses Karnesi'nde <%50 doğrulukta ses varsa hedefli "Tekrar turu" düğmesi göster
   const weak=soundBuckets().review;
   const rb=document.getElementById('reviewBtn');
@@ -1405,6 +1411,43 @@ function startReviewRound(){
   go('s-game');
   runStep();
 }
+/* Günün Kâşif Görevi: bilinen seslerle 3 hızlı tur, günde bir kez, gün serisini besler. */
+function questDoneToday(){ return state.questDates.includes(today()); }
+function dailyQuestSounds(){
+  const pool=[...unlockedPool()];
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  return pool.slice(0,3);
+}
+function dailyQuestSteps(){
+  return dailyQuestSounds().map((s,i)=>({game:i%2?'bul':'ses', sounds:[s]}));
+}
+function startDailyQuest(){
+  if(questDoneToday()) return;
+  const steps=dailyQuestSteps();
+  if(!steps.length) return;
+  play={lessonId:'quest', dailyQuest:true, steps, i:0};
+  state.last=new Date().toISOString();
+  save();
+  sessionStart=Date.now();
+  go('s-game');
+  runStep();
+}
+function finishDailyQuest(){
+  const t=today();
+  if(!state.questDates.includes(t)) state.questDates.push(t);
+  trackTime(); save(); burst();
+  document.getElementById('doneMascot').textContent='🌞';
+  document.getElementById('doneTitle').textContent='Günün Kâşif Görevi tamam!';
+  document.getElementById('doneText').textContent='Kısa görevini bitirdin, yarın tekrar gel!';
+  document.getElementById('doneBadge').hidden=true;
+  document.getElementById('doneDiscover').hidden=true;
+  document.getElementById('doneDiscoverBtn').hidden=true;
+  document.getElementById('doneBreakMsg').hidden=true;
+  document.getElementById('doneBreakBtn').hidden=true;
+  play=null;
+  go('s-done');
+  say('Aferin, günün görevini tamamladın!');
+}
 function openLesson(id){
   if(!available(id) && !state.done.includes(id)) return;
   const L=LESSONS.find(x=>x.id===id);
@@ -1440,6 +1483,7 @@ function stepAdvance(){
 }
 function finishLesson(){
   if(play && play.reviewRound){ finishReviewRound(); return; }
+  if(play && play.dailyQuest){ finishDailyQuest(); return; }
   const id=play.lessonId, L=LESSONS.find(x=>x.id===id);
   if(!state.done.includes(id)) state.done.push(id);
   if(L.rozet && !state.badges.includes(L.rozet)) state.badges.push(L.rozet);

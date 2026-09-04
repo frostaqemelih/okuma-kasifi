@@ -963,6 +963,33 @@ const testDriver = `
     check('Defter hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- Gunun Kasif Gorevi: gunde bir kez 3 hizli tur, gun serisini besler ---
+  try {
+    state = fresh();
+    play = null;
+    renderMap();
+    let qb = document.getElementById('questBtn');
+    check('Gorev butonu baslangicta aktif ve davet ediyor', qb.disabled === false && qb.textContent.includes('Kâşif Görevi'));
+    check('questDoneToday() gun basinda false', questDoneToday() === false);
+    startDailyQuest();
+    check('Gorev 3 turdan olusuyor', play && play.dailyQuest === true && play.steps.length === 3);
+    play.i = play.steps.length;
+    finishLesson();
+    check('Gorev bitince questDates bugunu iceriyor', state.questDates.includes(today()));
+    check('Gorev bitince ders haritasina dokunulmadi', state.done.length === 0);
+    check('Gorev bitis ekrani dogru baslik gosteriyor', document.getElementById('doneTitle').textContent === 'Günün Kâşif Görevi tamam!');
+    const playBefore = play;
+    startDailyQuest();
+    check('Ayni gun icinde tekrar baslatilamiyor', play === playBefore);
+    renderMap();
+    qb = document.getElementById('questBtn');
+    check('Gorev tamamlaninca buton pasif ve isaretli', qb.disabled === true && qb.textContent.includes('tamam'));
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('Gunun Kasif Gorevi hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   // --- 43) E4.4 (a) 5. grup başlangıcı: p sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
   try {
     check('WORDS.p tanımlı ve p ile başlıyor', !!WORDS.p && WORDS.p.word[0] === 'p');
