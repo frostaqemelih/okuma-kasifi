@@ -999,6 +999,48 @@ const testDriver = `
     check('5. grup ğ ozel kurali (E4.4 d) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 47) E4.4 (e) 5. grup: f sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
+  try {
+    check('WORDS.f tanımlı ve f ile başlıyor', !!WORDS.f && WORDS.f.word[0] === 'f');
+    check('STROKES.f tanımlı (çok vuruşlu: kancali govde + cizgi)', Array.isArray(STROKES.f) && STROKES.f.length === 2);
+    const L30 = LESSONS.find(x => x.id === 30);
+    check('LESSONS içinde ders 30 "Ses f" olarak tanımlı', !!L30 && L30.yeni.includes('f'));
+    const poolWithF = poolUpTo(30);
+    check('poolUpTo(30) f sesini içeriyor', poolWithF.includes('f'));
+    const reachableF = WORDBANK.filter(it => it.w.split('').every(c => poolWithF.includes(c)));
+    check('"fil" f ogrenilince WORDBANK icinde erisilebilir', reachableF.some(it => it.w === 'fil'));
+  } catch (e) {
+    check('5. grup f sesi (E4.4 e) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- 48) E4.4 (f) 5. grup tamamlandı: j sesi + "Kâşif Gösterisi 4" rozet dersi ---
+  try {
+    check('WORDS.j tanımlı ve j ile başlıyor', !!WORDS.j && WORDS.j.word[0] === 'j');
+    check('STROKES.j tanımlı (çok vuruşlu: nokta + kancali kuyruk)', Array.isArray(STROKES.j) && STROKES.j.length === 2);
+    const L31 = LESSONS.find(x => x.id === 31);
+    check('LESSONS içinde ders 31 "Ses j" olarak tanımlı', !!L31 && L31.yeni.includes('j'));
+    const L32 = LESSONS.find(x => x.id === 32);
+    check('LESSONS içinde ders 32 "Kâşif Gösterisi 4" gosteri tipinde ve rozetli', !!L32 && L32.tip === 'gosteri' && !!L32.rozet);
+    const poolWithJ = poolUpTo(31);
+    check('poolUpTo(31) 5. grubun tüm seslerini (p,h,v,ğ,f,j) içeriyor',
+      ['p', 'h', 'v', 'ğ', 'f', 'j'].every(ch => poolWithJ.includes(ch)));
+    const reachableJ = WORDBANK.filter(it => it.w.split('').every(c => poolWithJ.includes(c)));
+    check('"jeton" j ogrenilince WORDBANK icinde erisilebilir', reachableJ.some(it => it.w === 'jeton'));
+    check('ALL_LETTERS f ve j harflerini iceriyor (dagitici havuzu)', ['f', 'j'].every(c => ALL_LETTERS.includes(c)));
+
+    state = fresh();
+    state.done = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+    play = { lessonId: 32, steps: [], i: 0 };
+    assessResults = [];
+    finishLesson();
+    check('Ders 32 (Kâşif Gösterisi 4) bitince 5. grup rozeti kazandırıyor', state.badges.includes('5. Grup Kâşifi 🏆'));
+    check('Kâşif Gösterisi 4 puansız (needsReview isareti yok)', !(state.lessonLog[32] && state.lessonLog[32].needsReview));
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('5. grup j sesi + Kâşif Gösterisi 4 (E4.4 f) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

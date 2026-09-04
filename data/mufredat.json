@@ -64,7 +64,9 @@
     "p": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["papatya", "para", "top"], "sesletim": "p", "cizimVurus": 2, "karisir": ["b"] },
     "h": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["hava", "horoz", "hoş"], "sesletim": "hhh", "cizimVurus": 2 },
     "v": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["vazo", "vagon", "kova"], "sesletim": "vvv", "cizimVurus": 1 },
-    "ğ": { "tur": "yumusatici-unsuz", "uzatilabilir": false, "ornek": ["dağ", "öğle", "yağmur"], "sesletim": "kendi başına telaffuz edilmez, önündeki ünlüyü uzatır", "cizimVurus": 3, "kural": "Türkçe kelimeler asla 'ğ' ile BAŞLAMAZ; her zaman bir ünlüden sonra (ortada veya sonda) gelir — örn. dağ, öğle." }
+    "ğ": { "tur": "yumusatici-unsuz", "uzatilabilir": false, "ornek": ["dağ", "öğle", "yağmur"], "sesletim": "kendi başına telaffuz edilmez, önündeki ünlüyü uzatır", "cizimVurus": 3, "kural": "Türkçe kelimeler asla 'ğ' ile BAŞLAMAZ; her zaman bir ünlüden sonra (ortada veya sonda) gelir — örn. dağ, öğle." },
+    "f": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["fil", "fare", "fener"], "sesletim": "fff", "cizimVurus": 2, "karisir": ["v"] },
+    "j": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["jeton", "müze", "jimnastik"], "sesletim": "jjj", "cizimVurus": 2, "karisir": ["ş"] }
   },
 
   "ortakIskelet": [
@@ -316,6 +318,29 @@
       "basariOlcutu": "ğ'nin hiçbir kelimenin başında olmadığı kuralını tekrar edebilir; ğ harfini doğru sırayla çizer; 'dağ' kelimesini okur/son sesini bulur",
       "kelimeler": ["dağ"], "heceler": ["ağ", "eğ", "oğ", "uğ"], "cumleler": [],
       "not": "5. grubun 4. sesi — dilbilgisel özel durum: ğ kelime başında hiç kullanılmaz, bu yüzden 'ilk-ses-avi' oyunu YOK, bunun yerine 'son-ses-avi' kullanılıyor. Sıradaki sesler f, j."
+    },
+    {
+      "id": 30, "ad": "Ses f", "yeniSesler": ["f"], "yeniHarfler": ["f"],
+      "beceriler": ["/f/ ilk-ses avı", "/f/–/v/ ayırt etme (kritik, ötümlü/ötümsüz)", "f harfini çizme (kancalı gövde + çizgi)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/f/ ve /v/'yi ikili ayırt görevinde %80 ayırır; f harfini doğru sırayla çizer; 'fil' kelimesini okur",
+      "kelimeler": ["fil"], "heceler": ["fa", "fe", "fı", "fo", "fu", "af", "ef"], "cumleler": [],
+      "not": "5. grubun 5. sesi. Sıradaki ve son ses (j) ders 31'de eklenecek + 5. grup rozeti."
+    },
+    {
+      "id": 31, "ad": "Ses j", "yeniSesler": ["j"], "yeniHarfler": ["j"],
+      "beceriler": ["/j/ ilk-ses avı", "/j/–/ş/ ayırt etme", "j harfini çizme (nokta + kancalı kuyruk)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/j/ ile başlayan sözcükleri %80 tanır; j harfini doğru sırayla çizer; 'jeton' kelimesini okur",
+      "kelimeler": ["jeton"], "heceler": ["ja", "je", "jı", "jo", "ju", "aj", "ej"], "cumleler": [],
+      "not": "5. grubun (p,h,v,ğ,f,j) son sesi. 5. grup tamamlandı — ders 32'de 'Kâşif Gösterisi 4' ile rozet kazanılacak. Böylece MEB 2024 TYMM'in tüm 29 sesi/harfi tamamlanmış olur."
+    },
+    {
+      "id": 32, "ad": "Kâşif Gösterisi 4", "yeniSesler": [], "yeniHarfler": [],
+      "beceriler": ["kümülatif ses/harf yoklaması (1.–5. grup, 29 ses)", "kelime/hece pratiği", "serbest çizim", "ebeveyn raporu"],
+      "oyunlar": ["hizli-yoklama", "serbest-cizim"],
+      "basariOlcutu": "1.–5. grup seslerinin (29 ses, Türk alfabesinin tamamı) çoğunu güvenle tanır, çizer ve okur",
+      "rozet": "5. Grup Kâşif Rozeti"
     }
   ]
 }
