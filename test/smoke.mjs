@@ -957,6 +957,48 @@ const testDriver = `
     check('5. grup v sesi (E4.4 c) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 46) E4.4 (d) 5. grup: 'ğ' ozel kurali - kelime basinda hic olmaz ---
+  try {
+    check('WORDS.ğ tanımlı ve kelimesi ğ ile BAŞLAMIYOR (ozel kural)', !!WORDS['ğ'] && WORDS['ğ'].word[0] !== 'ğ');
+    check('WORDS.ğ kelimesi ğ harfini iceriyor (ortada/sonda)', WORDS['ğ'].word.includes('ğ'));
+    check('STROKES.ğ tanımlı (3 vuruş: sapka+govde+kuyruk)', Array.isArray(STROKES['ğ']) && STROKES['ğ'].length === 3);
+    const L29 = LESSONS.find(x => x.id === 29);
+    check('LESSONS içinde ders 29 "Ses ğ" olarak tanımlı', !!L29 && L29.yeni.includes('ğ'));
+    const poolWithG2 = poolUpTo(29);
+    check('poolUpTo(29) ğ sesini içeriyor', poolWithG2.includes('ğ'));
+    const reachableG2 = WORDBANK.filter(it => it.w.split('').every(c => poolWithG2.includes(c)));
+    check('"dağ" ğ ogrenilince WORDBANK icinde erisilebilir', reachableG2.some(it => it.w === 'dağ'));
+
+    check('syllablesFor() gecerli V+ğ hecesi (ağ) uretiyor', syllablesFor(['a', 'ğ']).includes('ağ'));
+    check('syllablesFor() gecersiz ğ+V hecesi (ğa) URETMIYOR (ğ hece basinda olmaz)', !syllablesFor(['a', 'ğ']).includes('ğa'));
+
+    const origSay3 = say;
+    say = (text, cb) => { if (cb) cb(); };
+    state = fresh();
+    play = null;
+    let sawStartsWithPrompt = false;
+    for (let i = 0; i < 30; i++) {
+      curTargets = [];
+      roundBul(['ğ']);
+      if (qtext.textContent.includes('hangi harfle başlar')) sawStartsWithPrompt = true;
+    }
+    check('roundBul() ğ hedefteyken hicbir zaman "hangi harfle basliyor" varyantini kullanmiyor', !sawStartsWithPrompt);
+
+    let sawGAsSesStartTarget = false;
+    for (let i = 0; i < 30; i++) {
+      curTargets = [];
+      roundSes(['ğ', 'a', 'd']);
+      if (curTargets.includes('ğ') && qtext.textContent.includes('başlıyor')) sawGAsSesStartTarget = true;
+    }
+    check('roundSes() ğ hicbir zaman "hangisi ... sesiyle basliyor" hedefi olmuyor', !sawGAsSesStartTarget);
+    say = origSay3;
+
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('5. grup ğ ozel kurali (E4.4 d) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

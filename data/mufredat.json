@@ -63,7 +63,8 @@
     "ş": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["şeker", "şal", "kuş"], "sesletim": "şşş", "cizimVurus": 2, "karisir": ["s"] },
     "p": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["papatya", "para", "top"], "sesletim": "p", "cizimVurus": 2, "karisir": ["b"] },
     "h": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["hava", "horoz", "hoş"], "sesletim": "hhh", "cizimVurus": 2 },
-    "v": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["vazo", "vagon", "kova"], "sesletim": "vvv", "cizimVurus": 1 }
+    "v": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["vazo", "vagon", "kova"], "sesletim": "vvv", "cizimVurus": 1 },
+    "ğ": { "tur": "yumusatici-unsuz", "uzatilabilir": false, "ornek": ["dağ", "öğle", "yağmur"], "sesletim": "kendi başına telaffuz edilmez, önündeki ünlüyü uzatır", "cizimVurus": 3, "kural": "Türkçe kelimeler asla 'ğ' ile BAŞLAMAZ; her zaman bir ünlüden sonra (ortada veya sonda) gelir — örn. dağ, öğle." }
   },
 
   "ortakIskelet": [
@@ -307,6 +308,14 @@
       "basariOlcutu": "/v/ ile başlayan sözcükleri %80 tanır; v harfini doğru sırayla çizer; 'vazo' kelimesini okur",
       "kelimeler": ["vazo"], "heceler": ["va", "ve", "vı", "vo", "vu", "av", "ev"], "cumleler": [],
       "not": "5. grubun 3. sesi. Sıradaki sesler ğ (kelime başında olmaz, özel kural), f, j."
+    },
+    {
+      "id": 29, "ad": "Ses ğ (yumuşak g)", "yeniSesler": ["ğ"], "yeniHarfler": ["ğ"],
+      "beceriler": ["ÖZEL KURAL: ğ hiçbir kelimenin başında olmaz, her zaman bir ünlüden sonra gelir", "son-ses avı (dağ, bağ gibi)", "ğ harfini çizme (g gövdesi + üstte küçük kemer/şapka)", "heceler (yalnız ünlü+ğ: ağ, öğ...)"],
+      "oyunlar": ["son-ses-avi", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "ğ'nin hiçbir kelimenin başında olmadığı kuralını tekrar edebilir; ğ harfini doğru sırayla çizer; 'dağ' kelimesini okur/son sesini bulur",
+      "kelimeler": ["dağ"], "heceler": ["ağ", "eğ", "oğ", "uğ"], "cumleler": [],
+      "not": "5. grubun 4. sesi — dilbilgisel özel durum: ğ kelime başında hiç kullanılmaz, bu yüzden 'ilk-ses-avi' oyunu YOK, bunun yerine 'son-ses-avi' kullanılıyor. Sıradaki sesler f, j."
     }
   ]
 }

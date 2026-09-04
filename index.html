@@ -714,7 +714,10 @@ const WORDS={
   'ç':{word:'çay', emoji:'☕'}, b:{word:'balon', emoji:'🎈'}, g:{word:'gemi', emoji:'🚢'}, c:{word:'ceket', emoji:'🧥'},
   'ş':{word:'şeker', emoji:'🍬'},
   /* E4.4: 5. grup (p,h,v,ğ,f,j) — sırayla ekleniyor. */
-  p:{word:'para', emoji:'💵'}, h:{word:'horoz', emoji:'🐓'}, v:{word:'vazo', emoji:'🏺'}
+  p:{word:'para', emoji:'💵'}, h:{word:'horoz', emoji:'🐓'}, v:{word:'vazo', emoji:'🏺'},
+  /* E4.4 (d): ğ — Türkçe'de kelime başında hiç olmaz, bu yüzden kelimesi ğ'yi ORTADA/SONDA
+     taşır (dağ), diğer tüm harflerden farklı olarak "hangi harfle başlar" oyununda kullanılmaz. */
+  'ğ':{word:'dağ', emoji:'⛰️'}
 };
 const LESSONS=[
   {id:0,  ad:'Hazırlık', alt:'Kulaklar ve eller hazır', yeni:[], tip:'hazirlik'},
@@ -745,7 +748,8 @@ const LESSONS=[
   {id:25, ad:'Kâşif Gösterisi 3', alt:'Kısa metin', yeni:[], rozet:'4. Grup Kâşifi 🏆', tip:'gosteri'},
   {id:26, ad:'Ses p', yeni:['p']},
   {id:27, ad:'Ses h', yeni:['h']},
-  {id:28, ad:'Ses v', yeni:['v']}
+  {id:28, ad:'Ses v', yeni:['v']},
+  {id:29, ad:'Ses ğ', yeni:['ğ']}
 ];
 const VOWELS='aeıioöuü';
 /* E4.5: 12→40 kelime — hepsi yalnız 1.+2. grup seslerinden (a,n,e,t,i,l,o,k,u,r,ı,m), pool'a göre filtrelenir. */
@@ -786,7 +790,10 @@ const WORDBANK=[
   /* E4.4 (b): h sesi eklendi — 'horoz' h+önceki gruplardan (o,r,z), hemen erişilebilir. */
   {w:'horoz',e:'🐓'},
   /* E4.4 (c): v sesi eklendi — 'vazo' v+önceki gruplardan, hemen erişilebilir. */
-  {w:'vazo',e:'🏺'}
+  {w:'vazo',e:'🏺'},
+  /* E4.4 (d): ğ sesi eklendi — 'dağ' ğ ortada/sonda (kelime başında olmaz kuralına uygun),
+     "son ses" oyununda kullanılır. */
+  {w:'dağ',e:'⛰️'}
 ];
 /* E4.1: 2. grup (o,k,u,r,ı,m) pekiştirmesi için 3 yeni cümle eklendi (kutu/armut/roket → u,r,m pratiği). */
 const SENTENCES=[
@@ -835,9 +842,9 @@ const RETRY_MSGS=['Az kaldı, tekrar dinleyelim.','Neredeyse! Bir daha dinleyeli
 const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
   'Neredeyse buldun, ipucuna bak.','Harika deniyorsun, ipucu burada.','Az kaldı Kâşif, ipucuna bak.'];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
-const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v'];
+const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v','ğ'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
-const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç',h:'H',v:'V'};
+const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç',h:'H',v:'V','ğ':'Ğ'};
 
 /* Normalize edilmiş harf yazım yolları (0–1). Her harf = vuruş dizisi; her vuruş = [x,y] noktaları.
    Vuruş sırası ve yönü MEB yazım kılavuzuna yakın (yeşil noktadan başla). */
@@ -881,7 +888,9 @@ const STROKES={
   /* E4.4 (b): h — uzun gövde (l gibi) + sağa açılan kemer (n'nin ikinci vuruşuyla aynı desen). */
   h:[ [[.36,.27],[.36,.73]], [[.36,.50],[.42,.41],[.53,.40],[.62,.49],[.62,.73]] ],
   /* E4.4 (c): v — tek vuruş: aşağı-aşağı-yukarı-yukarı, V şekli. */
-  v:[ [[.35,.40],[.42,.60],[.50,.72],[.58,.60],[.65,.40]] ]
+  v:[ [[.35,.40],[.42,.60],[.50,.72],[.58,.60],[.65,.40]] ],
+  /* E4.4 (d): ğ — g'nin gövdesi+kuyruğu (aynı desen) + üstte küçük şapka/kemer (breve işareti). */
+  'ğ':[ [[.40,.20],[.44,.25],[.50,.26],[.56,.25],[.60,.20]], [[.50,.33],[.37,.42],[.33,.55],[.40,.68],[.53,.72],[.65,.63],[.67,.49],[.60,.37],[.50,.33]], [[.60,.55],[.63,.68],[.60,.80],[.50,.85],[.40,.81]] ]
 };
 
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
@@ -917,7 +926,9 @@ function unlockedPool(){
 function syllablesFor(pool){
   const V=pool.filter(x=>VOWELS.includes(x)), C=pool.filter(x=>!VOWELS.includes(x));
   const out=new Set();
-  for(const c of C){ for(const v of V){ out.add(c+v); out.add(v+c); } }
+  // E4.4 (d): 'ğ' Türkçe'de hiçbir zaman hece/kelime başında olmaz, yalnızca bir ünlüden
+  // sonra gelir (ağ, öğ...) — bu yüzden ğ için sadece ünlü+ğ üretilir, ğ+ünlü ÜRETİLMEZ.
+  for(const c of C){ for(const v of V){ if(c!=='ğ') out.add(c+v); out.add(v+c); } }
   return [...out];
 }
 function available(id){ return id===0 || state.done.includes(id-1); }
@@ -1300,7 +1311,10 @@ function roundBul(pool){
   const same=shuffle(pool.filter(x=>x!==t)).slice(0,Math.min(1,need));
   const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,need-same.length);
   const opts=shuffle([t,...same,...distr]);
-  const r=Math.random();
+  // E4.4 (d): 'ğ' hiçbir kelimenin başında olmadığından "hangi harfle başlar?" (a) varyantı
+  // ğ hedefteyken anlamsızlaşır — bu durumda (b) veya (c) varyantına yönlendirilir.
+  let r=Math.random();
+  if(t==='ğ' && r<1/3) r=1/3+Math.random()*(2/3);
   if(r<1/3){
     qtext.textContent=`«${WORDS[t].word}» hangi harfle başlar?`;
     playArea.innerHTML=stageHTML(`<span>${WORDS[t].emoji}</span>`);
@@ -1332,16 +1346,21 @@ function allKnownWords(){
 }
 function roundSes(pool){
   locked=false; curWrongCount=0;
+  // E4.4 (d): 'ğ' hiçbir kelimenin başında olmadığından "hangisi ... sesiyle başlıyor?"
+  // varyantları (Start/Odd) ğ'yi hedef/dağıtıcı olarak kullanamaz; "son ses" (End) sorunsuzdur
+  // (örn. "dağ"), o yüzden yalnız Start/Odd için ğ'siz bir havuz kullanılır.
+  const startPool=pool.filter(x=>x!=='ğ');
+  const usePool=startPool.length?startPool:pool;
   const r=Math.random();
-  if(r<1/3) roundSesStart(pool);
-  else if(r<2/3) roundSesOdd(pool);
+  if(r<1/3) roundSesStart(usePool);
+  else if(r<2/3) roundSesOdd(usePool);
   else roundSesEnd(pool);
 }
 function roundSesStart(pool){
   const t=rnd(pool); curTargets=[t];
   const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
   let dist=shuffle(pool.filter(x=>x!==t));
-  if(dist.length<need) dist=dist.concat(shuffle(Object.keys(WORDS).filter(x=>x!==t&&!dist.includes(x))));
+  if(dist.length<need) dist=dist.concat(shuffle(Object.keys(WORDS).filter(x=>x!==t&&x!=='ğ'&&!dist.includes(x))));
   const opts=shuffle([t,...dist.slice(0,need)]);
   qtext.textContent=`Hangisi «${t}» sesiyle başlıyor?`;
   playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
