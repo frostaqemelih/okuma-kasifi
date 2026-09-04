@@ -77,8 +77,8 @@ const testDriver = `
     const dailySeconds = state.daily[today()] || 0;
     check("award() günün süresini state.daily'ye işledi", dailySeconds > 0);
     check("ödül ekranı (overlay) DOM'da mevcut", !!document.getElementById('reward'));
-    const saved = JSON.parse(localStorage.getItem('okuma-kasifi-v2'));
-    check('localStorage (okuma-kasifi-v2) güncellendi', !!saved && saved.stars === starsAfter);
+    const saved = JSON.parse(localStorage.getItem(KEY));
+    check('localStorage (' + KEY + ') güncellendi', !!saved && saved.stars === starsAfter);
   } catch (e) {
     check("award() akışı hatasız çalıştı (hata: " + e.message + ")", false);
   }
@@ -661,6 +661,27 @@ const testDriver = `
     check('printReport() Oneriler bolumunu iceriyor', rep.includes('Öneriler'));
   } catch (e) {
     check('Ebeveyn yazdir/PDF raporu (E1.12) hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
+  // --- 37) E8.1 entitlement katmani: state.entitlement, isPremium(), requirePremium() ---
+  try {
+    check('KEY okuma-kasifi-v3 olarak tanimli', KEY === 'okuma-kasifi-v3');
+    state = fresh();
+    check('state.entitlement varsayilan plan free', state.entitlement.plan === 'free');
+    check('isPremium() free planda false donuyor', isPremium() === false);
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    check('isPremium() suresiz premium planda true donuyor', isPremium() === true);
+    state.entitlement.expires = Date.now() - 1000;
+    check('isPremium() suresi gecmis planda false donuyor', isPremium() === false);
+    state.entitlement.expires = Date.now() + 100000;
+    check('isPremium() suresi gecmemis planda true donuyor', isPremium() === true);
+    let granted = false;
+    state.entitlement = { plan: 'premium', source: 'test', since: Date.now(), expires: null };
+    const reqResult = requirePremium('test', () => { granted = true; });
+    check('requirePremium() zaten premiumken dogrudan true donup callback calistiriyor', reqResult === true && granted === true);
+    state = fresh();
+  } catch (e) {
+    check('E8.1 entitlement katmani hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
   return results;

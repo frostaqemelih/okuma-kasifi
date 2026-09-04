@@ -394,7 +394,8 @@
 
 <script>
 /* ================= DURUM ================= */
-const KEY='okuma-kasifi-v2';
+const KEY_V2='okuma-kasifi-v2'; // E8.1: v3'e göç edildi, yalnız eski veriyi okumak için tutulur
+const KEY='okuma-kasifi-v3';
 function fresh(){return{
   mode:null, childName:'', done:[], badges:[], stars:0,
   freePlays:{bul:0,ses:0,hece:0,kelime:0,cumle:0,ciz:0},
@@ -403,23 +404,45 @@ function fresh(){return{
   daily:{},             // { 'YYYY-MM-DD': saniye }
   lessonLog:{},         // { id: {attempts, seconds, first, last} }
   reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
-  settings:{dailyGoalMin:15}
+  settings:{dailyGoalMin:15},
+  entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
+  promoUsed:[]           // E8.5: kullanılan tanıtım kodları
 }}
 function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
 try{
-  const s=JSON.parse(localStorage.getItem(KEY));
+  let raw=localStorage.getItem(KEY);
+  const migratingFromV2=!raw;
+  if(migratingFromV2) raw=localStorage.getItem(KEY_V2);
+  const s=JSON.parse(raw);
   if(s&&typeof s==='object'){
     const f=fresh();
     state=Object.assign(f,s,{
       freePlays:Object.assign(f.freePlays,s.freePlays||{}),
       settings:Object.assign(f.settings,s.settings||{}),
+      entitlement:Object.assign(f.entitlement,s.entitlement||{}),
       daily:s.daily||{}, lessonLog:s.lessonLog||{}, soundStats:s.soundStats||{},
-      reviewQueue:s.reviewQueue||[]
+      reviewQueue:s.reviewQueue||[], promoUsed:s.promoUsed||[]
     });
+    if(migratingFromV2) save(); // v3 anahtarına taşı; eski v2 kaydı dokunulmadan kalır
   }
 }catch(e){}
 function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)) }catch(e){} }
+
+/* ================= PREMIUM / ENTITLEMENT (E8.1) ================= */
+function isPremium(){
+  const e=state.entitlement;
+  if(!e || e.plan!=='premium') return false;
+  if(e.expires && Date.now()>e.expires) return false;
+  return true;
+}
+let pendingPaywallGrant=null;
+function requirePremium(feature, onGranted){
+  if(isPremium()){ if(onGranted) onGranted(); return true; }
+  pendingPaywallGrant=onGranted||null;
+  openGate(()=>openPaywall(feature));
+  return false;
+}
 function syncStars(){ document.querySelectorAll('#stars1,#stars2,#stars3').forEach(el=>el.textContent=state.stars); }
 
 /* ================= SESLENDİRME ================= */
@@ -1532,7 +1555,9 @@ function spawnConfetti(n){
 function openOverlay(id){ document.getElementById(id).classList.add('active') }
 function closeOverlay(id){ document.getElementById(id).classList.remove('active') }
 let gateAns=0;
-function openGate(){
+let gateOnSuccess=openParent; // E8.1: paywall gibi başka hedefler de kapıyı kullanabilsin diye
+function openGate(onSuccess){
+  gateOnSuccess=onSuccess||openParent;
   const a=3+Math.floor(Math.random()*6), b=3+Math.floor(Math.random()*6);
   gateAns=a*b;
   document.getElementById('gateQ').textContent=`Devam etmek için: ${a} × ${b} = ?`;
@@ -1540,7 +1565,7 @@ function openGate(){
   const row=document.getElementById('gatePins'); row.innerHTML='';
   opts.forEach(v=>{
     const btn=document.createElement('button'); btn.className='pin'; btn.textContent=v;
-    btn.onclick=()=>{ if(v===gateAns){ closeOverlay('gate'); openParent(); } else { btn.style.borderColor='var(--nope)'; } };
+    btn.onclick=()=>{ if(v===gateAns){ closeOverlay('gate'); gateOnSuccess(); } else { btn.style.borderColor='var(--nope)'; } };
     row.appendChild(btn);
   });
   openOverlay('gate');
@@ -1741,7 +1766,10 @@ function importProgress(){
   catch(e){ alert('Geçersiz veri.'); }
 }
 function resetProgress(){
-  if(confirm('Tüm ilerleme silinsin mi? Bu geri alınamaz.')){ const m=state.mode; state=fresh(); state.mode=m; save(); syncStars(); parentTab('genel'); }
+  if(confirm('Tüm ilerleme silinsin mi? Bu geri alınamaz.')){
+    const m=state.mode, ent=state.entitlement; // satın alınmış premium, ilerleme sıfırlanırken kaybolmasın
+    state=fresh(); state.mode=m; state.entitlement=ent; save(); syncStars(); parentTab('genel');
+  }
 }
 
 /* PWA — localhost'ta kapalı */
