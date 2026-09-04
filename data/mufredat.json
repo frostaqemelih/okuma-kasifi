@@ -57,7 +57,8 @@
     "d": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["davul", "duman", "domates"], "sesletim": "d", "cizimVurus": 2 },
     "z": { "tur": "surtunmeli-unsuz", "uzatilabilir": true, "ornek": ["zil", "kazan", "yazı"], "sesletim": "zzz", "cizimVurus": 1, "karisir": ["s"] },
     "ç": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["çilek", "çorap", "çanta"], "sesletim": "ç", "cizimVurus": 2, "karisir": ["c"] },
-    "b": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["balon", "bal", "bebek"], "sesletim": "b", "cizimVurus": 2 }
+    "b": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["balon", "bal", "bebek"], "sesletim": "b", "cizimVurus": 2 },
+    "g": { "tur": "patlayici-unsuz", "uzatilabilir": false, "ornek": ["gemi", "gül", "göl"], "sesletim": "g", "cizimVurus": 2, "karisir": ["k"] }
   },
 
   "ortakIskelet": [
@@ -246,6 +247,14 @@
       "basariOlcutu": "/b/ ile başlayan sözcükleri %80 tanır; b harfini doğru sırayla çizer; 'balon' kelimesini okur",
       "kelimeler": ["balon", "boya"], "heceler": ["ba", "be", "bı", "bo", "bu", "ab", "eb"], "cumleler": [],
       "not": "4. grubun (ç,b,g,c,ş) 2. sesi. Kalan 3 ses ders 22–24'te eklenecek."
+    },
+    {
+      "id": 22, "ad": "Ses g", "yeniSesler": ["g"], "yeniHarfler": ["g"],
+      "beceriler": ["/g/ ilk-ses avı", "/g/–/k/ ayırt etme (kritik, ötümsüz/ötümlü)", "g harfini çizme (gövde + kuyruk)", "heceler"],
+      "oyunlar": ["ilk-ses-avi", "ses-ayirt", "harf-ciz", "hece-kur", "kelime-esle"],
+      "basariOlcutu": "/g/ ve /k/'yi ikili ayırt görevinde %80 ayırır; g harfini doğru sırayla çizer; 'gemi' kelimesini okur",
+      "kelimeler": ["gemi", "gül"], "heceler": ["ga", "ge", "gı", "go", "gu", "ag", "eg"], "cumleler": [],
+      "not": "4. grubun (ç,b,g,c,ş) 3. sesi. Kalan 2 ses ders 23–24'te eklenecek."
     }
   ]
 }
