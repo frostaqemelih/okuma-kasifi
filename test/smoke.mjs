@@ -633,6 +633,23 @@ const testDriver = `
     check('4. grup ş sesi + Kâşif Gösterisi 3 (E4.3 e) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- 35) E1.11 çocuğun adı: onboarding girişi + ebeveyn özetinde kullanımı ---
+  try {
+    check('state.childName varsayılan olarak tanımlı (boş dize)', typeof state.childName === 'string');
+    check('#childNameInput alanı DOM icinde mevcut', !!document.getElementById('childNameInput'));
+    state.daily[today()] = 600; // wDays>0 olsun diye bu haftaya çalışma verisi ekle
+    setChildName('Ela');
+    check('setChildName() state.childName degerini gunceller', state.childName === 'Ela');
+    const pbody = pGenel();
+    check('pGenel() ozetinde Kasif yerine cocugun adi geciyor', pbody.includes('Ela'));
+    setChildName('  ');
+    check('setChildName() bosluk-only girdiyi bosaltir', state.childName === '');
+    const pbody2 = pGenel();
+    check('Isim boskan pGenel() varsayilan olarak Kasif kullaniyor', pbody2.includes('Kâşif'));
+  } catch (e) {
+    check('Cocuk adi (E1.11) hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

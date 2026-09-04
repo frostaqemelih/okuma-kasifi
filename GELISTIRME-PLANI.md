@@ -87,7 +87,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
 - [x] **E1.8** İlerleme JSON dışa/içe aktarma. — 2026-09-03
 - [x] **E1.9** İYİLEŞTİRME: grafik hedef çizgisi max'tan büyükse görünmüyor — ölçeklemeyi düzelt; grafiğe gün etiketleri/hover. — 2026-09-03
 - [x] **E1.10** İYİLEŞTİRME: `.ptabs` dar ekranda taşıyor — yatay kaydırılır şerit yap. — 2026-09-03
-- [ ] **E1.11** Çocuğun adını onboarding'de sor (opsiyonel, cihazda), ebeveyn özetinde "Kâşif" yerine kullan.
+- [x] **E1.11** Çocuğun adını onboarding'de sor (opsiyonel, cihazda), ebeveyn özetinde "Kâşif" yerine kullan. — 2026-09-04
 - [ ] **E1.12** Ebeveyne "yazdır / PDF" (tarayıcı print CSS) haftalık rapor.
 
 ### E2 — Hata Kurtarma & Çeşitlilik  → uzman: pedagoji raporu (§ Hata protokolü, § Oyunlaştırma)
@@ -246,6 +246,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E4.3 (d) (rutin, Hafta 2 kilometre taşı): "c" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.c` (patlayıcı ünsüz, ç ile karışır) + ders 23; `index.html`'e `WORDS.c` (ceket🧥), `STROKES.c` (tek vuruşlu açık eğri, ç'nin çengelsiz hâli), `LESSONS` id23 ("Ses c"). `WORDBANK`'a ceket🧥/cam🪟 eklendi (ikisi de c+önceki gruplardan, hemen erişilebilir). Son ses (ş, ders 24) + 4. grup rozeti kaldı. Smoke test'e 6 yeni kontrol.
 
 - 2026-09-04 — E4.3 (e) (rutin, Hafta 2 kilometre taşı — **E4.3 tamamlandı**): "ş" sesi tam donanımlı eklendi ve 4. grup kapandı — `mufredat.json`'a `sesler.ş` (sürtünmeli ünsüz, s ile karışır) + ders 24 ("Ses ş") + ders 25 ("Kâşif Gösterisi 3", kümülatif kutlama, rozet); `index.html`'e `WORDS.ş` (şeker🍬), `STROKES.ş` (s'nin eğrisi + altına küçük kedilya çengeli), `LESSONS` id24 + id25 (`tip:'gosteri'`, `rozet:'4. Grup Kâşifi 🏆'`). `WORDBANK`'a şeker🍬/şal🧣 eklendi. **4. ses grubu (ç,b,g,c,ş, 5 ses, ders 20–25) tamamen oynanabilir — böylece Hafta 2 kilometre taşının içerik derinliği hedefi (E4.1–E4.3: 2.–4. ses grupları) tamamlandı.** Sıradaki öncelik: E4.4 (5. grup p,h,v,ğ,f,j) veya Hafta 2'nin kalan diğer maddeleri (E3.5/E4.5/E5.1 zaten tamam). Smoke test'e 9 yeni kontrol (168 test toplamda).
+
+- 2026-09-04 — E1.11 (rutin, Hafta 2 kilometre taşı tamamlandıktan sonra, backlog sırası): "Yaş modu" (`s-mode`) ekranına opsiyonel "Adı" metin girişi eklendi (`#childNameInput`, `state.childName`, `setChildName()` — 20 karaktere kadar, boşluklar kırpılır, boşsa boş dizeye döner). `go()` ekran geçişinde girişi mevcut değerle dolduruyor. Ebeveyn "Genel" sekmesindeki haftalık özet cümlesi artık sabit "Kâşif" yerine `state.childName||'Kâşif'` kullanıyor. `okuma-kasifi-v2` şemasına `childName` alanı eklendi (geriye uyumlu — `fresh()` varsayılanı boş dize, mevcut kayıtlarda `Object.assign` ile otomatik dolduruluyor). Smoke test'e 6 yeni kontrol.
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

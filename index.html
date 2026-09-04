@@ -100,6 +100,11 @@
   .age-card .big{font-size:40px}
   .age-card b{font-family:var(--font-display); font-size:19px; display:block}
   .age-card span{font-size:13px; color:var(--ink-soft)}
+  /* E1.11: opsiyonel çocuk adı girişi */
+  .name-field{width:min(460px,92vw); margin-bottom:16px}
+  .name-field input{width:100%; font-family:var(--font-body); font-size:17px; padding:12px 16px;
+    border:2px solid var(--line); border-radius:var(--radius); background:var(--surface); color:var(--ink)}
+  .name-field input:focus-visible{outline:3px solid var(--primary); outline-offset:2px}
 
   /* harita */
   .path{display:flex; flex-direction:column; align-items:center; gap:0; width:min(460px,94vw)}
@@ -261,6 +266,11 @@
     <div class="mascot" style="width:92px; font-size:48px">🦉</div>
     <h1 style="font-size:clamp(22px,5vw,32px)">Kâşif kaç yaşında?</h1>
     <p class="sub">Böylece etkinlikleri ona göre ayarlarım. Sonra değiştirebilirsin.</p>
+    <div class="name-field">
+      <label for="childNameInput" class="sub" style="display:block; margin-bottom:6px">Adı (opsiyonel)</label>
+      <input type="text" id="childNameInput" maxlength="20" placeholder="örn. Ela" autocomplete="off"
+        oninput="setChildName(this.value)" aria-label="Çocuğun adı, opsiyonel">
+    </div>
     <div class="age-grid">
       <div class="age-card" onclick="setMode('kesif')">
         <span class="big">🐣</span><span><b>4–5 yaş · Keşif</b><span>Sesleri tanıma, harf çizme. Okuma yok, baskı yok.</span></span>
@@ -373,7 +383,7 @@
 /* ================= DURUM ================= */
 const KEY='okuma-kasifi-v2';
 function fresh(){return{
-  mode:null, done:[], badges:[], stars:0,
+  mode:null, childName:'', done:[], badges:[], stars:0,
   freePlays:{bul:0,ses:0,hece:0,kelime:0,cumle:0,ciz:0},
   correct:0, wrong:0, seconds:0, last:null,
   soundStats:{},        // { 'a': {c:doğru, w:yanlış}, ... }
@@ -649,6 +659,7 @@ function go(id){
     if(on){ s.classList.remove('anim'); void s.offsetWidth; s.classList.add('anim'); }
   });
   if('speechSynthesis' in window) speechSynthesis.cancel();
+  if(id==='s-mode'){ const ci=document.getElementById('childNameInput'); if(ci) ci.value=state.childName||''; }
   if(id==='s-map') renderMap();
   if(id==='s-free'){
     const h=(state.mode==='kesif')?'none':'';
@@ -665,6 +676,8 @@ function onStart(){
   else { go('s-map'); say('Keşif haritasına hoş geldin!'); }
 }
 function setMode(m){ state.mode=m; save(); go('s-map'); say(m==='kesif'?'Hadi sesleri keşfedelim!':'Hadi okumaya başlayalım!'); }
+/* E1.11: opsiyonel çocuk adı — onboarding'de sorulur, cihazda saklanır, ebeveyn özetinde kullanılır. */
+function setChildName(v){ state.childName=(v||'').trim().slice(0,20); save(); }
 
 /* ================= HARİTA ================= */
 function renderMap(){
@@ -1606,7 +1619,7 @@ function pGenel(){
   const b=soundBuckets();
   const wDays=(()=>{ let n=0; const d=new Date();
     for(let i=0;i<7;i++){ const k=new Date(d); k.setDate(d.getDate()-i); if((state.daily[k.toISOString().slice(0,10)]||0)>=60)n++; } return n; })();
-  const name='Kâşif';
+  const name=state.childName||'Kâşif';
   const sum = wDays
     ? `${name} bu hafta <b>${wDays} gün</b> çalıştı (${weekMinutes()} dk).` +
       (b.mastered.length?` <b>${b.mastered.join(', ')}</b> seslerinde ustalaştı.`:'') +
