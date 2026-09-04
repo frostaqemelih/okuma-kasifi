@@ -193,7 +193,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - [x] **E8.7** Ücretsiz kullanıcıya nazik premium teşviki: ders 6 bitince "2. grubu keşfet" kartı (baskı yok, kapatılabilir), ebeveyn panelinde "premium'da neler var" bölümü. Çocuğa ASLA satış göstermez. — 2026-09-04
 - [x] **E8.8** Premium rozeti/teşekkür: satın alan ebeveyne "teşekkürler" + çocuğa özel Kâşif kıyafeti/eşya (koleksiyon). — 2026-09-04
 - [x] **E8.9** Fiyatlandırma verisi: `data/plans.json` (plan id, ad, TL fiyat, periyot, özellik listesi) — hem paywall hem landing sayfası buradan okur. — 2026-09-04
-- [ ] **E8.10** Deneme süresi: 7 gün premium deneme (ebeveyn başlatır, tek sefer), bitiminde nazik hatırlatma, otomatik ücret YOK (deneme = sadece kilit açık, süre bitince kilitlenir).
+- [x] **E8.10** Deneme süresi: 7 gün premium deneme (ebeveyn başlatır, tek sefer), bitiminde nazik hatırlatma, otomatik ücret YOK (deneme = sadece kilit açık, süre bitince kilitlenir). — 2026-09-04
 
 ### E9 — Yayın & Dağıtım  → uzman: App Store Optimizer, Growth Hacker
 
@@ -296,6 +296,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E9.8 (rutin, backlog sırası — E9 epiğinin ilk maddesi): kullanıcı-yönlü `CHANGELOG.md` oluşturuldu — geliştirme sürecinde biriken tüm özellikler (öğrenme/ebeveyn/erişilebilirlik/premium/teknik) "Yayınlanmamış" başlığı altında sade dille özetlendi; ilk halka açık sürümden sonra tarihli sürüm bölümleriyle güncellenecek. Kod değişikliği yok, test eklenmedi (saf belge). Sıradaki öncelik: E7.3 (KVKK/gizlilik metinleri) veya E8.10 (7 gün deneme).
 
 - 2026-09-04 — E7.3 (rutin, backlog sırası): ebeveyn paneline 6. sekme "Yasal / Gizlilik" (`pYasal()`) eklendi — `arastirma/gizlilik-uyum.md`'deki karar tablosuna dayanarak sade dilde KVKK aydınlatma özeti (veri sorumlusu/amaç/hukuki sebep/aktarım/haklar), çocuk güvenliği ilkeleri (Kâşif serbest sohbet eden bir LLM değil, reklam/izleyici yok, satın alma ebeveyn kapısı arkasında), kullanım şartları özeti, "İlerlemeyi sıfırla" yönergesi ve iletişim e-postası. Metin, uygulamanın tasarımı gereği hiç kişisel veri toplamadığı gerçeğini yansıtıyor (hesapsız, `localStorage` dışında hiçbir yere veri gitmiyor). Sayfa sonunda yayın öncesi avukat gözden geçirmesi gerektiğine dair iç not (kaynak belgenin kendi uyarısıyla tutarlı). Smoke test'e 5 yeni kontrol (378 test toplamda, sekme sayısı kontrolü 5'ten 6'ya güncellendi). Sıradaki öncelik: E8.10 (7 gün deneme) veya E7.1 (PWA ikonları/manifest).
+
+- 2026-09-04 — E8.10 (rutin, backlog sırası — **E8 epiği çekirdek+aile planı hariç tamamlandı**, kalan tek madde E8.6): 7 günlük ücretsiz deneme eklendi — paywall'a `#trialBox` (yalnız deneme hiç kullanılmamışsa ve premium değilken görünür) + `startTrial()` (`state.trialUsed` cihaz başına tek kullanım bayrağı, `entitlement={plan:'premium',source:'trial',expires:+7 gün}`, `purchaseHistory`'ye kaydedilir — kart bilgisi istenmez, otomatik ücret yok, süre dolunca `isPremium()` zaten `expires` kontrolüyle otomatik kilitliyor, ek bir "kilitleme" kodu gerekmedi). Deneme bittiğinde (satın almadıysa) ebeveyn Ayarlar sekmesinde `pAyar()` artık nazik bir hatırlatma gösteriyor ("7 günlük deneminiz sona erdi... beğendiyseniz devam edebilirsiniz") — genel "Premium'da neler var?" tanıtımının yerini alıyor, baskı yok. Smoke test'e 12 yeni kontrol (390 test toplamda). Sıradaki öncelik: E8.6 (aile planı/çoklu profil, isteğe bağlı — büyük madde) veya E7.1 (PWA ikonları/manifest) / E9 (yayın & dağıtım).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 

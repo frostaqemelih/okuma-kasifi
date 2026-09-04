@@ -472,6 +472,7 @@
       </div>
       <p class="mini" id="promoMsg" aria-live="polite"></p>
     </div>
+    <div class="promo-box" id="trialBox" hidden></div>
     <button class="btn ghost tiny" onclick="restorePurchases()">↺ Satın alımları geri yükle</button>
     <p class="mini" id="restoreMsg" aria-live="polite"></p>
     <button class="btn ghost tiny" onclick="closePaywall()">Belki sonra</button>
@@ -567,7 +568,8 @@ function fresh(){return{
   settings:{dailyGoalMin:15, speechRate:'normal'}, // E5.3: speechRate 'normal'|'yavas'
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
-  purchaseHistory:[]     // E8.5: geri yükleme için cihazdaki satın alma kayıtları
+  purchaseHistory:[],    // E8.5: geri yükleme için cihazdaki satın alma kayıtları
+  trialUsed:false        // E8.10: 7 günlük deneme cihaz başına yalnız bir kez başlatılabilir
 }}
 function today(){ return new Date().toISOString().slice(0,10); }
 let state=fresh();
@@ -646,6 +648,31 @@ function renderPaywallPlans(){
       <ul class="plan-feat">${p.kapsam.map(k=>`<li>${k}</li>`).join('')}</ul>
       <button class="btn ok tiny" onclick="buy('${p.id}')">Satın Al</button>
     </div>`).join('');
+  renderTrialBox();
+}
+/* E8.10: 7 gün ücretsiz deneme — ebeveyn başlatır, cihaz başına tek sefer, otomatik ücret YOK
+   (yalnızca kilidi geçici açar; süre bitince otomatik olarak tekrar kilitlenir çünkü isPremium()
+   entitlement.expires'a bakıyor). */
+function renderTrialBox(){
+  const box=document.getElementById('trialBox'); if(!box) return;
+  if(isPremium() || state.trialUsed){ box.hidden=true; box.innerHTML=''; return; }
+  box.hidden=false;
+  box.innerHTML=`<p class="mini">Karar vermeden önce denemek mi istersiniz?</p>
+    <button class="btn ghost tiny" onclick="startTrial()">🎁 7 gün ücretsiz deneyin</button>
+    <p class="mini" style="opacity:.75">Kart bilgisi istenmez, otomatik ücretlendirme yok. Süre bitince özellikler tekrar kilitlenir.</p>`;
+}
+function startTrial(){
+  if(isPremium() || state.trialUsed) return;
+  const now=Date.now();
+  state.entitlement={plan:'premium', source:'trial', since:now, expires:now+7*86400000};
+  state.trialUsed=true;
+  state.purchaseHistory.push({...state.entitlement});
+  save();
+  renderPaywallPlans();
+  const text=document.getElementById('pwSuccessText');
+  if(text) text.textContent='7 günlük deneminiz başladı — tüm ses grupları ve özellikler artık açık.';
+  const badgeText=document.getElementById('pwSuccessBadge'); if(badgeText) badgeText.textContent='';
+  openOverlay('pwSuccess');
 }
 
 /* ================= STUB SATIN ALMA (E8.4) =================
@@ -2399,10 +2426,12 @@ function entitlementLabel(){
 function pAyar(){
   const s=state.settings;
   // E8.7: ebeveyn ayarlarında nazik premium bilgisi/teşviki — çocuğa asla gösterilmez
+  // E8.10: deneme süresi bittiyse (satın almadıysa) nazik bir hatırlatma göster — baskı yok, tek satır.
+  const trialEnded = !isPremium() && state.entitlement.source==='trial';
   const premiumBox = isPremium()
     ? `<div class="advice"><h4>⭐ ${entitlementLabel()}</h4><p>Tüm ses grupları ve özellikler açık. Teşekkürler!</p></div>`
-    : `<div class="advice"><h4>🔓 Premium'da neler var?</h4>
-        <p>Tüm ses grupları (2.–5.), Okuma Kulübü ve metin bankası, ayrıntılı rapor + yazdır/PDF, zayıf seslere özel odak turu.</p>
+    : `<div class="advice"><h4>🔓 ${trialEnded ? '7 günlük deneminiz sona erdi' : "Premium'da neler var?"}</h4>
+        <p>${trialEnded ? 'Umarız Kâşif ile keyifli vakit geçirmişsinizdir. Beğendiyseniz devam edebilirsiniz.' : ''}Tüm ses grupları (2.–5.), Okuma Kulübü ve metin bankası, ayrıntılı rapor + yazdır/PDF, zayıf seslere özel odak turu.</p>
         <button class="btn grape tiny" style="margin-top:8px" onclick="openPaywall('ayarlar','s-parent')">Premium'u keşfet</button>
       </div>`;
   return `

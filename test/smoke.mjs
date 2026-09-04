@@ -1337,6 +1337,41 @@ const testDriver = `
     check('E5.4 klavye erişilebilirliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E8.10: 7 gün ücretsiz deneme (ebeveyn başlatır, cihaz başına tek sefer, otomatik ücret yok) ---
+  try {
+    state = fresh();
+    check('yeni state trialUsed=false ile başlıyor', state.trialUsed === false);
+    check('deneme başlamadan önce premium değil', isPremium() === false);
+
+    openPaywall('test', 's-map');
+    check('trialBox uygun (deneme hakkı varken) görünür', document.getElementById('trialBox').hidden === false);
+
+    startTrial();
+    check('startTrial() premium açıyor', isPremium() === true);
+    check('startTrial() source=trial olarak işaretliyor', state.entitlement.source === 'trial');
+    check('startTrial() süresi ~7 gün', Math.round((state.entitlement.expires - Date.now()) / 86400000) === 7);
+    check('startTrial() trialUsed=true yapıyor', state.trialUsed === true);
+    check('startTrial() purchaseHistory kaydı bırakıyor', state.purchaseHistory.some(h => h.source === 'trial'));
+    closeOverlay('pwSuccess');
+
+    renderPaywallPlans();
+    check('deneme kullanıldıktan sonra trialBox gizleniyor', document.getElementById('trialBox').hidden === true);
+
+    const entBefore = { ...state.entitlement };
+    startTrial();
+    check('deneme ikinci kez başlatılamıyor (entitlement değişmiyor)', state.entitlement.since === entBefore.since);
+
+    // Deneme süresi bittiğinde (satın almadıysa) ebeveyn ayarlarında nazik hatırlatma gösterilsin.
+    state.entitlement = { plan: 'free', source: 'trial', since: Date.now() - 8 * 86400000, expires: Date.now() - 86400000 };
+    check('süresi dolmuş deneme artık premium değil', isPremium() === false);
+    const ayarHtmlTrialEnded = pAyar();
+    check('pAyar() deneme bitince nazik hatırlatma gösteriyor', ayarHtmlTrialEnded.includes('deneminiz sona erdi'));
+
+    state = fresh();
+  } catch (e) {
+    check('E8.10 7 gün deneme hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E7.3: KVKK/gizlilik "Yasal / Gizlilik" sekmesi ebeveyn panelinde ---
   try {
     parentTab('yasal');
