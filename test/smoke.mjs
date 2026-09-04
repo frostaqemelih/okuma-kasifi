@@ -707,6 +707,8 @@ const testDriver = `
     check('entitlement.source stub: ile basliyor', (state.entitlement.source || '').startsWith('stub:'));
     check('yillik planda expires ileri bir tarih', state.entitlement.expires > Date.now());
     check('confirmStubPurchase() stub odeme ekranini kapatip basari ekranini aciyor', !document.getElementById('stubPay').classList.contains('active') && document.getElementById('pwSuccess').classList.contains('active'));
+    check('confirmStubPurchase() satin alma tesekkur rozeti kazandiriyor (E8.8)', state.badges.includes("Kâşif'in Yıldız Pelerini 🦸"));
+    check('basari ekraninda rozet tesekkur metni gosteriliyor (E8.8)', document.getElementById('pwSuccessBadge').textContent.includes('Yıldız Pelerini'));
 
     let grantCalled = false;
     pendingPaywallGrant = () => { grantCalled = true; };
@@ -787,6 +789,7 @@ const testDriver = `
     check('gecerli kod (kucuk harfle girilse bile) premium aciyor', isPremium() === true);
     check('gecerli kodun suresi ~30 gun', Math.round((state.entitlement.expires - Date.now()) / 86400000) === 30);
     check('kullanilan kod promoUsed listesine eklendi', state.promoUsed.includes('KASIF30'));
+    check('tanitim kodu (ucretsiz hediye) satin alma tesekkur rozetini KAZANDIRMIYOR (E8.8)', !state.badges.includes("Kâşif'in Yıldız Pelerini 🦸"));
 
     state.entitlement = { plan: 'free', source: null, since: null, expires: null };
     promoInput.value = 'KASIF30';

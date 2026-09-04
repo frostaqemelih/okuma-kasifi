@@ -487,6 +487,7 @@
       <div class="big">🎉</div>
       <h2>Premium açıldı!</h2>
       <p id="pwSuccessText">Artık tüm ses grupları ve özellikler açık.</p>
+      <p class="sub" id="pwSuccessBadge" style="font-weight:700"></p>
       <div class="row"><button class="btn ok" onclick="finishPurchaseFlow()">Harika!</button></div>
     </div>
   </div>
@@ -613,9 +614,13 @@ function confirmStubPurchase(){
   };
   state.purchaseHistory.push({...state.entitlement}); // E8.5: geri yükleme için sakla
   save();
+  // E8.8: satın alan ebeveyne teşekkür + çocuğa özel koleksiyon ödülü (satış değil, sürpriz hediye)
+  awardBadge('Kâşif\'in Yıldız Pelerini 🦸');
   closeOverlay('stubPay');
   const text=document.getElementById('pwSuccessText');
   if(text) text.textContent = p.entitlementSuresiGun ? 'Artık tüm ses grupları ve özellikler açık.' : 'Artık tüm ses grupları ve özellikler kalıcı olarak açık.';
+  const badgeText=document.getElementById('pwSuccessBadge');
+  if(badgeText) badgeText.textContent = 'Teşekkürler! Kâşif\'e özel "Yıldız Pelerini" rozeti hediye edildi 🦸';
   openOverlay('pwSuccess');
 }
 function finishPurchaseFlow(){
@@ -1201,7 +1206,8 @@ const MILESTONE_BADGES=[
   {text:'14 Gün Üst Üste Kâşif 🔥🔥🔥', desc:'14 gün arka arkaya çalış.'},
   {text:'İlk Kelimeni Kurdun 📝', desc:'Kelime Kur\'da bir kelimeyi doğru sırala.'},
   {text:'İlk Cümleni Kurdun 🌱', desc:'Cümle Bahçesi\'nde bir cümleyi doğru sırala.'},
-  {text:'İlk Metnini Okudun 📖', desc:'Okuma Kulübü\'nde bir metni tamamla.'}
+  {text:'İlk Metnini Okudun 📖', desc:'Okuma Kulübü\'nde bir metni tamamla.'},
+  {text:'Kâşif\'in Yıldız Pelerini 🦸', desc:'Premium\'u aç.'} // E8.8: satın alma teşekkürü + koleksiyon ödülü
 ];
 function awardBadge(text){
   if(!state.badges.includes(text)){ state.badges.push(text); save(); }
