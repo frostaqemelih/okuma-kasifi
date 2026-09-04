@@ -362,6 +362,14 @@
     </div>
   </section>
 
+  <!-- KİMİN SIRASI? (Aile Planı: birden fazla çocuk profili varsa başlangıçta sorulur) -->
+  <section id="s-who" class="screen">
+    <div class="mascot" style="width:92px; font-size:48px">🦉</div>
+    <h1 style="font-size:clamp(22px,5vw,32px)">Bugün kim oynuyor?</h1>
+    <p class="sub">Kendi ilerlemeni görmek için adını seç.</p>
+    <div class="age-grid" id="whoList" style="width:min(520px,94vw)"></div>
+  </section>
+
   <!-- YAŞ / MOD -->
   <section id="s-mode" class="screen">
     <div class="mascot" style="width:92px; font-size:48px">🦉</div>
@@ -1350,6 +1358,7 @@ function go(id){
   if(id==='s-map') renderMap();
   if(id==='s-collection') renderCollection();
   if(id==='s-defter') renderDefter();
+  if(id==='s-who') renderWho();
   if(id==='s-free'){
     const h=(state.mode==='kesif')?'none':'';
     document.getElementById('freeHece').style.display=h;
@@ -1364,8 +1373,27 @@ function go(id){
 function onStart(){
   syncStars();
   sessionMinutes=0; breakShown=false; // E2.6: yeni oturum, mola sayacı sıfırlanır
+  // Aile Planı (E8.6): birden fazla çocuk profili varsa, ilerlemeyi karıştırmamak için
+  // önce "kimin sırası?" ekranı sorulur (Netflix "kim izliyor" deseniyle aynı fikir).
+  if(state.profiles.length>1){ go('s-who'); return; }
   if(!state.mode){ go('s-mode'); say('Kâşif kaç yaşında?'); }
   else { go('s-map'); say('Keşif haritasına hoş geldin!'); }
+}
+/* Onboarding "kimin için?" ekranı (rutin, Fikir havuzu maddesi): yalnızca birden fazla profil
+   varken görünür (tek çocuklu — çoğunluk — akışa hiç dokunmaz). Profil kartına dokununca o profile
+   geçilir (switchProfile zaten kaydet+yükle+yönlendirmeyi yapıyor); zaten aktif olan profil seçilirse
+   switchProfile no-op olduğundan burada doğrudan yönlendirilir. */
+function renderWho(){
+  const box=document.getElementById('whoList'); if(!box) return;
+  const avatars=['🧒','👧','🦊','🐻','🐰','🦉'];
+  box.innerHTML=state.profiles.map((p,i)=>`
+    <div class="age-card" tabindex="0" role="button" onclick="chooseWho('${p.id}')">
+      <span class="big">${avatars[i%avatars.length]}</span><span><b>${p.name}</b><span>${p.id===state.activeProfileId?'Son oynayan':'Dokun, başla'}</span></span>
+    </div>`).join('');
+}
+function chooseWho(id){
+  if(id!==state.activeProfileId){ switchProfile(id); return; }
+  go(state.mode?'s-map':'s-mode');
 }
 function setMode(m){ state.mode=m; save(); go('s-map'); say(m==='kesif'?'Hadi sesleri keşfedelim!':'Hadi okumaya başlayalım!'); }
 /* E1.11: opsiyonel çocuk adı — onboarding'de sorulur, cihazda saklanır, ebeveyn özetinde kullanılır. */

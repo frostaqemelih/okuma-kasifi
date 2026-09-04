@@ -1651,6 +1651,41 @@ const testDriver = `
     check('E8.6 Aile Planı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Onboarding "kimin için?" ekranı (rutin, Fikir havuzu maddesi — yalnız Aile Planı çoklu profilde) ---
+  try {
+    state = fresh();
+    state.mode = null;
+    onStart();
+    check('onStart() tek profilli (varsayılan) durumda "kimin sırası?" ekranını hiç göstermiyor',
+      document.getElementById('s-mode').classList.contains('active') && !document.getElementById('s-who').classList.contains('active'));
+
+    buy('yillik');
+    confirmStubPurchase();
+    state.childName = 'Ela'; state.mode = 'kesif'; state.done = ['0'];
+    ensureProfilesInit();
+    window.prompt = () => 'Kaan';
+    addProfile();
+    const p1IdW = state.profiles[0].id, p2IdW = state.profiles[1].id;
+    switchProfile(p1IdW); // aktif profili p1 (Ela) yap
+
+    onStart();
+    check('onStart() birden fazla profil varken "kimin sırası?" ekranını açıyor', document.getElementById('s-who').classList.contains('active'));
+    check('renderWho() her profil için bir kart oluşturuyor', document.querySelectorAll('#whoList .age-card').length === 2);
+    check('renderWho() aktif profili "Son oynayan" etiketiyle işaretliyor', document.querySelector('#whoList .age-card').textContent.includes('Son oynayan'));
+
+    chooseWho(p2IdW); // farklı profili seç (Kaan, henüz mod seçmemiş -> s-mode'a gitmeli)
+    check('chooseWho() farklı profile geçiyor', state.activeProfileId === p2IdW);
+    check('chooseWho() profil seçince doğru ekrana yönlendiriyor', document.getElementById('s-mode').classList.contains('active'));
+
+    go('s-who');
+    chooseWho(p2IdW); // zaten aktif olan profili tekrar seç — switchProfile no-op olsa da yönlendirmeli
+    check('chooseWho() zaten aktif profil seçilince de yönlendiriyor (takılı kalmıyor)', document.getElementById('s-mode').classList.contains('active'));
+
+    state = fresh();
+  } catch (e) {
+    check('Onboarding "kimin için?" ekranı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E9.7: "Yenilikler" (sürüm notları) sekmesi ebeveyn panelinde ---
   try {
     check('RELEASE_NOTES dizisi tanımlı ve dolu', Array.isArray(RELEASE_NOTES) && RELEASE_NOTES.length >= 2);
@@ -1769,7 +1804,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (14 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 14);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (14 statik + 1 renderWho() şablonu = 15 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 15);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
