@@ -2485,6 +2485,7 @@ function pAyar(){
       <button class="btn ghost tiny" onclick="exportProgress()">İlerlemeyi dışa aktar (JSON)</button>
       <button class="btn ghost tiny" onclick="importProgress()">İçe aktar</button>
       <button class="btn ghost tiny" style="color:var(--nope)" onclick="resetProgress()">İlerlemeyi sıfırla</button>
+      <a class="btn ghost tiny" href="${feedbackMailto()}">📮 Geri bildirim gönder</a>
     </div>`;
 }
 function wireParentSettings(){
@@ -2502,6 +2503,11 @@ function exportProgress(){
     ()=>alert('İlerleme panoya kopyalandı. Güvenli bir yere yapıştırın.'),
     ()=>prompt('Kopyalayın:', txt)
   ) || prompt('Kopyalayın:', txt);
+}
+// E9.5: beta geri bildirim kanalı — dış servis yok, yalnızca mailto: (kişisel veri otomatik eklenmez).
+function feedbackMailto(){
+  const subject=encodeURIComponent('Okuma Kâşifi - Geri Bildirim');
+  return `mailto:destek@okumakasifi.app?subject=${subject}`;
 }
 function importProgress(){
   const t=prompt('Dışa aktarılan JSON metnini yapıştırın:');

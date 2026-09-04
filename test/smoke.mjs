@@ -1403,6 +1403,18 @@ const testDriver = `
     check('E7.3 Yasal sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- E9.5: feedbackMailto() geçerli bir mailto: URL'i üretiyor ---
+  try {
+    const fb = feedbackMailto();
+    check('feedbackMailto() mailto: ile başlıyor', fb.startsWith('mailto:destek@okumakasifi.app'));
+    check('feedbackMailto() konu (subject) parametresi içeriyor', fb.includes('subject='));
+    parentTab('ayar');
+    const pbodyAyar = document.getElementById('pbody').innerHTML;
+    check('Ayarlar sekmesi "Geri bildirim gönder" bağlantısını render ediyor', pbodyAyar.includes('Geri bildirim gönder') && pbodyAyar.includes('mailto:destek@okumakasifi.app'));
+  } catch (e) {
+    check('E9.5 feedbackMailto()/Ayarlar sekmesi hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1496,6 +1508,10 @@ pushCheck('site/index.html: çocuk güvenliği mesajı var (reklam yok, sohbet r
 pushCheck('site/index.html: harici <script> yok, tek istisna Google Fonts (mimari kuralı)', !/<script/.test(siteHtml) && (siteHtml.match(/(?:href|src)="(https?:\/\/[^"]+)"/g) || []).every(m => /fonts\.(googleapis|gstatic)\.com/.test(m)));
 pushCheck('site/index.html: aynı marka renk token\'larını kullanıyor (--primary:#f2795b)', /--primary:#f2795b/.test(siteHtml));
 pushCheck('site/index.html: koyu tema desteği var (prefers-color-scheme:dark)', /prefers-color-scheme:dark/.test(siteHtml));
+
+// --- E9.5: beta geri bildirim kanalı — ebeveyn Ayarlar sekmesinde mailto: düğmesi (dış servis yok) ---
+pushCheck('JS: feedbackMailto() dış servis olmadan mailto: linki üretiyor', /function feedbackMailto\(\)\{/.test(html) && /return `mailto:/.test(html));
+pushCheck('HTML: Ayarlar sekmesinde "Geri bildirim gönder" düğmesi feedbackMailto()\'ya bağlı', /href="\$\{feedbackMailto\(\)\}"/.test(html) && /Geri bildirim gönder/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {
