@@ -9,7 +9,11 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<!-- E7.2: font CSS'i ilk boyayı bloklamasın diye preload+swap ile asenkron yükleniyor
+     (noscript yedeği zaten render-blocking; --font-display/--font-body zaten sistem yedek
+     fontlarıyla tanımlı, bu yüzden yazı font gelene kadar boş kalmıyor, yedekle görünüyor). -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap"></noscript>
 <title>Okuma Kâşifi</title>
 <style>
   :root{

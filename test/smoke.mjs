@@ -1587,6 +1587,11 @@ pushCheck('site/fiyatlar.html: aynı marka renk token\'larını kullanıyor (--p
 pushCheck('site/fiyatlar.html: koyu tema desteği var (prefers-color-scheme:dark)', /prefers-color-scheme:dark/.test(pricesHtml));
 pushCheck('site/index.html: "Fiyatları gör" artık ayrıntılı fiyat sayfasına bağlanıyor', /href="fiyatlar\.html"/.test(siteHtml));
 
+// --- E7.2: ilk açılış hızı — Google Fonts CSS'i ilk boyayı bloklamasın diye preload+swap ile yükleniyor ---
+pushCheck('index.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(html) && /<noscript><link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?/.test(html));
+pushCheck('site/index.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(siteHtml) && /<noscript><link rel="stylesheet"/.test(siteHtml));
+pushCheck('site/fiyatlar.html: Google Fonts CSS render-blocking değil (preload+onload swap deseni)', /<link rel="preload" as="style" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" onload="this\.onload=null;this\.rel='stylesheet'">/.test(pricesHtml) && /<noscript><link rel="stylesheet"/.test(pricesHtml));
+
 let failed = 0;
 for (const { name, pass } of results) {
   console.log(`  ${pass ? '✓' : '✗'} ${name}`);
