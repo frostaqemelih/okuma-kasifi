@@ -402,6 +402,14 @@
     <button class="btn ghost tiny" id="doneBreakBtn" onclick="acceptBreak()" hidden>☕ Mola ver, yarın devam</button>
   </section>
 
+  <!-- HATA SINIRI (E7.4) -->
+  <section id="s-error" class="screen">
+    <div class="mascot">😵</div>
+    <h1>Bir şeyler ters gitti</h1>
+    <p class="sub">Merak etme, ilerlemen cihazında güvende. Kâşif'i yeniden başlatalım.</p>
+    <button class="btn ok" onclick="location.reload()">🔄 Kâşif'i yeniden başlat</button>
+  </section>
+
   <!-- ROZET KOLEKSİYONU (E3.6) -->
   <section id="s-collection" class="screen scroll">
     <div class="topbar">
@@ -517,6 +525,18 @@
 <div id="printReport" class="print-only" aria-hidden="true"></div>
 
 <script>
+/* E7.4: hata sınırı — beklenmeyen bir çalışma zamanı hatasında çocuğu bozuk/beyaz ekranda bırakmak
+   yerine nazik bir "yeniden başlat" ekranına geçer. İlerleme localStorage'da kalır, kaybolmaz. */
+function showErrorScreen(){
+  try{
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    const el=document.getElementById('s-error');
+    if(el) el.classList.add('active');
+  }catch(e){}
+}
+window.addEventListener('error', showErrorScreen);
+window.addEventListener('unhandledrejection', showErrorScreen);
+
 /* ================= DURUM ================= */
 const KEY_V2='okuma-kasifi-v2'; // E8.1: v3'e göç edildi, yalnız eski veriyi okumak için tutulur
 const KEY='okuma-kasifi-v3';

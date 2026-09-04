@@ -1302,6 +1302,21 @@ const testDriver = `
     check('E6.4 parmak kası ısınma çizgileri hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E7.4: Hata sınırı — beklenmeyen hatada nazik "yeniden başlat" ekranı ---
+  try {
+    go('s-map');
+    check('showErrorScreen() öncesinde s-map aktif', document.getElementById('s-map').classList.contains('active'));
+    showErrorScreen();
+    check('showErrorScreen() #s-error ekranını aktif yapıyor', document.getElementById('s-error').classList.contains('active'));
+    check('showErrorScreen() önceki ekranı (s-map) devre dışı bırakıyor', !document.getElementById('s-map').classList.contains('active'));
+
+    go('s-map');
+    window.dispatchEvent(new window.ErrorEvent('error', { message: 'test hatası' }));
+    check('window "error" olayı otomatik olarak #s-error ekranına geçiyor', document.getElementById('s-error').classList.contains('active'));
+  } catch (e) {
+    check('E7.4 hata sınırı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1329,6 +1344,8 @@ pushCheck('Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut', html.inc
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
 pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="polite"/.test(html));
+// --- E7.4: hata sınırı ekranı ve "yeniden başlat" düğmesi HTML'de mevcut ---
+pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {
