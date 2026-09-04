@@ -77,6 +77,11 @@
   .btn:hover{filter:brightness(1.04)}
   .btn:active{transform:translateY(4px); box-shadow:var(--shadow-sm)}
   .btn:focus-visible{outline:3px solid var(--explore); outline-offset:3px}
+  /* E5.4: erişilebilirlik geçişi — tüm interaktif öğeler için görünür genel odak halkası (daha özel kurallar bunu geçersiz kılar) */
+  :focus-visible{outline:3px solid var(--primary); outline-offset:2px}
+  .age-card:focus-visible{outline:3px solid var(--primary); outline-offset:3px}
+  .choice:focus-visible{outline:3px solid var(--primary); outline-offset:5px}
+  .node:focus-visible{outline:3px solid var(--primary); outline-offset:3px}
   .btn.explore{background:var(--explore)} .btn.ok{background:var(--ok)} .btn.grape{background:var(--grape)}
   .btn.ghost{background:var(--surface); color:var(--ink); box-shadow:var(--shadow-sm)}
   .btn.tiny{font-size:15px; min-height:0; padding:11px 18px; box-shadow:var(--shadow-sm)}
@@ -332,10 +337,10 @@
         oninput="setChildName(this.value)" aria-label="Çocuğun adı, opsiyonel">
     </div>
     <div class="age-grid">
-      <div class="age-card" onclick="setMode('kesif')">
+      <div class="age-card" tabindex="0" role="button" onclick="setMode('kesif')">
         <span class="big">🐣</span><span><b>4–5 yaş · Keşif</b><span>Sesleri tanıma, harf çizme. Okuma yok, baskı yok.</span></span>
       </div>
-      <div class="age-card" onclick="setMode('cozumleme')">
+      <div class="age-card" tabindex="0" role="button" onclick="setMode('cozumleme')">
         <span class="big">🚀</span><span><b>6–7 yaş · Çözümleme</b><span>Ses → hece → kelime. Okumaya ilk adım.</span></span>
       </div>
     </div>
@@ -364,16 +369,16 @@
     </div>
     <h1 style="font-size:clamp(22px,5vw,30px)">Serbest oyun</h1>
     <div class="age-grid" style="width:min(520px,94vw)">
-      <div class="age-card" onclick="startFree('bul')"><span class="big">🔤</span><span><b>Harfi Bul</b><span>Kelime hangi harfle başlıyor?</span></span></div>
-      <div class="age-card" onclick="startFree('ses')"><span class="big">🔊</span><span><b>Sesi Eşleştir</b><span>Sesi duy, doğru resmi seç</span></span></div>
-      <div class="age-card" id="freeHece" onclick="startFree('hece')"><span class="big">🧩</span><span><b>Hece Kur</b><span>İki sesi birleştir, oku</span></span></div>
-      <div class="age-card" id="freeKelime" onclick="startFree('kelime')"><span class="big">🔡</span><span><b>Kelime Kur</b><span>Harfleri sırayla diz</span></span></div>
-      <div class="age-card" id="freeCumle" onclick="startFree('cumle')"><span class="big">🌱</span><span><b>Cümle Bahçesi</b><span>Kelimelerden cümle kur</span></span></div>
-      <div class="age-card" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
-      <div class="age-card" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
-      <div class="age-card" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
-      <div class="age-card" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
-      <div class="age-card" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('bul')"><span class="big">🔤</span><span><b>Harfi Bul</b><span>Kelime hangi harfle başlıyor?</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('ses')"><span class="big">🔊</span><span><b>Sesi Eşleştir</b><span>Sesi duy, doğru resmi seç</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeHece" onclick="startFree('hece')"><span class="big">🧩</span><span><b>Hece Kur</b><span>İki sesi birleştir, oku</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeKelime" onclick="startFree('kelime')"><span class="big">🔡</span><span><b>Kelime Kur</b><span>Harfleri sırayla diz</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeCumle" onclick="startFree('cumle')"><span class="big">🌱</span><span><b>Cümle Bahçesi</b><span>Kelimelerden cümle kur</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
     </div>
   </section>
 
@@ -536,6 +541,16 @@ function showErrorScreen(){
 }
 window.addEventListener('error', showErrorScreen);
 window.addEventListener('unhandledrejection', showErrorScreen);
+
+/* E5.4: erişilebilirlik — role="button" olan (gerçek <button> olmayan) öğeler klavyeyle de
+   (Enter/Boşluk) tıklanabilir olsun; delegasyonla tek dinleyici, sonradan eklenen kartları da kapsar. */
+window.addEventListener('keydown', function(e){
+  if(e.key!=='Enter' && e.key!==' ' && e.key!=='Spacebar') return;
+  const t=e.target;
+  if(t && t.getAttribute && t.getAttribute('role')==='button' && t.tagName!=='BUTTON'){
+    e.preventDefault(); t.click();
+  }
+});
 
 /* ================= DURUM ================= */
 const KEY_V2='okuma-kasifi-v2'; // E8.1: v3'e göç edildi, yalnız eski veriyi okumak için tutulur
@@ -1133,8 +1148,10 @@ function renderMap(){
     n.className='node '+(done?'done':now?'now':'locked')+(needsReview?' flag':'')+(premiumLocked?' premium-lock':'');
     n.textContent = done?'✓' : premiumLocked?'🔒' : (L.id===0?'★':L.id);
     n.disabled = !done && !now && !premiumLocked;
-    if(needsReview) n.setAttribute('aria-label', L.ad+' — tekrar önerilir');
-    if(premiumLocked) n.setAttribute('aria-label', L.ad+' — premium gerekir');
+    // E5.4: ekran okuyucu için düğüm durumunu her zaman betimle (yalnız simge yeterli değil)
+    let nl=L.ad+(done?' — tamamlandı':now?' — sırada':premiumLocked?' — premium gerekir':' — kilitli');
+    if(needsReview) nl+=' — tekrar önerilir';
+    n.setAttribute('aria-label', nl);
     n.onclick=()=>{ if(premiumLocked) requirePremium('lessonsGroup2plus', ()=>openLesson(L.id)); else openLesson(L.id); };
     const lbl=document.createElement('span');
     lbl.className='node-lbl'; lbl.textContent=L.ad;
@@ -1839,7 +1856,7 @@ function roundCiz(sounds){
   const t=rnd(sounds); curTargets=[t];
   qtext.textContent=`«${t}» harfini yaz`;
   playArea.innerHTML=`
-    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${t} harfini parmağınla çizme alanı"></canvas></div>
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
@@ -1861,7 +1878,7 @@ function roundCizBuyuk(sounds){
   const T=UPPER_MAP[t]||t.toUpperCase();
   qtext.textContent=`«${T}» BÜYÜK harfini yaz`;
   playArea.innerHTML=`
-    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="Büyük ${T} harfini parmağınla çizme alanı"></canvas></div>
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
@@ -1880,7 +1897,7 @@ function stepHazirlik(){
   locked=false; curTargets=[];
   qtext.textContent='Parmağınla ekranda serbest çiz';
   playArea.innerHTML=`
-    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="Serbest çizim alanı"></canvas></div>
     <p id="traceMsg">Kalem tutar gibi, istediğin çizgiyi çiz ✏️</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
@@ -1915,7 +1932,7 @@ function stepHazirlikSekil(key){
   const sh=WARMUP_SHAPES[key];
   qtext.textContent=`${sh.acc} parmağınla takip et ${sh.emoji}`;
   playArea.innerHTML=`
-    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${sh.ad} kılavuz çizgisini parmağınla takip etme alanı"></canvas></div>
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>

@@ -1317,6 +1317,26 @@ const testDriver = `
     check('E7.4 hata sınırı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E5.4: erişilebilirlik geçişi — .age-card kartları klavyeyle de tıklanabilir olmalı ---
+  try {
+    state = fresh(); state.mode = null; save();
+    go('s-mode');
+    const card = Array.from(document.querySelectorAll('.age-card')).find(el => el.getAttribute('onclick').includes('setMode') && el.getAttribute('onclick').includes('kesif'));
+    check('age-card klavye odağı alabiliyor (tabindex=0)', card && card.getAttribute('tabindex') === '0');
+    check('age-card role="button" taşıyor', card && card.getAttribute('role') === 'button');
+    // jsdom (runScripts:'outside-only') satır-içi onclick niteliğini çalıştırmadığından,
+    // gerçek tıklama (.click()) yerine bir 'click' dinleyicisiyle delegasyonun onu tetiklediğini doğruluyoruz.
+    let clicked = false;
+    card.addEventListener('click', () => { clicked = true; });
+    card.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    check('age-card üzerinde Enter tuşu click() eylemini tetikliyor', clicked === true);
+    clicked = false;
+    card.dispatchEvent(new window.KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true }));
+    check('age-card üzerinde Boşluk tuşu click() eylemini tetikliyor', clicked === true);
+  } catch (e) {
+    check('E5.4 klavye erişilebilirliği hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1346,6 +1366,12 @@ pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dy
 pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="polite"/.test(html));
 // --- E7.4: hata sınırı ekranı ve "yeniden başlat" düğmesi HTML'de mevcut ---
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
+// --- E5.4: erişilebilirlik geçişi ---
+pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (12 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 12);
+pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
+pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
+pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {
