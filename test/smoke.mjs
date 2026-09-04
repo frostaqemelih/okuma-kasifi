@@ -1179,6 +1179,44 @@ const testDriver = `
     check('E5.5 disleksi-dostu gorunum hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- E5.7: Sessiz mod - TTS mesajlarinin yazili karsiligi da gosterilsin (fbMsg) ---
+  try {
+    state = fresh();
+    play = null;
+    roundBul(['a', 'n', 'e', 't']);
+    const rightBtn = document.querySelector('#choices .choice[data-right="1"]');
+    choose(rightBtn, true);
+    let fb = document.getElementById('fbMsg');
+    check('choose() dogru cevapta fbMsg gorunur ve metin iceriyor', fb.hidden === false && fb.textContent.length > 0);
+
+    state = fresh();
+    play = null;
+    roundBul(['a', 'n', 'e', 't']);
+    const wrongBtn2 = document.querySelector('#choices .choice:not([data-right="1"])');
+    choose(wrongBtn2, false);
+    fb = document.getElementById('fbMsg');
+    check('choose() 1. yanlista fbMsg gorunur ve metin iceriyor', fb.hidden === false && fb.textContent.length > 0);
+
+    hideFeedback();
+    fb = document.getElementById('fbMsg');
+    check('hideFeedback() fbMsg gizler ve temizler', fb.hidden === true && fb.textContent === '');
+
+    state = fresh();
+    play = null;
+    wordState = { kind: 'kelime', sep: '', target: ['a', 't'], tiles: [], filled: [{ l: 'a' }, { l: 't' }] };
+    checkWord();
+    fb = document.getElementById('fbMsg');
+    check('checkWord() dogru kelimede fbMsg gorunur ve metin iceriyor', fb.hidden === false && fb.textContent.length > 0);
+
+    state = fresh();
+    play = null; freeGame = null;
+    showFeedback('eski mesaj');
+    startFree('bul');
+    check('nextFreeRound() yeni turda onceki fbMsg temizleniyor', document.getElementById('fbMsg').hidden === true);
+  } catch (e) {
+    check('E5.7 sessiz mod yazili geri bildirim hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -1202,6 +1240,8 @@ pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("st
 pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', html.includes("startFree('buyuk')") && html.includes('Büyük mü Küçük mü?'));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
+// --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
+pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="polite"/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {

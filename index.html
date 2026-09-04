@@ -56,7 +56,7 @@
   .screen.scroll{justify-content:flex-start; overflow-y:auto; padding:92px 20px 40px}
   .screen.anim{animation:rise .34s cubic-bezier(.2,.8,.2,1)}
   @keyframes rise{from{opacity:0; transform:translateY(14px) scale(.98)}to{opacity:1; transform:none}}
-  @media (prefers-reduced-motion:reduce){ .screen.anim{animation:none} .mascot,.node.now,.choice.hint{animation:none!important} }
+  @media (prefers-reduced-motion:reduce){ .screen.anim{animation:none} .mascot,.node.now,.choice.hint{animation:none!important} .fb-msg{animation:none!important} }
 
   h1{font-family:var(--font-display); font-weight:800; font-size:clamp(26px,5.6vw,48px);
     color:var(--primary-d); letter-spacing:-.01em; text-wrap:balance; line-height:1.06}
@@ -130,6 +130,10 @@
   .dots i.on{background:var(--primary)} .dots i.cur{background:var(--primary); transform:scale(1.4)}
   .prompt{font-family:var(--font-display); font-weight:600; font-size:clamp(16px,3.7vw,23px);
     max-width:26ch; text-wrap:balance}
+  .fb-msg{font-weight:700; font-size:clamp(14px,3.2vw,18px); color:var(--primary-d); background:var(--surface);
+    border:2px solid var(--line); border-radius:16px; padding:8px 16px; max-width:30ch; text-align:center;
+    animation:fbIn .25s ease-out}
+  @keyframes fbIn{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:none}}
   .stage{background:var(--surface); border:2px solid var(--line); border-radius:30px; box-shadow:var(--shadow);
     width:min(340px,78vw); aspect-ratio:16/11; display:flex; align-items:center; justify-content:center;
     font-size:clamp(64px,18vw,120px); line-height:1}
@@ -380,6 +384,7 @@
     </div>
     <div class="dots" id="dots"></div>
     <p class="prompt" id="qtext">…</p>
+    <p class="fb-msg" id="fbMsg" aria-live="polite" hidden></p>
     <div id="playArea" style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%"></div>
   </section>
 
@@ -1119,7 +1124,7 @@ function runStep(){
   curIsReview=!!st.review;
   curIsAssess=!!st.assess;
   if(curIsAssess && (play.i===0 || !play.steps[play.i-1].assess)) assessResults=[];
-  renderDots();
+  renderDots(); hideFeedback();
   ({hazirlik:stepHazirlik, bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle})[st.game](st.sounds||unlockedPool());
 }
 function renderDots(){
@@ -1201,7 +1206,7 @@ function startFree(g){
   nextFreeRound();
 }
 function nextFreeRound(){
-  closeOverlay('reward');
+  closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
   ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk})[freeGame](pool);
 }
@@ -1215,6 +1220,10 @@ let curIsAssess=false, assessResults=[]; // E3.1 ders sonu mini-değerlendirme
 let sessionMinutes=0, breakShown=false; // E2.6 oturum ritmi
 const qtext=document.getElementById('qtext');
 const playArea=document.getElementById('playArea');
+// E5.7: sessiz mod — TTS ile birlikte söylenen övgü/ipucu/tekrar mesajlarını da yazılı göster,
+// böylece ses kapalıyken (kütüphane/uyku öncesi) çocuk hiçbir yönergeyi kaçırmaz.
+function showFeedback(t){ const el=document.getElementById('fbMsg'); if(!el) return; el.textContent=t; el.hidden=false; }
+function hideFeedback(){ const el=document.getElementById('fbMsg'); if(el){ el.hidden=true; el.textContent=''; } }
 
 function creditSounds(ok){
   curTargets.forEach(s=>{
@@ -1564,7 +1573,7 @@ function choose(el,right){
     if(curIsReview) consumeReview();
     if(curIsAssess) assessResults.push(true);
     save();
-    say(rnd(PRAISE), award);
+    const praise=rnd(PRAISE); showFeedback(praise); say(praise, award);
     return;
   }
   curWrongCount++;
@@ -1576,15 +1585,16 @@ function choose(el,right){
     recordRoundResult(false); // E2.5
     if(curIsAssess) assessResults.push(false);
     if(correctEl) correctEl.classList.add('right');
+    showFeedback('Doğrusu bu. Birlikte söyleyelim: '+roundPrompt);
     say('Doğrusu bu. Birlikte söyleyelim: '+roundPrompt, ()=>{ say(roundPrompt, award); });
   }else if(curWrongCount===2){
     // 2. yanlış: hedefli ipucu — yanlış şıkkı soluklaştır, doğru şıkkı vurgula
     el.style.opacity='.35'; el.disabled=true;
     if(correctEl) correctEl.classList.add('hint');
-    say(rnd(HINT_MSGS),()=>{ say(roundPrompt); });
+    const hint=rnd(HINT_MSGS); showFeedback(hint); say(hint,()=>{ say(roundPrompt); });
   }else{
     // 1. yanlış: nötr tekrar
-    say(rnd(RETRY_MSGS),()=>{ el.classList.remove('wrong'); say(roundPrompt); });
+    const retry=rnd(RETRY_MSGS); showFeedback(retry); say(retry,()=>{ el.classList.remove('wrong'); say(roundPrompt); });
   }
 }
 
@@ -1647,12 +1657,13 @@ function checkWord(){
              'Çok iyi denedin, cümle tamam!','Kelimeleri harika sıraladın!','Bir Kâşif gibi okudun!'])
       : rnd(['Kelimeyi kurdun! Aferin!','Harika, doğru sırada!','Süpersin!',
              'Çok iyi denedin, kelime tamam!','Harfleri harika sıraladın!','Emeğinin karşılığını aldın!']);
-    say(praise, award);
+    showFeedback(praise); say(praise, award);
   }else{
     state.wrong++; creditSounds(false); save();
     document.querySelectorAll('#slots .slot').forEach(s=>s.classList.add('bad'));
-    say(kind==='cumle'?'Kelimeleri tekrar sıralayalım.':'Harfleri tekrar sıralayalım.',
-        ()=>{ if(wordState){ wordState.filled=[]; renderWord(); } });
+    const retry=kind==='cumle'?'Kelimeleri tekrar sıralayalım.':'Harfleri tekrar sıralayalım.';
+    showFeedback(retry);
+    say(retry, ()=>{ if(wordState){ wordState.filled=[]; renderWord(); } });
   }
 }
 
