@@ -127,7 +127,7 @@ anahtarları kullanıcıdan gelecek); erişilebilirlik temel seviye; KVKK/gizlil
   - [x] (a) **ç** tam donanımlı eklendi: `mufredat.json` sesler.ç+ders20, `WORDS.ç` (çay☕), `STROKES.ç` (2 vuruş: açık c-eğrisi gövde+kedilya çengeli), `LESSONS` id20, `WORDBANK`'a çay☕. — 2026-09-04
   - [x] (b) **b** tam donanımlı eklendi: `mufredat.json` sesler.b+ders21, `WORDS.b` (balon🎈), `STROKES.b` (2 vuruş: dik gövde+kabarcık ilmek), `LESSONS` id21, `WORDBANK`'a balon🎈/boya🎨. — 2026-09-04
   - [x] (c) **g** tam donanımlı eklendi: `mufredat.json` sesler.g+ders22, `WORDS.g` (gemi🚢), `STROKES.g` (2 vuruş: o gövdesi+alt kuyruk), `LESSONS` id22, `WORDBANK`'a gemi🚢/gül🌹. — 2026-09-04
-  - [ ] (d) **c** ekle (ders 23)
+  - [x] (d) **c** tam donanımlı eklendi: `mufredat.json` sesler.c+ders23, `WORDS.c` (ceket🧥), `STROKES.c` (1 vuruş: açık eğri, ç'nin çengelsiz hâli), `LESSONS` id23, `WORDBANK`'a ceket🧥/cam🪟. — 2026-09-04
   - [ ] (e) **ş** ekle (ders 24) + 4. grup rozeti/Kâşif Gösterisi 3 (ders 25)
 - [ ] **E4.4** 5. grup `p,h,v,ğ,f,j`: benzer. (ğ kelime başında olmaz — kural göster.)
 - [x] **E4.5** WORDBANK'i 12→40+ kelimeye çıkar (grup ilerledikçe açılan). Her kelimeye net emoji/görsel. — 2026-09-03
@@ -242,6 +242,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-04 — E4.3 (b) (rutin, Hafta 2 kilometre taşı): "b" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.b` (patlayıcı ünsüz) + ders 21; `index.html`'e `WORDS.b` (balon🎈), `STROKES.b` (dik gövde + gövde ortasından sağa çıkan kabarcık ilmeği), `LESSONS` id21 ("Ses b"). `WORDBANK`'a balon🎈/boya🎨 eklendi (ikisi de b+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: g (ders 22). Smoke test'e 6 yeni kontrol.
 
 - 2026-09-04 — E4.3 (c) (rutin, Hafta 2 kilometre taşı): "g" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.g` (patlayıcı ünsüz, k ile karışır) + ders 22; `index.html`'e `WORDS.g` (gemi🚢), `STROKES.g` (o'nun kapalı gövdesi + alt sağdan aşağı sarkan kuyruk deşentr), `LESSONS` id22 ("Ses g"). `WORDBANK`'a gemi🚢/gül🌹 eklendi (ikisi de g+önceki gruplardan, hemen erişilebilir). Sıradaki alt adım: c (ders 23). Smoke test'e 6 yeni kontrol.
+
+- 2026-09-04 — E4.3 (d) (rutin, Hafta 2 kilometre taşı): "c" sesi tam donanımlı eklendi — `mufredat.json`'a `sesler.c` (patlayıcı ünsüz, ç ile karışır) + ders 23; `index.html`'e `WORDS.c` (ceket🧥), `STROKES.c` (tek vuruşlu açık eğri, ç'nin çengelsiz hâli), `LESSONS` id23 ("Ses c"). `WORDBANK`'a ceket🧥/cam🪟 eklendi (ikisi de c+önceki gruplardan, hemen erişilebilir). Son ses (ş, ders 24) + 4. grup rozeti kaldı. Smoke test'e 6 yeni kontrol.
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
