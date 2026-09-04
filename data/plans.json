@@ -1,0 +1,49 @@
+{
+  "surum": "0.1",
+  "kaynak": "arastirma/rakip-analizi.md — § fiyatlandırma (2026-09)",
+  "not": "Bu dosya kaynak/referans verisidir; index.html tek-dosya mimarisi gereği aynı veri PLANS sabiti olarak orada da tutulur (elle senkronize edilir, mufredat.json/metinler.json ile aynı desen). Gerçek fiyat/dönem kesinleşince ikisi birlikte güncellenir.",
+  "paraBirimi": "TRY",
+  "planlar": [
+    {
+      "id": "aylik",
+      "ad": "Aylık",
+      "fiyat": 179,
+      "periyot": "ay",
+      "entitlementSuresiGun": 30,
+      "vurgu": null,
+      "kapsam": [
+        "2.–5. ses grupları (ders 7 ve sonrası)",
+        "Okuma Kulübü ve metin bankası",
+        "Ayrıntılı ebeveyn raporu + yazdır/PDF",
+        "Zayıf seslere odak turu",
+        "Yazdırılabilir çalışma sayfaları"
+      ]
+    },
+    {
+      "id": "yillik",
+      "ad": "Yıllık",
+      "fiyat": 1199,
+      "periyot": "yıl",
+      "entitlementSuresiGun": 365,
+      "vurgu": "2 ay bedava",
+      "kapsam": [
+        "Aylık plandaki her şey",
+        "En avantajlı fiyat (aylığa göre ~%44 tasarruf)",
+        "Aile planı: 3 çocuk profiline kadar"
+      ]
+    },
+    {
+      "id": "tekseferlik",
+      "ad": "Tek Seferlik",
+      "fiyat": 349,
+      "periyot": "tek seferlik",
+      "entitlementSuresiGun": null,
+      "vurgu": "kalıcı, abonelik yok",
+      "kapsam": [
+        "Tüm içerik kalıcı olarak açılır",
+        "Yenileme veya otomatik ödeme yok"
+      ]
+    }
+  ],
+  "deneme": { "gunSayisi": 7, "not": "E8.10'da uygulanacak — ebeveyn başlatır, tek sefer, otomatik ücretlendirme yok." }
+}

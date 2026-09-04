@@ -684,6 +684,41 @@ const testDriver = `
     check('E8.1 entitlement katmani hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- 38) E8.9 + E8.3 + E8.4: PLANS verisi, paywall ekrani, stub satin alma akisi ---
+  try {
+    check('#s-paywall ekrani DOM da mevcut', !!document.getElementById('s-paywall'));
+    check('PLANS 3 plan iceriyor', Array.isArray(PLANS) && PLANS.length === 3);
+    check('Her PLANS ogesinde id/fiyat/periyot/kapsam var', PLANS.every(p => p.id && typeof p.fiyat === 'number' && p.periyot && Array.isArray(p.kapsam) && p.kapsam.length > 0));
+    state = fresh();
+    openPaywall('test-ozellik', 's-map');
+    check('openPaywall() s-paywall ekranini aktif ediyor', document.getElementById('s-paywall').classList.contains('active'));
+    const plansHtml = document.getElementById('paywallPlans').innerHTML;
+    check('paywall plan kartlari render edildi', (plansHtml.match(/plan-card/g) || []).length === 3);
+    check('paywall kapatilinca geri donulecek ekran kaydedildi', paywallReturn === 's-map');
+
+    buy('yillik');
+    check('buy() stub odeme ekranini aciyor', document.getElementById('stubPay').classList.contains('active'));
+    check('stub odeme ekrani secilen plani gosteriyor', document.getElementById('stubPayPlan').textContent.includes('Yıllık'));
+
+    const before = isPremium();
+    confirmStubPurchase();
+    check('satin alma oncesi premium degildi', before === false);
+    check('confirmStubPurchase() sonrasi isPremium() true', isPremium() === true);
+    check('entitlement.source stub: ile basliyor', (state.entitlement.source || '').startsWith('stub:'));
+    check('yillik planda expires ileri bir tarih', state.entitlement.expires > Date.now());
+    check('confirmStubPurchase() stub odeme ekranini kapatip basari ekranini aciyor', !document.getElementById('stubPay').classList.contains('active') && document.getElementById('pwSuccess').classList.contains('active'));
+
+    let grantCalled = false;
+    pendingPaywallGrant = () => { grantCalled = true; };
+    finishPurchaseFlow();
+    check('finishPurchaseFlow() bekleyen kilidi acma islemini calistiriyor', grantCalled === true);
+    check('finishPurchaseFlow() basari ekranini kapatiyor', !document.getElementById('pwSuccess').classList.contains('active'));
+
+    state = fresh();
+  } catch (e) {
+    check('E8.9/E8.3/E8.4 paywall + stub satin alma hatasiz calisti (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

@@ -257,6 +257,22 @@
   .badges{display:flex; gap:8px; flex-wrap:wrap; justify-content:center}
   .badge{background:var(--surface); border:2px solid var(--sun); border-radius:999px; padding:6px 12px;
     font-family:var(--font-display); font-weight:700; font-size:13px}
+
+  /* premium paywall (E8.3) */
+  .paywall-benefits{list-style:none; width:min(420px,92vw); text-align:left; display:flex; flex-direction:column; gap:8px}
+  .paywall-benefits li{font-size:15px; color:var(--ink); padding-left:26px; position:relative}
+  .paywall-benefits li::before{content:'✓'; position:absolute; left:0; color:var(--ok); font-weight:800}
+  .plan-grid{display:grid; gap:14px; width:min(460px,94vw); grid-template-columns:1fr}
+  @media (min-width:560px){ .plan-grid{grid-template-columns:repeat(3,1fr)} }
+  .plan-card{background:var(--surface); border:2px solid var(--line); border-radius:20px; padding:16px 14px;
+    text-align:left; display:flex; flex-direction:column; gap:8px; box-shadow:var(--shadow-sm)}
+  .plan-name{font-family:var(--font-display); font-weight:800; font-size:17px; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .plan-tag{background:var(--sun); color:var(--ink); font-size:11px; font-weight:700; border-radius:999px; padding:3px 9px}
+  .plan-price{font-family:var(--font-display); font-weight:800; font-size:24px; color:var(--primary-d)}
+  .plan-period{font-family:var(--font-body); font-weight:600; font-size:13px; color:var(--ink-soft)}
+  .plan-feat{list-style:none; display:flex; flex-direction:column; gap:5px; flex:1}
+  .plan-feat li{font-size:12.5px; color:var(--ink-soft); padding-left:16px; position:relative}
+  .plan-feat li::before{content:'•'; position:absolute; left:2px; color:var(--explore)}
 </style>
 </head>
 <body>
@@ -365,6 +381,27 @@
     <p class="mini" style="text-align:center; margin-top:18px">Tüm veriler yalnızca bu cihazda. Hiçbir şey buluta gönderilmez.</p>
   </section>
 
+  <!-- PREMIUM PAYWALL (E8.3) — yalnız ebeveyn kapısından erişilir -->
+  <section id="s-paywall" class="screen scroll">
+    <div class="topbar">
+      <button class="icon-btn" onclick="closePaywall()" aria-label="Kapat">✕</button>
+      <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Premium</span>
+      <span style="width:50px"></span>
+    </div>
+    <div class="mascot">🔓</div>
+    <h1>Kâşif'in tüm dünyasını açın</h1>
+    <p class="sub">Premium ile çocuğunuz sınırsız keşfe devam eder:</p>
+    <ul class="paywall-benefits">
+      <li>Tüm ses grupları ve 40+ ders</li>
+      <li>Okuma Kulübü ve genişleyen metin bankası</li>
+      <li>Ayrıntılı ebeveyn raporu + yazdır/PDF</li>
+      <li>Zayıf seslere özel tekrar turu</li>
+    </ul>
+    <div class="plan-grid" id="paywallPlans"></div>
+    <button class="btn ghost tiny" onclick="closePaywall()">Belki sonra</button>
+    <p class="mini" style="text-align:center">Bu ekran yalnızca ebeveyn kapısından açılır; çocuğa satış gösterilmez.</p>
+  </section>
+
   <!-- EBEVEYN KAPISI -->
   <div class="overlay" id="gate">
     <div class="sheet">
@@ -385,6 +422,30 @@
         <button class="btn ok" onclick="nextFreeRound()">Devam et</button>
         <button class="btn ghost tiny" onclick="closeOverlay('reward'); go('s-free')">Oyun seç</button>
       </div>
+    </div>
+  </div>
+
+  <!-- STUB ÖDEME (E8.4) — gerçek sağlayıcı yok, yalnızca test/onay adımı -->
+  <div class="overlay" id="stubPay">
+    <div class="sheet">
+      <div class="big">🧪</div>
+      <h2>Test ödeme ekranı</h2>
+      <p>Bu bir test sürümüdür — gerçek ödeme alınmayacak. Gerçek ödeme sağlayıcı bağlantısı (Stripe/iyzico/App Store/Play Billing) daha sonra eklenecek.</p>
+      <p class="mini" id="stubPayPlan" style="font-weight:700"></p>
+      <div class="row">
+        <button class="btn ok" onclick="confirmStubPurchase()">Satın almayı onayla (test)</button>
+        <button class="btn ghost tiny" onclick="closeOverlay('stubPay')">Vazgeç</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SATIN ALMA BAŞARILI -->
+  <div class="overlay" id="pwSuccess">
+    <div class="sheet">
+      <div class="big">🎉</div>
+      <h2>Premium açıldı!</h2>
+      <p id="pwSuccessText">Artık tüm ses grupları ve özellikler açık.</p>
+      <div class="row"><button class="btn ok" onclick="finishPurchaseFlow()">Harika!</button></div>
     </div>
   </div>
 
@@ -440,8 +501,72 @@ let pendingPaywallGrant=null;
 function requirePremium(feature, onGranted){
   if(isPremium()){ if(onGranted) onGranted(); return true; }
   pendingPaywallGrant=onGranted||null;
-  openGate(()=>openPaywall(feature));
+  const activeScreen=document.querySelector('.screen.active');
+  const returnTo=activeScreen?activeScreen.id:(state.mode?'s-map':'s-start');
+  openGate(()=>openPaywall(feature, returnTo));
   return false;
+}
+
+/* E8.9: fiyatlandırma verisi — data/plans.json ile senkron tutulur (elle, mufredat.json deseni). */
+const PLANS=[
+  {id:'aylik', ad:'Aylık', fiyat:179, periyot:'ay', entitlementSuresiGun:30, vurgu:null,
+    kapsam:['2.–5. ses grupları (ders 7 ve sonrası)','Okuma Kulübü ve metin bankası','Ayrıntılı ebeveyn raporu + yazdır/PDF','Zayıf seslere odak turu']},
+  {id:'yillik', ad:'Yıllık', fiyat:1199, periyot:'yıl', entitlementSuresiGun:365, vurgu:'2 ay bedava',
+    kapsam:['Aylık plandaki her şey','En avantajlı fiyat','Aile planı: 3 çocuk profiline kadar']},
+  {id:'tekseferlik', ad:'Tek Seferlik', fiyat:349, periyot:'tek seferlik', entitlementSuresiGun:null, vurgu:'kalıcı, abonelik yok',
+    kapsam:['Tüm içerik kalıcı olarak açılır','Yenileme veya otomatik ödeme yok']}
+];
+
+/* ================= PAYWALL (E8.3) ================= */
+let paywallFeature=null, paywallReturn='s-start';
+function openPaywall(feature, returnTo){
+  paywallFeature=feature||null;
+  paywallReturn=returnTo||(state.mode?'s-map':'s-start');
+  renderPaywallPlans();
+  go('s-paywall');
+}
+function closePaywall(){ pendingPaywallGrant=null; go(paywallReturn); }
+function renderPaywallPlans(){
+  const wrap=document.getElementById('paywallPlans'); if(!wrap) return;
+  wrap.innerHTML=PLANS.map(p=>`
+    <div class="plan-card">
+      <div class="plan-name">${p.ad}${p.vurgu?`<span class="plan-tag">${p.vurgu}</span>`:''}</div>
+      <div class="plan-price">${p.fiyat}&nbsp;TL<span class="plan-period">/${p.periyot}</span></div>
+      <ul class="plan-feat">${p.kapsam.map(k=>`<li>${k}</li>`).join('')}</ul>
+      <button class="btn ok tiny" onclick="buy('${p.id}')">Satın Al</button>
+    </div>`).join('');
+}
+
+/* ================= STUB SATIN ALMA (E8.4) =================
+   Gerçek ödeme sağlayıcısı (Stripe / RevenueCat / iyzico / App Store / Play Billing)
+   entegrasyonu YOK — anahtar/hesap repoya girmez. buy(planId) test modunda
+   entitlement'ı doğrudan açar; entegrasyon noktası aşağıda TODO ile işaretli. */
+let pendingPlanId=null;
+function buy(planId){
+  const p=PLANS.find(x=>x.id===planId); if(!p) return;
+  pendingPlanId=planId;
+  const el=document.getElementById('stubPayPlan');
+  if(el) el.textContent=`${p.ad} — ${p.fiyat} TL / ${p.periyot}`;
+  openOverlay('stubPay');
+}
+function confirmStubPurchase(){
+  const p=PLANS.find(x=>x.id===pendingPlanId); if(!p) return;
+  // TODO: gerçek sağlayıcı — burada gerçek ödeme onayı bekleyip başarılıysa devam edilecek.
+  const now=Date.now();
+  state.entitlement={
+    plan:'premium', source:'stub:'+p.id, since:now,
+    expires:p.entitlementSuresiGun ? now+p.entitlementSuresiGun*86400000 : null
+  };
+  save();
+  closeOverlay('stubPay');
+  const text=document.getElementById('pwSuccessText');
+  if(text) text.textContent = p.entitlementSuresiGun ? 'Artık tüm ses grupları ve özellikler açık.' : 'Artık tüm ses grupları ve özellikler kalıcı olarak açık.';
+  openOverlay('pwSuccess');
+}
+function finishPurchaseFlow(){
+  closeOverlay('pwSuccess');
+  const g=pendingPaywallGrant; pendingPaywallGrant=null;
+  if(g) g(); else closePaywall();
 }
 function syncStars(){ document.querySelectorAll('#stars1,#stars2,#stars3').forEach(el=>el.textContent=state.stars); }
 
