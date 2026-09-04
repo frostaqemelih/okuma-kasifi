@@ -1,6 +1,6 @@
 /* Okuma Kâşifi — basit çevrimdışı önbellek (prototip) */
-const CACHE = 'okuma-kasifi-v1';
-const ASSETS = ['./', './index.html', './manifest.json'];
+const CACHE = 'okuma-kasifi-v2';
+const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   // E7.7: skipWaiting() burada ÇAĞRILMAZ — yeni sürüm hazır olunca sayfa bunu

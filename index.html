@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#f2795b">
 <link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap">
@@ -255,6 +257,12 @@
     padding:10px 14px; font-family:var(--font-body); font-weight:700; max-width:420px; margin:0 auto}
   .update-bar span{font-size:14px}
   @media (prefers-reduced-motion:no-preference){ .update-bar:not([hidden]){animation:cheer .4s} }
+  /* E7.1: "ana ekrana ekle" ipucu — s-start altında sakin, kapatılabilir satır içi çubuk */
+  .a2hs-bar{display:flex; align-items:center; gap:8px; justify-content:center; flex-wrap:wrap;
+    background:var(--surface-2); border:2px solid var(--line); border-radius:14px;
+    padding:8px 12px; margin-top:14px; max-width:340px; margin-left:auto; margin-right:auto}
+  .a2hs-bar span{font-size:13px; color:var(--ink-soft); font-family:var(--font-body); font-weight:700}
+  .icon-btn.tiny{width:34px; height:34px; font-size:14px}
   /* E5.5: disleksi-dostu görünüm — sıcak/kremsi zemin (düşük kontrastlı beyaz yerine), geniş harf/satır
      aralığı, sola hizalı metin, serif olmayan yazı tipi. Sıcak zemin bilinçli olarak tema/koyu moddan
      bağımsızdır — disleksi araştırmalarında önerilen krem tonu, koyu temanın yüksek kontrastından daha
@@ -331,6 +339,11 @@
     <p class="sub">Merhaba, ben Kâşif! Birlikte sesleri, harfleri ve heceleri keşfedeceğiz.</p>
     <button class="btn" onclick="onStart()">▶&nbsp;&nbsp;Başla</button>
     <button class="btn ghost tiny" onclick="openGate()">👨‍👩‍👧&nbsp; Ebeveyn köşesi</button>
+    <div id="a2hsBar" class="a2hs-bar" hidden>
+      <span id="a2hsText"></span>
+      <button class="btn tiny" id="a2hsInstallBtn" onclick="promptA2HS()" hidden>Ekle</button>
+      <button class="icon-btn tiny" onclick="dismissA2HS()" aria-label="Bu ipucunu kapat">✕</button>
+    </div>
   </section>
 
   <!-- YAŞ / MOD -->
@@ -578,7 +591,7 @@ function fresh(){return{
   daily:{},             // { 'YYYY-MM-DD': saniye }
   lessonLog:{},         // { id: {attempts, seconds, first, last} }
   reviewQueue:[],       // 3. yanlışta kaçırılan sesler (E2.2 tekrar turu bunu okuyacak)
-  settings:{dailyGoalMin:15, speechRate:'normal'}, // E5.3: speechRate 'normal'|'yavas'
+  settings:{dailyGoalMin:15, speechRate:'normal', a2hsDismissed:false}, // E5.3: speechRate 'normal'|'yavas'; E7.1: a2hsDismissed
   entitlement:{plan:'free', source:null, since:null, expires:null}, // E8.1: plan='free'|'premium'
   promoUsed:[],          // E8.5: kullanılan tanıtım kodları
   purchaseHistory:[],    // E8.5: geri yükleme için cihazdaki satın alma kayıtları
@@ -2564,6 +2577,46 @@ function dismissUpdate(){
   const b=document.getElementById('updateBar'); if(b) b.hidden=true;
 }
 
+/* E7.1: "ana ekrana ekle" ipucu — çocuğu değil ekranı açan kişiyi bir kez, nazikçe bilgilendirir.
+   iOS'ta otomatik kurulum istemi yoktur (Safari paylaş menüsü elle kullanılır); Android/Chrome'da
+   tarayıcı `beforeinstallprompt` olayını fırlatınca gerçek "Ekle" düğmesi gösterilir. */
+let deferredA2HSPrompt=null;
+function isStandaloneDisplay(){
+  try{ return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone===true; }
+  catch(e){ return false; }
+}
+function isIOSDevice(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent||'') && !window.MSStream;
+}
+function showA2HSBar(){
+  if(isStandaloneDisplay() || state.settings.a2hsDismissed) return;
+  const bar=document.getElementById('a2hsBar'); if(!bar) return;
+  const txt=document.getElementById('a2hsText');
+  const installBtn=document.getElementById('a2hsInstallBtn');
+  if(isIOSDevice()){
+    txt.textContent='📲 Ana ekrana eklemek için paylaş simgesine, sonra "Ana Ekrana Ekle"ye dokun.';
+    installBtn.hidden=true;
+  }else if(deferredA2HSPrompt){
+    txt.textContent='📲 Okuma Kâşifi\'ni ana ekranına ekleyebilirsin.';
+    installBtn.hidden=false;
+  }else{
+    return;
+  }
+  bar.hidden=false;
+}
+function dismissA2HS(){
+  state.settings.a2hsDismissed=true; save();
+  const bar=document.getElementById('a2hsBar'); if(bar) bar.hidden=true;
+}
+function promptA2HS(){
+  if(!deferredA2HSPrompt) return;
+  deferredA2HSPrompt.prompt();
+  deferredA2HSPrompt.userChoice.finally(()=>{ deferredA2HSPrompt=null; dismissA2HS(); });
+}
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredA2HSPrompt=e; showA2HSBar();
+});
+
 /* PWA — localhost'ta kapalı */
 const IS_DEV=['localhost','127.0.0.1'].includes(location.hostname);
 if('serviceWorker' in navigator && location.protocol.startsWith('http') && !IS_DEV){
@@ -2585,6 +2638,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http') && !IS_D
 }
 applySettings();
 syncStars();
+showA2HSBar();
 </script>
 </body>
 </html>

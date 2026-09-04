@@ -13,6 +13,7 @@ import { dirname, join } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const html = readFileSync(join(__dirname, '..', 'index.html'), 'utf8');
 const swJs = readFileSync(join(__dirname, '..', 'sw.js'), 'utf8');
+const manifestJson = readFileSync(join(__dirname, '..', 'manifest.json'), 'utf8');
 
 const dom = new JSDOM(html, { url: 'http://localhost/', runScripts: 'outside-only' });
 const { window } = dom;
@@ -1440,6 +1441,35 @@ pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşlu
 pushCheck('sw.js: install olayı skipWaiting() cagirmiyor (guncelleme onaya bagli)', !/addAll\(ASSETS\)\)\.then\(\(\) => self\.skipWaiting\(\)\)/.test(swJs));
 pushCheck('sw.js: SKIP_WAITING mesajinda skipWaiting() cagriliyor', /addEventListener\('message'/.test(swJs) && /SKIP_WAITING.*self\.skipWaiting\(\)/.test(swJs));
 pushCheck('HTML: #updateBar guncelleme cubugu tanimli', /id="updateBar"/.test(html) && /applyUpdate\(\)/.test(html));
+
+// --- E7.1: gerçek PWA ikonları (icon-192.png / icon-512.png) + manifest.json + sw.js önbelleği ---
+function pngDims(path) {
+  const buf = readFileSync(path);
+  if (buf.length < 24 || buf.readUInt32BE(0) !== 0x89504e47) throw new Error('gecerli PNG degil');
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}
+pushCheck('icon-192.png dosyası gerçek 192x192 PNG', (() => {
+  try { const d = pngDims(join(__dirname, '..', 'icon-192.png')); return d.width === 192 && d.height === 192; }
+  catch { return false; }
+})());
+pushCheck('icon-512.png dosyası gerçek 512x512 PNG', (() => {
+  try { const d = pngDims(join(__dirname, '..', 'icon-512.png')); return d.width === 512 && d.height === 512; }
+  catch { return false; }
+})());
+pushCheck('manifest.json: icon-192/512 hem "any" hem "maskable" purpose ile tanımlı', (() => {
+  try {
+    const m = JSON.parse(manifestJson);
+    const has = (size, purpose) => m.icons.some(i => i.sizes === `${size}x${size}` && i.purpose === purpose);
+    return has(192, 'any') && has(192, 'maskable') && has(512, 'any') && has(512, 'maskable');
+  } catch { return false; }
+})());
+pushCheck('HTML: apple-touch-icon ve favicon linkleri tanımlı', /rel="apple-touch-icon" href="icon-192.png"/.test(html) && /rel="icon" href="icon-192.png"/.test(html));
+pushCheck('sw.js: CACHE surumu ikon eklenmesiyle guncellendi (v2)', /const CACHE = 'okuma-kasifi-v2'/.test(swJs));
+pushCheck('sw.js: ASSETS onbellek listesi ikon dosyalarini iceriyor', /icon-192\.png/.test(swJs) && /icon-512\.png/.test(swJs));
+pushCheck('HTML: #a2hsBar "ana ekrana ekle" ipucu cubugu tanımlı', /id="a2hsBar" class="a2hs-bar" hidden/.test(html) && /id="a2hsInstallBtn"/.test(html));
+pushCheck('JS: showA2HSBar/dismissA2HS/promptA2HS fonksiyonları tanımlı', /function showA2HSBar\(\)/.test(html) && /function dismissA2HS\(\)/.test(html) && /function promptA2HS\(\)/.test(html));
+pushCheck('JS: beforeinstallprompt dinleyicisi kayıtlı (Android/Chrome kurulum istemi)', /addEventListener\('beforeinstallprompt'/.test(html));
+pushCheck('settings.a2hsDismissed varsayılan false ile şemada tanımlı', /a2hsDismissed:false/.test(html));
 
 let failed = 0;
 for (const { name, pass } of results) {
