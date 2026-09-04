@@ -1272,6 +1272,36 @@ const testDriver = `
     check('E6.5 büyük harf çizimi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E6.4: "Havada çiz" ısınması + parmak kası ısınma çizgileri (dalga, zikzak, sarmal) ---
+  try {
+    const L0 = LESSONS.find(x => x.id === 0);
+    const steps0 = buildSteps(L0);
+    check('buildSteps(ders 0) serbest çizim + 3 ısınma şekli içeriyor', steps0.length === 4 && steps0[0].game === 'hazirlik');
+    check('buildSteps(ders 0) sırayla dalga/zikzak/sarmal ekliyor', ['dalga', 'zikzak', 'sarmal'].every((k, idx) => steps0[idx + 1].game === 'hazirlikSekil' && steps0[idx + 1].sekil === k));
+
+    check('WARMUP_SHAPES 3 şekil içeriyor (dalga, zikzak, sarmal)', Object.keys(WARMUP_SHAPES).length === 3);
+    check('WARMUP_SHAPES her şeklin path dizisi ≥4 nokta ve 0-1 aralığında', Object.values(WARMUP_SHAPES).every(sh => sh.path.length >= 4 && sh.path.every(([x, y]) => x >= 0 && x <= 1 && y >= 0 && y <= 1)));
+    check('spiralPoints() istenen tur sayısına göre nokta üretiyor', spiralPoints(2).length > 10);
+
+    state = fresh();
+    play = { lessonId: 0, steps: steps0, i: 1 };
+    curTargets = [];
+    const shapePath = WARMUP_SHAPES.dalga.path.map(([x, y]) => [x * 100, y * 100]);
+    const goodPts = shapePath.slice();
+    trace = { shape: 'dalga', strokes: [goodPts], path: shapePath, size: 100, reset() {} };
+    checkWarmupTrace();
+    check('checkWarmupTrace() kılavuzun üstünden geçince kilitleniyor (basarili)', locked === true);
+
+    state = fresh();
+    play = { lessonId: 0, steps: steps0, i: 1 };
+    locked = false;
+    trace = { shape: 'dalga', strokes: [[[5, 5], [8, 8], [10, 10]]], path: shapePath, size: 100, reset() {} };
+    checkWarmupTrace();
+    check('checkWarmupTrace() alakasız çizimde kilitlenmiyor (basarisiz, tekrar denenebilir)', locked === false);
+  } catch (e) {
+    check('E6.4 parmak kası ısınma çizgileri hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;

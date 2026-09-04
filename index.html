@@ -1131,7 +1131,8 @@ function assessSteps(sounds){
   return [0,1,2].map(i=>({game:i%2?'bul':'ses', sounds, assess:true}));
 }
 function buildSteps(L){
-  if(L.tip==='hazirlik') return [{game:'hazirlik'}];
+  // E6.4: serbest çizim ısınmasının ardından parmak kası ısınma çizgileri (dalga, zikzak, sarmal).
+  if(L.tip==='hazirlik') return [{game:'hazirlik'}, {game:'hazirlikSekil',sekil:'dalga'}, {game:'hazirlikSekil',sekil:'zikzak'}, {game:'hazirlikSekil',sekil:'sarmal'}];
   const pool=poolUpTo(L.id);
   const steps=[];
   if(L.tip==='gosteri'){
@@ -1193,6 +1194,7 @@ function runStep(){
   curIsAssess=!!st.assess;
   if(curIsAssess && (play.i===0 || !play.steps[play.i-1].assess)) assessResults=[];
   renderDots(); hideFeedback();
+  if(st.game==='hazirlikSekil'){ stepHazirlikSekil(st.sekil); return; } // E6.4: parmak kası ısınma çizgileri
   ({hazirlik:stepHazirlik, bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, kelime:roundKelime, cumle:roundCumle})[st.game](st.sounds||unlockedPool());
 }
 function renderDots(){
@@ -1873,6 +1875,90 @@ function checkHazirlik(){
   if(pts.length<10){ traceMsg('Biraz daha çiz 👆'); return; }
   locked=true; traceMsg('Harika! ✨');
   say('Çok güzel! Ellerin hazır.', award);
+}
+/* E6.4: parmak kası ısınma çizgileri — serbest çizimden sonra kılavuzlu dalga/zikzak/sarmal takibi. */
+function spiralPoints(turns){
+  const pts=[]; const steps=40;
+  for(let i=0;i<=steps;i++){
+    const t=i/steps, ang=t*turns*2*Math.PI, r=.06+t*.28;
+    pts.push([.5+Math.cos(ang)*r, .5+Math.sin(ang)*r]);
+  }
+  return pts;
+}
+const WARMUP_SHAPES={
+  dalga:{ad:'Dalga',acc:'Dalgayı',emoji:'〰️',path:[[.14,.50],[.24,.32],[.34,.50],[.44,.32],[.54,.50],[.64,.32],[.74,.50],[.84,.32]]},
+  zikzak:{ad:'Zikzak',acc:'Zikzağı',emoji:'⚡',path:[[.16,.30],[.36,.70],[.50,.30],[.66,.70],[.84,.30]]},
+  sarmal:{ad:'Sarmal',acc:'Sarmalı',emoji:'🌀',path:spiralPoints(2.5)}
+};
+function stepHazirlikSekil(key){
+  locked=false; curTargets=[];
+  const sh=WARMUP_SHAPES[key];
+  qtext.textContent=`${sh.acc} parmağınla takip et ${sh.emoji}`;
+  playArea.innerHTML=`
+    <div id="traceWrap"><canvas id="traceCanvas"></canvas></div>
+    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <div class="trace-actions">
+      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
+      <button class="btn ok tiny" onclick="checkWarmupTrace()">Bitti</button>
+    </div>`;
+  setupWarmupTrace(key);
+  sayPrompt(`${sh.acc} parmağınla takip et. Yeşil noktadan başla.`);
+}
+function setupWarmupTrace(key){
+  const sh=WARMUP_SHAPES[key];
+  const wrap=document.getElementById('traceWrap');
+  const cv=document.getElementById('traceCanvas');
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const size=wrap.clientWidth;
+  cv.width=size*dpr; cv.height=size*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  const css=getComputedStyle(document.documentElement);
+  const guide=css.getPropertyValue('--line').trim()||'#ddd';
+  const ink=css.getPropertyValue('--primary').trim()||'#f2795b';
+  const ok=css.getPropertyValue('--ok').trim()||'#3fae6b';
+  const path=sh.path.map(([x,y])=>[x*size,y*size]);
+  function drawGuide(){
+    ctx.clearRect(0,0,size,size);
+    ctx.save();
+    ctx.strokeStyle=guide; ctx.lineWidth=size*0.03; ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.setLineDash([size*0.022,size*0.02]);
+    ctx.beginPath(); ctx.moveTo(path[0][0],path[0][1]);
+    for(let i=1;i<path.length;i++) ctx.lineTo(path[i][0],path[i][1]);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle=ok; ctx.beginPath(); ctx.arc(path[0][0],path[0][1],size*0.045,0,7); ctx.fill();
+  }
+  drawGuide();
+  const strokes=[]; let cur=null, drawing=false;
+  const pos=e=>{ const r=cv.getBoundingClientRect(); const p=(e.touches&&e.touches[0])?e.touches[0]:e;
+    return [p.clientX-r.left, p.clientY-r.top]; };
+  function start(e){ if(drawing) return; e.preventDefault(); drawing=true; cur=[pos(e)]; strokes.push(cur);
+    if(e.pointerId!=null && cv.setPointerCapture){ try{ cv.setPointerCapture(e.pointerId) }catch(_){} } }
+  function move(e){ if(!drawing) return; e.preventDefault(); const p=pos(e); cur.push(p);
+    ctx.strokeStyle=ink; ctx.lineWidth=size*0.06; ctx.lineCap='round'; ctx.lineJoin='round';
+    const n=cur.length; ctx.beginPath(); ctx.moveTo(cur[n-2][0],cur[n-2][1]); ctx.lineTo(p[0],p[1]); ctx.stroke(); }
+  function end(){ if(!drawing) return; drawing=false; }
+  if(window.PointerEvent){
+    cv.addEventListener('pointerdown',start); cv.addEventListener('pointermove',move);
+    cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end); window.addEventListener('pointerup',end);
+  }else{
+    cv.addEventListener('mousedown',start); cv.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
+    cv.addEventListener('touchstart',start,{passive:false}); cv.addEventListener('touchmove',move,{passive:false}); cv.addEventListener('touchend',end);
+  }
+  trace={shape:key,size,strokes,path, reset(){ strokes.length=0; drawGuide(); }};
+}
+function checkWarmupTrace(){
+  if(locked) return;
+  const pts=[].concat(...(trace.strokes||[]));
+  if(pts.length<10){ traceMsg('Parmağınla çizginin üstünden geç 👆'); return; }
+  const ratio=strokeMatchRatio(pts, trace.path, trace.size);
+  if(ratio>0.35){
+    locked=true; traceMsg('Harika! 🌟');
+    say(rnd(['Çok güzel!','Harikasın!','Elin hazır!','Süper bir takip!']), award);
+  }else{
+    traceMsg('Çizgiyi kılavuzun üstünde tutmaya çalış. Tekrar deneyelim.');
+    say('Çizgiyi kılavuzun üstünde tutmaya çalış.', ()=>{ trace.reset(); });
+  }
 }
 function setupTrace(letter,level,upper){
   // E6.2: 5 kademe — (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) yalnız başlangıç noktası, (5) bellekten.
