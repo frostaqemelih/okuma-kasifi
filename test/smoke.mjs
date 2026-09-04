@@ -1293,6 +1293,42 @@ const testDriver = `
     check('E4.6 büyük/küçük harf farkındalığı hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Kafiye Bulma (rutin, yeni mini oyun): fonolojik farkındalık ---
+  try {
+    const kafiyePool = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    const { known, groups } = rhymeGroups(kafiyePool);
+    check('rhymeGroups() bilinen kelimeler arasından en az 1 kafiye grubu (>=2 kelime) buluyor',
+      Array.isArray(known) && Object.values(groups).some(g => g.length >= 2));
+
+    state = fresh();
+    recentRounds = [];
+    play = null;
+    roundKafiye(kafiyePool);
+    check('roundKafiye() doğru soru metnini gösteriyor', /ile kafiyeli \\(uyaklı\\) kelime hangisi\\?$/.test(qtext.textContent));
+    check('roundKafiye() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundKafiye() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundKafiye() curTargets kafiye harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
+
+    const rBtnKafiye = document.querySelector('#choices .choice[data-right="1"]');
+    curWrongCount = 0;
+    const correctBefore3 = state.correct;
+    choose(rBtnKafiye, true);
+    check('roundKafiye() doğru cevapta doğru sayacını artırıyor', state.correct === correctBefore3 + 1);
+
+    state = fresh();
+    play = null;
+    roundKafiye(['a']); // yetersiz pool -> güvenli şekilde roundBul icine düşmeli
+    check('roundKafiye() yetersiz pool ile hatasız roundBul icine düşüyor', document.querySelectorAll('#choices .choice').length > 0);
+
+    state = fresh();
+    play = null;
+    freeGame = 'kafiye';
+    startFree('kafiye');
+    check('startFree("kafiye") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Kafiye Bulma hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E5.3: Ses hız/tekrar kontrolü (yavaş/normal) ---
   try {
     state = fresh();
@@ -1723,6 +1759,8 @@ pushCheck('Serbest oyun menüsünde "Sayılar" kartı mevcut', html.includes("st
 pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', html.includes("startFree('buyuk')") && html.includes('Büyük mü Küçük mü?'));
 // --- E6.5: Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut ---
 pushCheck('Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut', html.includes("startFree('cizBuyuk')") && html.includes('Büyük Harf Çiz'));
+// --- Kafiye Bulma: Serbest oyun menüsünde kart mevcut ---
+pushCheck('Serbest oyun menüsünde "Kafiye Bulma" kartı mevcut', html.includes("startFree('kafiye')") && html.includes('Kafiye Bulma'));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -1731,7 +1769,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (13 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 13);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (14 kart)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 14);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));

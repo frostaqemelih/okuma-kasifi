@@ -415,6 +415,7 @@
       <div class="age-card" tabindex="0" role="button" onclick="startFree('ciz')"><span class="big">✏️</span><span><b>Harf Çiz</b><span>Yeşil noktadan başla, harfi yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
       <div class="age-card" tabindex="0" role="button" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('kafiye')"><span class="big">🎵</span><span><b>Kafiye Bulma</b><span>Hangi kelime kafiyeli (uyaklı)?</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
@@ -1606,7 +1607,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1881,6 +1882,40 @@ function roundSesEnd(pool){
   playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. Hangisi ${t} sesiyle bitiyor?`);
+}
+/* Kafiye Bulma (rutin, yeni mini oyun): fonolojik farkındalık — bilinen kelimeler arasından
+   hedef kelimeyle kafiyeli (aynı son 2 harfle biten) kelimeyi bul. Yeterli kafiye çifti yoksa
+   (erken oyun, dar havuz) roundBul()'a düşer — mevcut Hece Kur/Sesi Eşleştir fallback deseniyle aynı. */
+function rhymeGroups(pool){
+  const known=[], seen=new Set();
+  allKnownWords().forEach(w=>{
+    if(seen.has(w.w) || w.w.length<2) return;
+    if(!w.w.split('').every(c=>pool.includes(c))) return;
+    seen.add(w.w); known.push(w);
+  });
+  const groups={};
+  known.forEach(w=>{ const suf=w.w.slice(-2); (groups[suf]=groups[suf]||[]).push(w); });
+  return {known, groups};
+}
+function roundKafiye(pool){
+  locked=false; curWrongCount=0; curTargets=[];
+  const {known, groups}=rhymeGroups(pool);
+  const rhymeSuffixes=Object.keys(groups).filter(s=>groups[s].length>=2);
+  if(!rhymeSuffixes.length){ roundBul(pool); return; }
+  const suf=rnd(rhymeSuffixes);
+  const group=groups[suf];
+  const target=rnd(group);
+  const correct=rnd(group.filter(w=>w.w!==target.w));
+  const others=known.filter(w=>w.w.slice(-2)!==suf && w.w!==target.w);
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distr=shuffle(others).slice(0,need);
+  if(distr.length<need){ roundBul(pool); return; }
+  const opts=shuffle([{emoji:correct.e,cap:correct.w,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  curTargets=[...new Set(suf.split(''))].filter(c=>/^[a-zçğıöşü]$/.test(c));
+  qtext.textContent=`«${target.w}» ile kafiyeli (uyaklı) kelime hangisi?`;
+  playArea.innerHTML=stageHTML(`<span>${target.e}</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Dinle. ${target.w}. ${target.w} ile kafiyeli kelime hangisi?`);
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 2 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){
