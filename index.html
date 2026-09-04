@@ -1105,10 +1105,14 @@ const SENTENCES=[
   /* 5. grup (p,h,v,ğ,f,j) pekiştirmesi — Türk alfabesinin tüm 29 sesi artık cümlede kullanılabilir. */
   {w:['baba','para','al'], t:'Baba para al.'},
   {w:['fil','su','iç'],    t:'Fil su iç.'},
-  {w:['horoz','öter'],     t:'Horoz öter.'}
+  {w:['horoz','öter'],     t:'Horoz öter.'},
+  /* Cümle Bahçesi genişlemesi (rutin): WORDBANK genişletmesindeki yeni kelimelerle 3.-5. grup pekiştirmesi. */
+  {w:['nine','dondurma','al'], t:'Nine dondurma al.'},
+  {w:['anne','çiçek','al'],    t:'Anne çiçek al.'},
+  {w:['baba','top','al'],      t:'Baba top al.'}
 ];
 const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne',
-  'su','domates','yumurta','çay','gül','şeker','baba','fil','horoz'];
+  'su','domates','yumurta','çay','gül','şeker','baba','fil','horoz','dondurma','çiçek','top'];
 /* E3.5: Okuma Kulübü metin bankası — data/metinler.json ile senkron. Her metin yalnız kendi
    `gerekli` seslerinden kurulu (Kâşif metni okusa da çocuk seslerini tanıyabilsin diye); anlama
    soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı

@@ -522,6 +522,16 @@ const testDriver = `
     check('4. grup pool kendi cumlesini iceriyor', candsFor(g4Pool).some(s => s.t === 'Nine çay al.'));
     check('4. grup pool 5. grup cumlesini henuz icermiyor', !candsFor(g4Pool).some(s => s.t === 'Fil su iç.'));
     check('Tam alfabe pool tum cumleleri kapsiyor', candsFor(g5Pool).length === SENTENCES.length);
+
+    // WORDBANK genişletmesindeki yeni kelimelerle eklenen cümleler de aynı tier kuralına uyuyor.
+    check('2. grup pool "Nine dondurma al." cümlesini henüz içermiyor', !candsFor(g2Pool).some(s => s.t === 'Nine dondurma al.'));
+    check('3. grup pool "Nine dondurma al." cümlesini içeriyor', candsFor(g3Pool).some(s => s.t === 'Nine dondurma al.'));
+    check('3. grup pool "Anne çiçek al." cümlesini henüz içermiyor', !candsFor(g3Pool).some(s => s.t === 'Anne çiçek al.'));
+    check('4. grup pool "Anne çiçek al." cümlesini içeriyor', candsFor(g4Pool).some(s => s.t === 'Anne çiçek al.'));
+    check('4. grup pool "Baba top al." cümlesini henüz içermiyor', !candsFor(g4Pool).some(s => s.t === 'Baba top al.'));
+    check('5. grup (tam alfabe) pool "Baba top al." cümlesini içeriyor', candsFor(g5Pool).some(s => s.t === 'Baba top al.'));
+    check('SENT_WORDS yeni kelimeleri (dondurma/çiçek/top) içeriyor',
+      ['dondurma', 'çiçek', 'top'].every(w => SENT_WORDS.includes(w)));
   } catch (e) {
     check('Cumle Bahcesi 3.-5. grup pekistirmesi hatasiz calisti (hata: ' + e.message + ')', false);
   }
