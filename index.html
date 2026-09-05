@@ -424,6 +424,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeOkuma" onclick="startFree('okuma')"><span class="big">📖</span><span><b>Okuma Kulübü</b><span>Kısa metni oku, soruları yanıtla</span></span></div>
       <div class="age-card" tabindex="0" role="button" onclick="startFree('rakam')"><span class="big">🔢</span><span><b>Sayılar</b><span>1'den 10'a say, rakamı bul</span></span></div>
       <div class="age-card" tabindex="0" role="button" onclick="startFree('kafiye')"><span class="big">🎵</span><span><b>Kafiye Bulma</b><span>Hangi kelime kafiyeli (uyaklı)?</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('kategori')"><span class="big">🗂️</span><span><b>Kategori Bulmaca</b><span>Hangisi hayvan, meyve, taşıt, eşya?</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
@@ -1693,7 +1694,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -2118,6 +2119,44 @@ function roundZit(pool){
   playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesinin zıttı (tersi) hangisi?`);
+}
+/* Kategori Bulmaca (rutin, yeni mini oyun): önceki oyunlardan (ses/harf/hece/kafiye/zıt) farklı bir
+   beceri — sözcük dağarcığı SINIFLANDIRMASI (semantik kategori farkındalığı, zıt anlamdan ayrı: bu
+   "hangi grubа ait" sorusu). Bilinen kelimeler arasından yalnızca pool'a uyanlar kullanılır; en az 2
+   kategoride yeterli kelime yoksa (erken oyun, dar havuz) roundBul()'a düşer. */
+const CATEGORY_WORDS=[
+  {label:'bir hayvan', words:[
+    {w:'at',e:'🐎'},{w:'inek',e:'🐄'},{w:'arı',e:'🐝'},{w:'kartal',e:'🦅'},{w:'koala',e:'🐨'},
+    {w:'balık',e:'🐟'},{w:'fil',e:'🐘'},{w:'horoz',e:'🐓'},{w:'kurt',e:'🐺'}
+  ]},
+  {label:'bir meyve', words:[
+    {w:'elma',e:'🍎'},{w:'armut',e:'🍐'},{w:'limon',e:'🍋'},{w:'üzüm',e:'🍇'},{w:'muz',e:'🍌'}
+  ]},
+  {label:'bir taşıt', words:[
+    {w:'tren',e:'🚆'},{w:'motor',e:'🛵'},{w:'tekne',e:'⛵'},{w:'metro',e:'🚇'},{w:'roket',e:'🚀'}
+  ]},
+  {label:'bir eşya', words:[
+    {w:'kalem',e:'✏️'},{w:'kutu',e:'📦'},{w:'kart',e:'💳'},{w:'top',e:'⚽'},{w:'kova',e:'🪣'}
+  ]}
+];
+function roundKategori(pool){
+  locked=false; curWrongCount=0; curTargets=[];
+  const known=w=>w.split('').every(c=>pool.includes(c));
+  const avail=CATEGORY_WORDS.map(c=>({label:c.label, words:c.words.filter(x=>known(x.w))})).filter(c=>c.words.length>=1);
+  if(avail.length<2){ roundBul(pool); return; }
+  const catIdx=Math.floor(Math.random()*avail.length);
+  const cat=avail[catIdx];
+  const target=rnd(cat.words);
+  const distrPool=avail.filter((_,i)=>i!==catIdx).flatMap(c=>c.words);
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distr=shuffle(distrPool).slice(0,Math.min(need,distrPool.length));
+  if(!distr.length){ roundBul(pool); return; }
+  curTargets=[...new Set(target.w.split(''))];
+  const opts=shuffle([{emoji:target.e,cap:target.w,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  qtext.textContent=`Hangisi ${cat.label}?`;
+  playArea.innerHTML=stageHTML(`<span class="glyph">❓</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Hangisi ${cat.label}?`);
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 3 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){

@@ -1498,6 +1498,40 @@ const testDriver = `
     check('Zıt Kelimeler hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Kategori Bulmaca (rutin, yeni mini oyun): sözcük dağarcığı sınıflandırması ---
+  try {
+    check('CATEGORY_WORDS dizisi tanımlı ve en az 3 kategori içeriyor', Array.isArray(CATEGORY_WORDS) && CATEGORY_WORDS.length >= 3);
+    check('CATEGORY_WORDS her kelime yalnız Türk alfabesi harflerinden kurulu',
+      CATEGORY_WORDS.every(c => c.words.every(x => x.w.split('').every(ch => ALL_LETTERS.includes(ch)))));
+
+    const fullPoolKat = ALL_LETTERS;
+    state = fresh();
+    play = null;
+    roundKategori(fullPoolKat);
+    check('roundKategori() "Hangisi bir ...?" sorusu soruyor', /^Hangisi bir /.test(qtext.textContent));
+    check('roundKategori() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundKategori() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundKategori() curTargets doğru cevabın harfleriyle doluyor', Array.isArray(curTargets) && curTargets.length > 0);
+
+    const rBtnKat = document.querySelector('#choices .choice[data-right="1"]');
+    const correctBeforeKat = state.correct;
+    choose(rBtnKat, true);
+    check('roundKategori() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeKat + 1);
+
+    state = fresh();
+    play = null;
+    roundKategori(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiç kategori kelimesi uymaz) -> güvenli şekilde roundBul içine düşmeli
+    check('roundKategori() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !/^Hangisi bir /.test(qtext.textContent));
+
+    state = fresh();
+    play = null;
+    freeGame = 'kategori';
+    startFree('kategori');
+    check('startFree("kategori") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Kategori Bulmaca hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E5.3: Ses hız/tekrar kontrolü (yavaş/normal) ---
   try {
     state = fresh();
@@ -1989,6 +2023,8 @@ pushCheck('Serbest oyun menüsünde "Kafiye Bulma" kartı mevcut', html.includes
 // --- Zıt Kelimeler: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
 pushCheck('Serbest oyun menüsünde "Zıt Kelimeler" kartı mevcut', html.includes("startFree('zit')") && html.includes('Zıt Kelimeler'));
 pushCheck('"Zıt Kelimeler" kartı Çözümleme moduna özel gizleniyor (freeZit)', /getElementById\('freeZit'\)\.style\.display=h/.test(html));
+// --- Kategori Bulmaca: Serbest oyun menüsünde kart mevcut (her iki yaş modunda da gorunur) ---
+pushCheck('Serbest oyun menüsünde "Kategori Bulmaca" kartı mevcut', html.includes("startFree('kategori')") && html.includes('Kategori Bulmaca'));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -1997,7 +2033,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (15 statik + 1 renderWho() şablonu = 16 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 16);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (16 statik + 1 renderWho() şablonu = 17 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 17);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
