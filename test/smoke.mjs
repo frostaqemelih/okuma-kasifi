@@ -1536,6 +1536,9 @@ const testDriver = `
       ['bir renk', 'bir giysi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
     check('CATEGORY_WORDS yeni "meslek" ve "spor" kategorilerini içeriyor',
       ['bir meslek', 'bir spor'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS "meyve" ve "taşıt" kategorileri genişletildi (en az 8 kelime)',
+      CATEGORY_WORDS.find(c => c.label === 'bir meyve').words.length >= 8 &&
+      CATEGORY_WORDS.find(c => c.label === 'bir taşıt').words.length >= 8);
     check('CATEGORY_WORDS "bir eşya" kategorisi 1. grup kelimelerini içeriyor (tel, alet)',
       CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'tel') &&
       CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'alet'));
