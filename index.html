@@ -2157,10 +2157,11 @@ function roundHece(pool){
   const sy=syllablesFor(pool);
   if(sy.length<3){ roundSes(pool); return; }
   const r=Math.random();
-  if(r<1/4) roundHeceListen(sy);
-  else if(r<1/2) roundHecePic(sy);
-  else if(r<3/4) roundHeceMissing(pool,sy);
-  else roundHeceSayisi(pool,sy);
+  if(r<1/5) roundHeceListen(sy);
+  else if(r<2/5) roundHecePic(sy);
+  else if(r<3/5) roundHeceMissing(pool,sy);
+  else if(r<4/5) roundHeceSayisi(pool,sy);
+  else roundHarfSayisi(pool,sy);
 }
 function roundHeceListen(sy){
   // E2.4(a): hece tanı — dinle ve doğru heceyi seç.
@@ -2226,6 +2227,30 @@ function roundHeceSayisi(pool,sy){
   playArea.innerHTML=stageHTML(`<span>${target.e}</span>`);
   paint(opts.map(n=>({glyph:String(n),key:n})),'c3',o=>o.key===t);
   sayPrompt(`Dinle. ${target.w}. Bu kelimede kaç hece var?`);
+}
+/* Hece Kur 5. varyant (rutin, yeni içerik): harf SAYMA — hece saymadan (fonolojik/ünlü sayma)
+   farklı bir beceri: kelimeyi yazılı olarak (qtext'te görünür) inceleyip harf-harf sayma
+   (yazı-bilinci/orthografik farkındalık — bir kelimenin hece sayısıyla harf sayısı aynı olmayabilir,
+   ör. "kart" 1 hece ama 4 harf). */
+function roundHarfSayisi(pool,sy){
+  const words=allKnownWords().filter(w=>w.w.split('').every(c=>pool.includes(c)));
+  const counts=[...new Set(words.map(w=>w.w.length))];
+  if(counts.length<2){ roundHeceListen(sy); return; }
+  const target=rnd(words);
+  const t=target.w.length; curTargets=target.w.split('');
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  let wrongCounts=counts.filter(c=>c!==t);
+  let extra=1;
+  while(wrongCounts.length<need && extra<=8){
+    if(t-extra>=1 && !wrongCounts.includes(t-extra)) wrongCounts.push(t-extra);
+    if(wrongCounts.length<need && !wrongCounts.includes(t+extra)) wrongCounts.push(t+extra);
+    extra++;
+  }
+  const opts=shuffle([t,...shuffle(wrongCounts).slice(0,need)]);
+  qtext.textContent=`«${target.w}» kelimesinde kaç harf var?`;
+  playArea.innerHTML=stageHTML(`<span>${target.e}</span>`);
+  paint(opts.map(n=>({glyph:String(n),key:n})),'c3',o=>o.key===t);
+  sayPrompt(`${target.w}. Bu kelimede kaç harf var?`);
 }
 function choose(el,right){
   if(locked) return;

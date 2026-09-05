@@ -376,12 +376,12 @@ const testDriver = `
     state = fresh();
     recentRounds = [];
 
-    Math.random = () => 0.4; // (b) hece→resim (4 varyant: <.25 tanı, .25-.5 resim, .5-.75 eksik harf, >=.75 hece say)
+    Math.random = () => 0.3; // (b) hece→resim (5 varyant: <.2 tanı, .2-.4 resim, .4-.6 eksik harf, .6-.8 hece say, >=.8 harf say)
     roundHece(fullPool);
     check('roundHece (b) varyantı doğru soru metnini gösteriyor', qtext.textContent.includes('hecesiyle başlayan'));
     check('roundHece (b) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
 
-    Math.random = () => 0.6; // (c) eksik harfi bul
+    Math.random = () => 0.5; // (c) eksik harfi bul
     roundHece(fullPool);
     check('roundHece (c) varyantı "eksik harf" soru metnini gösteriyor', qtext.textContent.includes('eksik harf'));
     check('roundHece (c) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
@@ -400,7 +400,7 @@ const testDriver = `
 
     check('syllableCount() ünlü sayısını doğru sayıyor', syllableCount('elma') === 2 && syllableCount('kalemlik') === 3 && syllableCount('at') === 1);
 
-    Math.random = () => 0.9; // (d) hece say
+    Math.random = () => 0.7; // (d) hece say
     roundHece(fullPool);
     check('roundHece (d) varyantı "kaç hece" soru metnini gösteriyor', qtext.textContent.includes('kaç hece'));
     check('roundHece (d) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
@@ -412,6 +412,26 @@ const testDriver = `
     Math.random = origRandom;
   } catch (e) {
     check('Hece Kur 4. varyant (roundHeceSayisi) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- Hece Kur 5. varyant (rutin, yeni içerik): (e) harf sayma — hece saymadan farklı bir beceri ---
+  try {
+    const origRandom = Math.random;
+    const fullPool = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    state = fresh();
+    recentRounds = [];
+
+    Math.random = () => 0.9; // (e) harf say
+    roundHece(fullPool);
+    check('roundHece (e) varyantı "kaç harf" soru metnini gösteriyor', qtext.textContent.includes('kaç harf'));
+    check('roundHece (e) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    // NOT: testDriver şablon dizesi içinde regex kaçış dizileri (\d gibi) çift yazılmalı (bkz. üstteki not).
+    check('roundHece (e) doğru şık gerçek harf sayısına eşit',
+      curTargets.length > 0 && Number(document.querySelector('#choices .choice[data-right="1"]').textContent.match(/\\d+/)[0]) === curTargets.join('').length);
+
+    Math.random = origRandom;
+  } catch (e) {
+    check('Hece Kur 5. varyant (roundHarfSayisi) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
   // --- 18) E6.1 Çok vuruşlu harflerde vuruş vuruş kılavuz ---
