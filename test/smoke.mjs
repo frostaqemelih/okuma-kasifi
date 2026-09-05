@@ -1390,17 +1390,30 @@ const testDriver = `
     state = fresh();
     recentRounds = [];
     play = null;
+    const origRandomKafiye = Math.random;
+    Math.random = () => 0.1; // (a) roundKafiyeSec varyantı
     roundKafiye(kafiyePool);
-    check('roundKafiye() doğru soru metnini gösteriyor', /ile kafiyeli \\(uyaklı\\) kelime hangisi\\?$/.test(qtext.textContent));
-    check('roundKafiye() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
-    check('roundKafiye() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    Math.random = origRandomKafiye;
+    check('roundKafiye() (a) doğru soru metnini gösteriyor', /ile kafiyeli \\(uyaklı\\) kelime hangisi\\?$/.test(qtext.textContent));
+    check('roundKafiye() (a) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundKafiye() (a) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
     check('roundKafiye() curTargets kafiye harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
 
     const rBtnKafiye = document.querySelector('#choices .choice[data-right="1"]');
     curWrongCount = 0;
     const correctBefore3 = state.correct;
     choose(rBtnKafiye, true);
-    check('roundKafiye() doğru cevapta doğru sayacını artırıyor', state.correct === correctBefore3 + 1);
+    check('roundKafiye() (a) doğru cevapta doğru sayacını artırıyor', state.correct === correctBefore3 + 1);
+
+    // (b) YENİ: evet/hayır kafiye yargısı varyantı — iki kelime söylenir, kafiyeli mi diye sorulur.
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // roundKafiyeEvetHayir varyantı
+    roundKafiye(kafiyePool);
+    Math.random = origRandomKafiye;
+    check('roundKafiye() (b) "kafiyeli (uyaklı) mi?" soruyor', qtext.textContent.endsWith('kafiyeli (uyaklı) mi?'));
+    check('roundKafiye() (b) tam olarak 2 şık (Evet/Hayır) sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundKafiye() (b) tam 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
 
     state = fresh();
     play = null;

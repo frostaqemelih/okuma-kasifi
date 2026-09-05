@@ -1987,6 +1987,11 @@ function roundKafiye(pool){
   const {known, groups}=rhymeGroups(pool);
   const rhymeSuffixes=Object.keys(groups).filter(s=>groups[s].length>=2);
   if(!rhymeSuffixes.length){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundKafiyeSec(pool, known, groups, rhymeSuffixes);
+  else roundKafiyeEvetHayir(pool, known, groups, rhymeSuffixes);
+}
+function roundKafiyeSec(pool, known, groups, rhymeSuffixes){
+  // (a) mevcut: hedef kelimeyle kafiyeli olanı çoktan seçmeliden bul.
   const suf=rnd(rhymeSuffixes);
   const group=groups[suf];
   const target=rnd(group);
@@ -2001,6 +2006,29 @@ function roundKafiye(pool){
   playArea.innerHTML=stageHTML(`<span>${target.e}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${target.w}. ${target.w} ile kafiyeli kelime hangisi?`);
+}
+function roundKafiyeEvetHayir(pool, known, groups, rhymeSuffixes){
+  // (b) YENİ: iki kelime söylenir, çocuk "kafiyeli mi?" sorusuna evet/hayır ile karar verir —
+  // (a)'daki çoktan seçmeliden farklı bir beceri: bir kelimeyi hatırlamak yerine iki kelimeyi
+  // karşılaştırıp YARGI vermek.
+  const suf=rnd(rhymeSuffixes);
+  const group=groups[suf];
+  const a=rnd(group);
+  const wantYes=Math.random()<0.5;
+  let b;
+  if(wantYes){
+    b=rnd(group.filter(w=>w.w!==a.w));
+  }else{
+    const others=known.filter(w=>w.w.slice(-2)!==suf);
+    if(!others.length){ roundKafiyeSec(pool, known, groups, rhymeSuffixes); return; }
+    b=rnd(others);
+  }
+  curTargets=[...new Set(suf.split(''))].filter(c=>/^[a-zçğıöşü]$/.test(c));
+  qtext.textContent=`«${a.w}» ile «${b.w}» kafiyeli (uyaklı) mi?`;
+  playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
+  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
+  sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} kafiyeli mi?`);
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 3 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){
