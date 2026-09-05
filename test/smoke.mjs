@@ -1334,6 +1334,9 @@ const testDriver = `
     const g1OnlyNames = PROPER_NAMES.filter(p => p.name.split('').every(c => g1PoolNames.includes(c)));
     check('PROPER_NAMES en az 4 isim yalnız 1. grup seslerinden kurulu (ücretsiz katman)', g1OnlyNames.length >= 4);
     check('PROPER_NAMES yeni isimleri (nil/ata) içeriyor', ['nil', 'ata'].every(n => PROPER_NAMES.some(p => p.name === n)));
+    check('PROPER_NAMES ileri katman isimleri (poyraz/gökçe) içeriyor', ['poyraz', 'gökçe'].every(n => PROPER_NAMES.some(p => p.name === n)));
+    check('PROPER_NAMES ileri katman isimleri 1.+2. grup dışına çıkıyor (3.-5. grup seslerini de kullanıyor)',
+      ['poyraz', 'gökçe'].every(n => !n.split('').every(c => g1PoolNames.concat('okurım'.split('')).includes(c))));
 
     const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
     state = fresh();
