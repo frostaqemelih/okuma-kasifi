@@ -2056,9 +2056,10 @@ function roundHece(pool){
   const sy=syllablesFor(pool);
   if(sy.length<3){ roundSes(pool); return; }
   const r=Math.random();
-  if(r<1/3) roundHeceListen(sy);
-  else if(r<2/3) roundHecePic(sy);
-  else roundHeceMissing(pool,sy);
+  if(r<1/4) roundHeceListen(sy);
+  else if(r<1/2) roundHecePic(sy);
+  else if(r<3/4) roundHeceMissing(pool,sy);
+  else roundHeceSayisi(pool,sy);
 }
 function roundHeceListen(sy){
   // E2.4(a): hece tanı — dinle ve doğru heceyi seç.
@@ -2099,6 +2100,31 @@ function roundHeceMissing(pool,sy){
   playArea.innerHTML=stageHTML(`<span class="glyph">${shown}</span>`);
   paint(opts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===missing);
   sayPrompt(`${t}. Eksik harf hangisi?`);
+}
+/* Hece Kur 4. varyant (rutin, yeni içerik): hece SAYMA — Türkçede çift ünlü yok, her ünlü kendi
+   hecesini başlatır, bu yüzden bir kelimedeki hece sayısı = o kelimedeki ünlü sayısı. Heceyi
+   tanımaktan (a/b/c) farklı bir beceri: kelimeyi bütün dinleyip zihinde parçalara ayırma. */
+const TURKISH_VOWELS='aeıioöuü';
+function syllableCount(w){ return w.split('').filter(c=>TURKISH_VOWELS.includes(c)).length; }
+function roundHeceSayisi(pool,sy){
+  const words=allKnownWords().filter(w=>w.w.split('').every(c=>pool.includes(c)));
+  const counts=[...new Set(words.map(w=>syllableCount(w.w)))].filter(c=>c>=1);
+  if(counts.length<2){ roundHeceListen(sy); return; }
+  const target=rnd(words.filter(w=>syllableCount(w.w)>=1));
+  const t=syllableCount(target.w); curTargets=target.w.split('');
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  let wrongCounts=counts.filter(c=>c!==t);
+  let extra=1;
+  while(wrongCounts.length<need && extra<=6){
+    if(t-extra>=1 && !wrongCounts.includes(t-extra)) wrongCounts.push(t-extra);
+    if(wrongCounts.length<need && !wrongCounts.includes(t+extra)) wrongCounts.push(t+extra);
+    extra++;
+  }
+  const opts=shuffle([t,...shuffle(wrongCounts).slice(0,need)]);
+  qtext.textContent=`«${target.w}» kelimesinde kaç hece var?`;
+  playArea.innerHTML=stageHTML(`<span>${target.e}</span>`);
+  paint(opts.map(n=>({glyph:String(n),key:n})),'c3',o=>o.key===t);
+  sayPrompt(`Dinle. ${target.w}. Bu kelimede kaç hece var?`);
 }
 function choose(el,right){
   if(locked) return;
