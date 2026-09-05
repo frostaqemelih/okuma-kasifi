@@ -1322,18 +1322,25 @@ const testDriver = `
     check('roundRakam() normal seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
     check('roundRakam() tam olarak 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
 
-    Math.random = () => 0.5; // (b) say-bul varyantı
+    Math.random = () => 0.3; // (b) say-bul varyantı
     roundRakam();
     Math.random = origRandom;
     check('roundRakam() (b) varyantı "Kaç tane? Say ve bul." soruyor', qtext.textContent === 'Kaç tane? Say ve bul.');
     check('roundRakam() (b) varyantı sesli anlatımda cevabı ele vermiyor', NUMBERS.every(x => !roundPrompt.includes(x.tr)));
 
-    Math.random = () => 0.9; // (c) YENİ: sayı sırası varyantı — t.n=10 -> öncesi (9) soruluyor
+    Math.random = () => 0.6; // (c) sayı sırası varyantı
     roundRakam();
     Math.random = origRandom;
     check('roundRakam() (c) varyantı sayı sırası soruyor ("önce"/"sonra")', qtext.textContent.endsWith('hangi sayı gelir?') && (qtext.textContent.includes('önce') || qtext.textContent.includes('sonra')));
     check('roundRakam() (c) varyantı normal seviyede 3 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 3);
     check('roundRakam() (c) varyantı tam olarak 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
+    Math.random = () => 0.9; // (d) YENİ: büyüklük karşılaştırma varyantı — t.n=10, b.n=9 -> "küçük" soruluyor
+    roundRakam();
+    Math.random = origRandom;
+    check('roundRakam() (d) varyantı büyüklük karşılaştırması soruyor ("büyük"/"küçük")', qtext.textContent.includes('hangisi daha') && (qtext.textContent.includes('büyük') || qtext.textContent.includes('küçük')));
+    check('roundRakam() (d) varyantı tam olarak 2 seçenek sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundRakam() (d) varyantı tam olarak 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
 
     const rBtn = document.querySelector('#choices .choice[data-right="1"]');
     curWrongCount = 0;
