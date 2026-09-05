@@ -374,6 +374,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-05 — ANTONYMS içerik genişletme (rutin, backlog sırası — Zıt Kelimeler oyununa içerik zenginleştirme): 5 yeni zıt anlamlı çift eklendi — `uzun🐍/kısa🐛`, `kolay😄/zor😣`, `ileri➡️/geri⬅️`, `var✅/yok❌`, `ağır🏋️/hafif🪶` — hepsi farklı ses gruplarını (z/y/g/v/ğ,h,f) kapsayan, kolay decoratif emojili gerçek Türkçe zıt anlamlı kelime çiftleri (önceden 9 sabit çiftti, artık 14). `roundZit()` kodu değişmeden yeni çiftleri otomatik kapsadı (mevcut pool-filtreleme mantığı). Smoke test'e 1 yeni kontrol + eşik 5→14 güncellendi (614 test toplamda). Sıradaki öncelik: yeni içerik/varyant veya E7.5 (i18n iskeleti, düşük öncelik, saf refactor).
 
+- 2026-09-05 — Kategori Bulmaca'ya 2 yeni kategori: renk ve giysi (rutin, backlog sırası — içerik derinliği): `CATEGORY_WORDS`'e "bir renk" (kırmızı🔴/sarı🟡/mavi🔵/yeşil🟢/mor🟣/turuncu🟠) ve "bir giysi" (elbise👗/pantolon👖/ayakkabı👟/şapka🧢/çorap🧦) kategorileri eklendi (4'ten 6 kategoriye) — farklı ses gruplarını (b/ş/ç/v/y vb.) kapsayan kelimeler, `roundKategori()`/`roundKategoriFarkli()` kodu değişmeden yeni kategorileri otomatik kapsadı. Smoke test'e 1 yeni kontrol + eşik 3→6 güncellendi (615 test toplamda). Bu oturumda toplam 5 madde tamamlandı (Kategori Bulmaca yeni oyunu + 2. varyantı + 2 yeni kategori, Sayılar 4. varyantı, Zıt Kelimeler içerik genişletmesi). Sıradaki öncelik: yeni içerik/varyant veya E7.5 (i18n iskeleti, düşük öncelik, saf refactor).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
