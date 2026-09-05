@@ -2336,8 +2336,10 @@ function roundKategori(pool){
   const known=w=>w.split('').every(c=>pool.includes(c));
   const avail=CATEGORY_WORDS.map(c=>({label:c.label, words:c.words.filter(x=>known(x.w))})).filter(c=>c.words.length>=1);
   if(avail.length<2){ roundBul(pool); return; }
-  if(Math.random()<0.5) roundKategoriIsim(pool, avail);
-  else roundKategoriFarkli(pool, avail);
+  const r=Math.random();
+  if(r<1/3) roundKategoriIsim(pool, avail);
+  else if(r<2/3) roundKategoriFarkli(pool, avail);
+  else roundKategoriEvetHayir(pool, avail);
 }
 function roundKategoriIsim(pool, avail){
   // (a) mevcut: kategori adı verilir, o kategoriden bir kelime bulunur.
@@ -2374,6 +2376,26 @@ function roundKategoriFarkli(pool, avail){
   playArea.innerHTML=stageHTML(`<span class="glyph">🧐</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt('Hangisi gruba ait değil, farklı olan hangisi?');
+}
+function roundKategoriEvetHayir(pool, avail){
+  // (c) YENİ: bir kelime + bir kategori adı verilir, "bu kelime bu kategoriye ait mi?" sorusuna
+  // evet/hayır ile karar verilir (Zıt/Eş Anlamlı'daki roundZitEvetHayir/roundEsanlamEvetHayir
+  // deseniyle aynı) — (a)/(b)'den farklı: kelime seçmek yerine bir eşleşmeye doğrudan YARGI vermek.
+  const cat=rnd(avail);
+  const wantYes=avail.length<2 ? true : Math.random()<0.5;
+  let word;
+  if(wantYes){
+    word=rnd(cat.words);
+  }else{
+    const others=avail.filter(c=>c!==cat);
+    word=rnd(rnd(others).words);
+  }
+  curTargets=[...new Set(word.w.split(''))];
+  qtext.textContent=`«${word.w}» ${cat.label} mi?`;
+  playArea.innerHTML=stageHTML(`<span>${word.e}</span>`);
+  const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
+  paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
+  sayPrompt(`Dinle. ${word.w}. ${word.w} ${cat.label} mi?`);
 }
 /* Sesli mi Sessiz mi? (rutin, yeni mini oyun, Çözümleme modu): önceki oyunlardan (ses/harf/hece/kafiye/
    zıt/kategori) farklı bir beceri — bir harfin ÜNLÜ mü ÜNSÜZ mü olduğunu tanıma (Türkçe ses bilgisi,

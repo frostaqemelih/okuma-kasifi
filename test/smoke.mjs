@@ -1569,19 +1569,29 @@ const testDriver = `
     // (b) YENİ: "hangisi gruba ait değil?" (odd-one-out) — kategori adı verilmiyor.
     state = fresh();
     play = null;
-    Math.random = () => 0.9; // roundKategoriFarkli varyantı
+    Math.random = () => 0.5; // roundKategoriFarkli varyantı (1/3–2/3 arası)
     roundKategori(fullPoolKat);
     Math.random = origRandomKat;
     check('roundKategori() (b) "gruba ait değil" sorusu soruyor', qtext.textContent === 'Hangisi gruba ait değil (farklı)?');
     check('roundKategori() (b) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
     check('roundKategori() (b) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
 
+    // (c) YENİ: kelime+kategori verilir, "bu kategoriye ait mi?" sorusuna evet/hayır ile karar verilir.
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // roundKategoriEvetHayir varyantı (>2/3)
+    roundKategori(fullPoolKat);
+    Math.random = origRandomKat;
+    check('roundKategori() (c) "... mi?" evet/hayır sorusu soruyor', /mi\\?$/.test(qtext.textContent));
+    check('roundKategori() (c) tam 2 şık (evet/hayır) sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundKategori() (c) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+
     state = fresh();
     play = null;
     // 1. grup (ücretsiz katman) zenginleştirmesinden sonra artık "at" (bir hayvan) + "tel"/"alet"
     // (bir eşya) yeterli — roundKategori() bu havuzda GERÇEKTEN bir kategori sorusu üretmeli.
     roundKategori(['a', 'n', 'e', 't', 'i', 'l']);
-    check('roundKategori() 1. grup (ücretsiz) havuzuyla da gerçek bir kategori sorusu üretiyor (tel/alet zenginleştirmesi)', /^Hangisi bir /.test(qtext.textContent) || qtext.textContent === 'Hangisi gruba ait değil (farklı)?');
+    check('roundKategori() 1. grup (ücretsiz) havuzuyla da gerçek bir kategori sorusu üretiyor (tel/alet zenginleştirmesi)', /^Hangisi bir /.test(qtext.textContent) || qtext.textContent === 'Hangisi gruba ait değil (farklı)?' || /mi\\?$/.test(qtext.textContent));
 
     state = fresh();
     play = null;
