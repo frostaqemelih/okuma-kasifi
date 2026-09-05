@@ -2180,7 +2180,12 @@ const CATEGORY_WORDS=[
     {w:'tren',e:'🚆'},{w:'motor',e:'🛵'},{w:'tekne',e:'⛵'},{w:'metro',e:'🚇'},{w:'roket',e:'🚀'}
   ]},
   {label:'bir eşya', words:[
-    {w:'kalem',e:'✏️'},{w:'kutu',e:'📦'},{w:'kart',e:'💳'},{w:'top',e:'⚽'},{w:'kova',e:'🪣'}
+    {w:'kalem',e:'✏️'},{w:'kutu',e:'📦'},{w:'kart',e:'💳'},{w:'top',e:'⚽'},{w:'kova',e:'🪣'},
+    /* 1. grup (ücretsiz katman) zenginleştirme (rutin, WORDBANK/SENTENCES'teki 1. grup zenginleştirme
+       deseniyle aynı): "tel"/"alet" yalnız a,n,e,t,i,l seslerinden kurulu — bunlar olmadan roundKategori()
+       yalnız 1. grup açık bir çocuk için hiç yeterli kategori (avail.length<2) bulamıyor ve hep
+       roundBul()'a düşüyordu (yalnız "bir hayvan"daki "at" tek başına yeterli değildi). */
+    {w:'tel',e:'🧵'},{w:'alet',e:'🔧'}
   ]},
   /* İçerik genişletme (rutin, ANTONYMS genişletmesiyle aynı desen): 2 yeni kategori — daha fazla
      çeşitlilik, farklı ses gruplarını (b/ş/ç/v/y gibi) kapsayan kelimeler. */

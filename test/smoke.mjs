@@ -1514,6 +1514,9 @@ const testDriver = `
       CATEGORY_WORDS.every(c => c.words.every(x => x.w.split('').every(ch => ALL_LETTERS.includes(ch)))));
     check('CATEGORY_WORDS "renk" ve "giysi" kategorilerini içeriyor',
       ['bir renk', 'bir giysi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS "bir eşya" kategorisi 1. grup kelimelerini içeriyor (tel, alet)',
+      CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'tel') &&
+      CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'alet'));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
@@ -1544,7 +1547,14 @@ const testDriver = `
 
     state = fresh();
     play = null;
-    roundKategori(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiç kategori kelimesi uymaz) -> güvenli şekilde roundBul içine düşmeli
+    // 1. grup (ücretsiz katman) zenginleştirmesinden sonra artık "at" (bir hayvan) + "tel"/"alet"
+    // (bir eşya) yeterli — roundKategori() bu havuzda GERÇEKTEN bir kategori sorusu üretmeli.
+    roundKategori(['a', 'n', 'e', 't', 'i', 'l']);
+    check('roundKategori() 1. grup (ücretsiz) havuzuyla da gerçek bir kategori sorusu üretiyor (tel/alet zenginleştirmesi)', /^Hangisi bir /.test(qtext.textContent) || qtext.textContent === 'Hangisi gruba ait değil (farklı)?');
+
+    state = fresh();
+    play = null;
+    roundKategori(['a', 'e']); // gerçekten yetersiz pool (hiç kategori kelimesi uymaz) -> güvenli şekilde roundBul içine düşmeli
     check('roundKategori() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !/^Hangisi bir /.test(qtext.textContent) && qtext.textContent !== 'Hangisi gruba ait değil (farklı)?');
 
     state = fresh();
