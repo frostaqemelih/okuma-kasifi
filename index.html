@@ -431,6 +431,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeZit" onclick="startFree('zit')"><span class="big">🔀</span><span><b>Zıt Kelimeler</b><span>Kelimenin tersini (zıttını) bul</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeSesli" onclick="startFree('sesli')"><span class="big">🎶</span><span><b>Sesli mi Sessiz mi?</b><span>Harf ünlü mü, ünsüz mü?</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeEsanlam" onclick="startFree('esanlam')"><span class="big">🟰</span><span><b>Eş Anlamlı Kelimeler</b><span>Aynı anlama gelen kelimeyi bul</span></span></div>
+      <div class="age-card" tabindex="0" role="button" onclick="startFree('cizRakam')"><span class="big">🔢✏️</span><span><b>Rakam Çiz</b><span>Yeşil noktadan başla, rakamı yaz</span></span></div>
     </div>
   </section>
 
@@ -1334,6 +1335,23 @@ const STROKES_UPPER={
   j:[ [[.60,.22],[.60,.62],[.52,.74],[.40,.76],[.32,.68]] ]
 };
 
+/* Rakam Çiz (rutin, yeni mini oyun): STROKES/STROKES_UPPER ile aynı desen — 0-9 rakamları için vuruş
+   yolları (anahtar rakamın kendisi, '0'-'9'). setupTrace()'in 3. parametresi burada 'rakam' string'i
+   olarak geçilir (upper=true/false yerine); checkTrace() zaten harf/glif fark etmeksizin font
+   render'ından (mc.fillText) çıkardığı piksel maskesiyle çalıştığından ekstra bir değişiklik gerekmedi. */
+const STROKES_RAKAM={
+  '0':[ [[.50,.28],[.38,.35],[.33,.50],[.38,.65],[.50,.72],[.62,.65],[.67,.50],[.62,.35],[.50,.28]] ],
+  '1':[ [[.40,.36],[.50,.28]], [[.50,.28],[.50,.73]] ],
+  '2':[ [[.36,.38],[.42,.30],[.55,.29],[.64,.36],[.63,.46],[.50,.58],[.36,.70],[.36,.73],[.65,.73]] ],
+  '3':[ [[.36,.32],[.48,.28],[.60,.32],[.62,.42],[.52,.50],[.60,.58],[.62,.68],[.50,.73],[.37,.68]] ],
+  '4':[ [[.58,.28],[.35,.58],[.65,.58]], [[.58,.28],[.58,.73]] ],
+  '5':[ [[.62,.30],[.38,.30],[.36,.48],[.48,.45],[.60,.50],[.64,.62],[.55,.72],[.42,.71],[.36,.63]] ],
+  '6':[ [[.60,.30],[.45,.32],[.36,.45],[.34,.60],[.42,.71],[.55,.73],[.64,.65],[.63,.53],[.53,.47],[.42,.50]] ],
+  '7':[ [[.35,.30],[.65,.30]], [[.65,.30],[.42,.73]] ],
+  '8':[ [[.50,.29],[.40,.33],[.38,.42],[.44,.48],[.50,.50],[.44,.53],[.36,.60],[.38,.68],[.50,.73],[.62,.68],[.64,.60],[.56,.53],[.50,.50],[.56,.48],[.62,.42],[.60,.33],[.50,.29]] ],
+  '9':[ [[.60,.50],[.62,.40],[.55,.32],[.44,.30],[.36,.36],[.37,.47],[.47,.52],[.58,.48],[.62,.42],[.60,.52],[.55,.62],[.46,.71]] ]
+};
+
 /* E6.1: çok vuruşlu harflerde vuruş vuruş kılavuz — aktif vuruşu belirleme + eşleşme oranı. */
 function multiStrokeGuideOn(letter,level,strokesMap){
   strokesMap=strokesMap||STROKES;
@@ -1698,7 +1716,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz, esanlam:roundEsanlam})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz, esanlam:roundEsanlam, cizRakam:roundRakamCiz})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -1717,7 +1735,10 @@ function hideFeedback(){ const el=document.getElementById('fbMsg'); if(el){ el.h
 
 function creditSounds(ok){
   curTargets.forEach(s=>{
-    if(!/^[a-zçğıöşü]$/.test(s)) return;
+    // Rakam Çiz (rutin): tek haneli rakam hedefleri de (STROKES_RAKAM anahtarları) burada
+    // kabul edilir — böylece cizLevelRakam ilerlemesi + genel "ses ustalığı" rozeti digit
+    // tracing'i de kapsar (SOUND_ORDER sabit harf listesi olduğundan Ses Karnesi'ne sızmaz).
+    if(!/^[a-zçğıöşü0-9]$/.test(s)) return;
     const st=state.soundStats[s]||(state.soundStats[s]={c:0,w:0});
     st[ok?'c':'w']++;
     // E2.3: basit Leitner kutusu — doğru cevap "strength"i artırır, yanlış azaltır (0-5)
@@ -2749,6 +2770,7 @@ let trace={};
 /* E6.2: harf çizim kademesi (1 kılavuzlu iz → 5 bellekten), her başarılı çizimde ilerler. */
 function cizLevel(s){ const st=state.soundStats[s]; return (st && st.cizLevel) || 1; }
 function cizLevelUpper(s){ const st=state.soundStats[s]; return (st && st.cizLevelUpper) || 1; } // E6.5
+function cizLevelRakam(s){ const st=state.soundStats[s]; return (st && st.cizLevelRakam) || 1; } // Rakam Çiz
 function roundCiz(sounds){
   locked=false;
   const t=rnd(sounds); curTargets=[t];
@@ -2788,6 +2810,28 @@ function roundCizBuyuk(sounds){
   roundPrompt=`Büyük ${T} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
   say(`Büyük ${T} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
+    if(trace.hint) trace.hint(()=>{ locked=false; }); else locked=false;
+  });
+}
+/* Rakam Çiz (rutin, yeni mini oyun): roundCiz ile aynı akış, STROKES_RAKAM kullanır — Sayılar (rakam)
+   modülü gibi harf havuzundan bağımsız, her zaman oynanabilir (her iki yaş modunda da görünür). */
+function roundRakamCiz(){
+  locked=false;
+  const t=String(rnd(NUMBERS).n); curTargets=[t];
+  qtext.textContent=`«${t}» rakamını yaz`;
+  playArea.innerHTML=`
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${t} rakamını parmağınla çizme alanı"></canvas></div>
+    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <div class="trace-actions">
+      <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
+      <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
+    </div>
+    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
+  setupTrace(t,cizLevelRakam(t),'rakam');
+  roundPrompt=`${t} rakamını yaz. Yeşil noktadan başla.`;
+  locked=true;
+  say(`${t} rakamı. Şimdi göster, sonra sen yaz.`, ()=>{
     if(trace.hint) trace.hint(()=>{ locked=false; }); else locked=false;
   });
 }
@@ -2898,9 +2942,10 @@ function checkWarmupTrace(){
 function setupTrace(letter,level,upper){
   // E6.2: 5 kademe — (1) kılavuzlu iz, (2) noktalı, (3) soluk, (4) yalnız başlangıç noktası, (5) bellekten.
   // E6.5: upper=true iken STROKES_UPPER + BÜYÜK glyph kullanılır (state.soundStats[letter] anahtarı hâlâ küçük harf).
+  // Rakam Çiz: upper==='rakam' iken STROKES_RAKAM kullanılır, glyph rakamın kendisi (büyük/küçük harf yok).
   level=level||1;
-  const strokesMap=upper?STROKES_UPPER:STROKES;
-  const glyph=upper?(UPPER_MAP[letter]||(letter?letter.toUpperCase():letter)):letter;
+  const strokesMap=upper==='rakam'?STROKES_RAKAM:upper?STROKES_UPPER:STROKES;
+  const glyph=upper==='rakam'?letter:upper?(UPPER_MAP[letter]||(letter?letter.toUpperCase():letter)):letter;
   const wrap=document.getElementById('traceWrap');
   const cv=document.getElementById('traceCanvas');
   const dpr=Math.min(window.devicePixelRatio||1,2);
@@ -3024,7 +3069,7 @@ function setupTrace(letter,level,upper){
     cv.addEventListener('mousedown',start); cv.addEventListener('mousemove',move); window.addEventListener('mouseup',end);
     cv.addEventListener('touchstart',start,{passive:false}); cv.addEventListener('touchmove',move,{passive:false}); cv.addEventListener('touchend',end);
   }
-  trace={letter,upper:!!upper,size,strokes,maskPts,
+  trace={letter,upper,size,strokes,maskPts,
     activeStroke(){ return activeStroke; },
     reset(){ strokes.length=0; activeStroke=0; drawGuide(true); },
     hint(cb){ strokes.length=0; activeStroke=0; playHint(cb); }};
@@ -3045,10 +3090,11 @@ function checkTrace(){
   if(coverage>0.5 && accuracy>0.4){
     locked=true; traceMsg('Harika! 🌟'); creditSounds(true);
     // E6.2: başarılı çizimde kademe ilerler (kılavuz azalır); sınır 5 (bellekten)
-    // E6.5: büyük harf modundaysa (trace.upper) ayrı cizLevelUpper alanı ilerler, küçük harf ilerlemesine dokunmaz
+    // E6.5: büyük harf modundaysa (trace.upper===true) ayrı cizLevelUpper alanı ilerler, küçük harf ilerlemesine dokunmaz
+    // Rakam Çiz: trace.upper==='rakam' iken ayrı cizLevelRakam alanı ilerler
     const cst=state.soundStats[trace.letter];
     if(cst){
-      const field=trace.upper?'cizLevelUpper':'cizLevel';
+      const field=trace.upper==='rakam'?'cizLevelRakam':trace.upper?'cizLevelUpper':'cizLevel';
       cst[field]=Math.min(5,(cst[field]||1)+1); save();
     }
     say(rnd(['Çok güzel yazdın!','Harika bir '+trace.letter+' oldu!','Aferin, tam üstünden geçtin!',

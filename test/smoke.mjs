@@ -2106,6 +2106,31 @@ const testDriver = `
     check('Eş Anlamlı Kelimeler hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Rakam Çiz (rutin, yeni mini oyun): STROKES_RAKAM + cizLevelRakam + digit creditSounds ---
+  // Not: setupTrace()/checkTrace() jsdom'da canvas 2D context'i olmadığından (mevcut Harf Çiz
+  // testlerinde de aynı sebeple) doğrudan çağrılmıyor — yalnız saf/durum fonksiyonları test edilir.
+  try {
+    check('STROKES_RAKAM 0-9 rakamlarının tümü için tanımlı', '0123456789'.split('').every(d => Array.isArray(STROKES_RAKAM[d]) && STROKES_RAKAM[d].length > 0));
+    check('STROKES_RAKAM her vuruş en az 2 nokta içeriyor, koordinatlar 0-1 aralığında',
+      Object.values(STROKES_RAKAM).every(strokes => strokes.every(s => s.length >= 2 && s.every(([x, y]) => x >= 0 && x <= 1 && y >= 0 && y <= 1))));
+
+    check('multiStrokeGuideOn() STROKES_RAKAM ile çok vuruşlu "1" için true döner', multiStrokeGuideOn('1', 1, STROKES_RAKAM) === true);
+    check('multiStrokeGuideOn() STROKES_RAKAM ile tek vuruşlu "0" için false döner', multiStrokeGuideOn('0', 1, STROKES_RAKAM) === false);
+
+    state = fresh();
+    check('cizLevelRakam() rakam hiç çizilmemişken varsayılan 1', cizLevelRakam('7') === 1);
+    state.soundStats = { '7': { c: 0, w: 0, cizLevelRakam: 3 } };
+    check('cizLevelRakam() kayıtlı kademeyi döndürüyor', cizLevelRakam('7') === 3);
+
+    // creditSounds() artık tek haneli rakam hedeflerini de kabul ediyor (Rakam Çiz ilerlemesi için)
+    state = fresh();
+    curTargets = ['7'];
+    creditSounds(true);
+    check("creditSounds() rakam hedefini de state.soundStats'a işliyor", state.soundStats['7'] && state.soundStats['7'].c === 1);
+  } catch (e) {
+    check('Rakam Çiz hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -2142,6 +2167,9 @@ pushCheck('"Sesli mi Sessiz mi?" kartı Çözümleme moduna özel gizleniyor (fr
 // --- Eş Anlamlı Kelimeler: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
 pushCheck('Serbest oyun menüsünde "Eş Anlamlı Kelimeler" kartı mevcut', html.includes("startFree('esanlam')") && html.includes('Eş Anlamlı Kelimeler'));
 pushCheck('"Eş Anlamlı Kelimeler" kartı Çözümleme moduna özel gizleniyor (freeEsanlam)', /getElementById\('freeEsanlam'\)\.style\.display=h/.test(html));
+// --- Rakam Çiz: Serbest oyun menüsünde kart mevcut (her iki yaş modunda da gorunur, Sayılar/Harf Çiz gibi) ---
+pushCheck('Serbest oyun menüsünde "Rakam Çiz" kartı mevcut', html.includes("startFree('cizRakam')") && html.includes('Rakam Çiz'));
+pushCheck('nextFreeRound() dağıtım haritası cizRakam:roundRakamCiz içeriyor', /cizRakam:roundRakamCiz/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -2150,7 +2178,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (18 statik + 1 renderWho() şablonu = 19 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 19);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (19 statik + 1 renderWho() şablonu = 20 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 20);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
