@@ -2236,10 +2236,18 @@ function choose(el,right){
 }
 
 /* --- Kelime Kur ---
-   2 varyant: (a) resim→kelime kur (görsel ipucuyla), (b) yalnız dinle→kelime kur (resim yok,
-   yalnız Kâşif'in söylediği kelimeden kurulur — işitsel/fonolojik farkındalık pratiği). Rastgele seçilir. */
+   3 varyant: (a) resim→kelime kur (görsel ipucuyla, tile), (b) yalnız dinle→kelime kur (resim yok,
+   yalnız Kâşif'in söylediği kelimeden kurulur — işitsel/fonolojik farkındalık pratiği, tile),
+   (c) YENİ: eksik harfi bul — kelimede bir harf boş bırakılır, çoktan seçmeli tamamlanır (tile
+   sıralamaktan farklı bir beceri: yazılı kelimeyi harf harf inceleyip eksik parçayı bulma). */
 let wordState=null;
 function roundKelime(pool){
+  const r=Math.random();
+  if(r<1/3) roundKelimeTile(pool,false);
+  else if(r<2/3) roundKelimeTile(pool,true);
+  else roundKelimeEksik(pool);
+}
+function roundKelimeTile(pool,listenOnly){
   locked=false;
   const cands=WORDBANK.filter(x=>x.w.split('').every(c=>pool.includes(c)));
   if(!cands.length){ roundHece(pool); return; }
@@ -2251,7 +2259,6 @@ function roundKelime(pool){
   const distrPool=pool.filter(c=>!target.includes(c));
   const distr=shuffle(distrPool).slice(0, Math.min(distrN, distrPool.length));
   wordState={target, tiles:shuffle([...target,...distr]), filled:[]};
-  const listenOnly=Math.random()<0.5;
   qtext.textContent=listenOnly?'Dinle ve kelimeyi kur':'Harfleri sırayla koy';
   playArea.innerHTML=`
     <div class="stage" style="aspect-ratio:16/9"><span>${listenOnly?'🎧':it.e}</span></div>
@@ -2261,6 +2268,24 @@ function roundKelime(pool){
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
   renderWord();
   sayPrompt(`${it.w}. ${it.w} kelimesini kur.`);
+}
+function roundKelimeEksik(pool){
+  locked=false; curWrongCount=0;
+  const cands=WORDBANK.filter(x=>x.w.length>=3 && x.w.split('').every(c=>pool.includes(c)));
+  if(!cands.length){ roundKelimeTile(pool,false); return; }
+  const it=rnd(cands);
+  const letters=it.w.split('');
+  const pos=Math.floor(Math.random()*letters.length);
+  const missing=letters[pos]; curTargets=[missing];
+  const shown=letters.map((c,i)=>i===pos?'_':c).join('');
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distrPool=pool.filter(c=>c!==missing);
+  const distr=shuffle(distrPool).slice(0, Math.min(need, distrPool.length));
+  const opts=shuffle([missing,...distr]);
+  qtext.textContent=`«${shown}» kelimesinde eksik harf hangisi?`;
+  playArea.innerHTML=stageHTML(`<span>${it.e}</span>`);
+  paint(opts.map(l=>({glyph:l,key:l})), opts.length<=2?'c2':opts.length===3?'c3':'c4', o=>o.key===missing);
+  sayPrompt(`${it.w}. «${shown}» kelimesinde eksik harf hangisi?`);
 }
 function renderWord(){
   const {target,tiles,filled,kind}=wordState;
@@ -2311,8 +2336,14 @@ function checkWord(){
   }
 }
 
-/* --- Cümle Bahçesi --- */
+/* --- Cümle Bahçesi ---
+   2 varyant: (a) kelime taşlarını sıraya diz (mevcut), (b) YENİ: cümledeki eksik kelimeyi bul
+   (cloze) — çoktan seçmeli, tile mekanizmasından farklı bir beceri (okuduğunu/dinlediğini
+   anlayarak boşluğa uyan kelimeyi seçme). Rastgele seçilir. */
 function roundCumle(pool){
+  if(Math.random()<0.5) roundCumleSirala(pool); else roundCumleTamamla(pool);
+}
+function roundCumleSirala(pool){
   locked=false;
   const cands=SENTENCES.filter(x=>x.w.every(w=>w.split('').every(c=>pool.includes(c))));
   if(!cands.length){ roundKelime(pool); return; }
@@ -2332,6 +2363,24 @@ function roundCumle(pool){
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
   renderWord();
   sayPrompt(`${it.t} Kelimeleri sırala.`);
+}
+function roundCumleTamamla(pool){
+  locked=false; curWrongCount=0;
+  const cands=SENTENCES.filter(x=>x.w.length>=2 && x.w.every(w=>w.split('').every(c=>pool.includes(c))));
+  if(!cands.length){ roundCumleSirala(pool); return; }
+  const it=rnd(cands);
+  const bi=Math.floor(Math.random()*it.w.length);
+  const missing=it.w[bi];
+  curTargets=[...new Set(missing.split(''))];
+  const shown=capitalize(it.w.map((w,i)=>i===bi?'____':w).join(' '))+'.';
+  const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
+  const distrCands=SENT_WORDS.filter(w=>w!==missing && w.split('').every(c=>pool.includes(c)));
+  const distr=shuffle(distrCands).slice(0, Math.min(need, distrCands.length));
+  const opts=shuffle([{glyph:missing,key:'right'},...distr.map((w,i)=>({glyph:w,key:'d'+i}))]);
+  qtext.textContent=shown;
+  playArea.innerHTML=stageHTML(`<span class="glyph">✍️</span>`);
+  paint(opts, opts.length<=2?'c2':opts.length===3?'c3':'c4', o=>o.key==='right');
+  sayPrompt(`${it.t} Cümledeki boşluğa hangi kelime gelir?`);
 }
 
 /* --- Kendi Hikayeni Kur (Fikir havuzu, premium, Çözümleme modu) ---

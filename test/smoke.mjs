@@ -1806,18 +1806,23 @@ const testDriver = `
     check('E9.7 Yenilikler sekmesi hatasız render edildi (hata: ' + e.message + ')', false);
   }
 
-  // --- Kelime Kur çeşitliliği (yeni içerik/varyant): (a) resim→kelime, (b) yalnız dinle→kelime ---
+  // --- Kelime Kur çeşitliliği: (a) resim→kelime, (b) yalnız dinle→kelime, (c) YENİ eksik harfi bul ---
   try {
     const origRandomKelime = Math.random;
     state = fresh();
-    Math.random = () => 0.9; // (a) resim ipucuyla (listenOnly = r<0.5 => false)
+    Math.random = () => 0.1; // (a) resim ipucuyla (r<1/3)
     roundKelime(unlockedPool());
     check('roundKelime (a) resim varyantı emoji ipucu gösteriyor', playArea.querySelector('.stage span').textContent !== '🎧' && qtext.textContent === 'Harfleri sırayla koy');
-    Math.random = () => 0.1; // (b) yalnız dinle (listenOnly = r<0.5 => true)
+    Math.random = () => 0.5; // (b) yalnız dinle (1/3<=r<2/3)
     roundKelime(unlockedPool());
     check('roundKelime (b) dinle varyantı resim yerine 🎧 gösteriyor', playArea.querySelector('.stage span').textContent === '🎧');
     check('roundKelime (b) dinle varyantı soru metnini gösteriyor', qtext.textContent === 'Dinle ve kelimeyi kur');
     check('roundKelime (b) varyantında da kelime taşları/karesi kurulu', wordState && wordState.target.length > 0 && wordState.tiles.length >= wordState.target.length);
+    Math.random = () => 0.9; // (c) eksik harfi bul (r>=2/3)
+    roundKelime(unlockedPool());
+    check('roundKelime (c) eksik harf varyantı soru metninde alt çizgi gösteriyor', /_/.test(qtext.textContent) && qtext.textContent.includes('eksik harf hangisi?'));
+    check('roundKelime (c) eksik harf varyantında doğru şık işaretli', !!document.querySelector('#choices .choice[data-right="1"]'));
+    check('roundKelime (c) eksik harf varyantı çoktan seçmeli (choices) kullanıyor, tile değil', document.getElementById('choices') && document.getElementById('choices').children.length > 0);
     Math.random = origRandomKelime;
     state = fresh();
     play = null;
@@ -1825,25 +1830,41 @@ const testDriver = `
     check('Kelime Kur çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Cümle Bahçesi çeşitliliği: (a) kelime taşlarını sırala, (b) YENİ cümleyi tamamla (cloze) ---
+  try {
+    const origRandomCumle = Math.random;
+    state = fresh();
+    Math.random = () => 0.9; // (b) tamamla (r>=0.5)
+    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    check('roundCumle (b) tamamla varyantı boşluklu cümle gösteriyor', qtext.textContent.includes('____'));
+    check('roundCumle (b) tamamla varyantı çoktan seçmeli (choices) kullanıyor', document.getElementById('choices') && document.getElementById('choices').children.length > 0);
+    check('roundCumle (b) tamamla varyantında doğru şık işaretli', !!document.querySelector('#choices .choice[data-right="1"]'));
+    Math.random = origRandomCumle;
+    state = fresh();
+    play = null;
+  } catch (e) {
+    check('Cümle Bahçesi çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E2.5 zorluk uyarlaması genişletildi: Kelime Kur / Cümle Bahçesi çeldirici sayısı da uyarlanıyor ---
   try {
     const origRandomZorluk = Math.random;
     state = fresh();
-    Math.random = () => 0.9; // (a) resim varyantı sabitlensin ki taş sayısı yalnızca zorluktan değişsin
+    Math.random = () => 0.9; // shuffle/rnd sabitlensin, roundKelimeTile/roundCumleSirala doğrudan çağrılıyor
 
     recentRounds = [true, true, true, true, true]; // %100 -> zor
-    roundKelime(['a', 'n', 'e', 't', 'i', 'l']);
+    roundKelimeTile(['a', 'n', 'e', 't', 'i', 'l'], false);
     const zorTiles = wordState.tiles.length, zorTarget = wordState.target.length;
     recentRounds = [false, false, false, true, false]; // %20 -> kolay
-    roundKelime(['a', 'n', 'e', 't', 'i', 'l']);
+    roundKelimeTile(['a', 'n', 'e', 't', 'i', 'l'], false);
     const kolayTiles = wordState.tiles.length;
     check('roundKelime (zor) en az kolay kadar çeldirici taş sunuyor', (zorTiles - zorTarget) >= (kolayTiles - wordState.target.length));
 
     recentRounds = [true, true, true, true, true]; // zor
-    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    roundCumleSirala(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
     const zorCumleTiles = wordState.tiles.length, zorCumleTarget = wordState.target.length;
     recentRounds = [false, false, false, true, false]; // kolay
-    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    roundCumleSirala(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
     check('roundCumle (kolay) hiç çeldirici kelime eklemiyor', wordState.tiles.length === wordState.target.length);
     check('roundCumle (zor) kolaydan daha fazla/eşit çeldirici kelime sunuyor', (zorCumleTiles - zorCumleTarget) >= (wordState.tiles.length - wordState.target.length));
 
