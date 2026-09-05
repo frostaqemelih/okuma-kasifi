@@ -2105,11 +2105,13 @@ const testDriver = `
 
   // --- Eş Anlamlı Kelimeler (rutin, yeni mini oyun): Zıt Kelimeler'le aynı desen, farklı beceri ---
   try {
-    check('SYNONYMS dizisi tanımlı ve en az 14 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 14);
+    check('SYNONYMS dizisi tanımlı ve en az 17 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 17);
     check('SYNONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       SYNONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (sinirli/kızgın, tembel/uyuşuk, güçlü/kuvvetli, cesur/yürekli, şişman/tombul)',
       ['sinirli', 'tembel', 'güçlü', 'cesur', 'şişman'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (kocaman/dev, ıslak/nemli, kırık/bozuk)',
+      ['kocaman', 'ıslak', 'kırık'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
