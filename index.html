@@ -2002,25 +2002,40 @@ function roundKafiye(pool){
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${target.w}. ${target.w} ile kafiyeli kelime hangisi?`);
 }
-/* E4.7: Rakam ve sayı sesleri mini-modülü — 2 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
+/* E4.7: Rakam ve sayı sesleri mini-modülü — 3 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){
   locked=false; curWrongCount=0; curTargets=[];
   const t=rnd(NUMBERS);
   const lvl=difficultyLevel(), total=lvl==='zor'?4:lvl==='kolay'?2:3, need=total-1;
-  const distr=shuffle(NUMBERS.filter(x=>x.n!==t.n)).slice(0,need);
-  const opts=shuffle([t,...distr]);
-  if(Math.random()<0.5){
+  const r=Math.random();
+  if(r<1/3){
     // (a) duy-bul: sayının adını duy, rakamı bul
+    const distr=shuffle(NUMBERS.filter(x=>x.n!==t.n)).slice(0,need);
+    const opts=shuffle([t,...distr]);
     qtext.textContent='Duyduğun sayı hangisi?';
     playArea.innerHTML=stageHTML(`<span class="glyph">👂</span>`);
     paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===t.n);
     sayPrompt(`Dinle. ${t.tr}. Duyduğun sayı hangisi?`);
-  }else{
+  }else if(r<2/3){
     // (b) say-bul: resimdeki nesneleri say, rakamı bul
+    const distr=shuffle(NUMBERS.filter(x=>x.n!==t.n)).slice(0,need);
+    const opts=shuffle([t,...distr]);
     qtext.textContent='Kaç tane? Say ve bul.';
     playArea.innerHTML=stageHTML(`<span>${'⭐'.repeat(t.n)}</span>`);
     paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===t.n);
     sayPrompt('Kaç tane yıldız var? Say ve bul.');
+  }else{
+    // (c) YENİ: sayı sırası — bir sonraki/bir önceki sayıyı bul (sayma sırası farkındalığı)
+    const canNext=t.n<10, canPrev=t.n>1;
+    const askNext = canNext && (!canPrev || Math.random()<0.5);
+    const targetN = askNext ? t.n+1 : t.n-1;
+    const targetObj = NUMBERS.find(x=>x.n===targetN);
+    const distr=shuffle(NUMBERS.filter(x=>x.n!==targetN)).slice(0,need);
+    const opts=shuffle([targetObj,...distr]);
+    qtext.textContent = askNext ? `«${t.n}»'dan sonra hangi sayı gelir?` : `«${t.n}»'dan önce hangi sayı gelir?`;
+    playArea.innerHTML=stageHTML(`<span class="glyph">${t.n}</span>`);
+    paint(opts.map(x=>({glyph:String(x.n),key:x.n})),'c3',o=>o.key===targetN);
+    sayPrompt(askNext ? `${t.tr}'dan sonra hangi sayı gelir?` : `${t.tr}'dan önce hangi sayı gelir?`);
   }
 }
 /* E4.6: Büyük/küçük harf farkındalığı — 2 varyant, ikisi de KURAL öğretir (harf şekli değil):
