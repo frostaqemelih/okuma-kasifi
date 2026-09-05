@@ -2138,6 +2138,11 @@ function roundZit(pool){
   locked=false; curWrongCount=0;
   const cands=ANTONYMS.filter(p=>(p.a+p.b).split('').every(c=>pool.includes(c)));
   if(!cands.length){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundZitSec(pool, cands);
+  else roundZitEvetHayir(pool, cands);
+}
+function roundZitSec(pool, cands){
+  // (a) mevcut: hedef kelimenin zıttını çoktan seçmeliden bul.
   const it=rnd(cands);
   const aFirst=Math.random()<0.5;
   const shown=aFirst?it:{a:it.b,b:it.a,ea:it.eb,eb:it.ea};
@@ -2151,6 +2156,31 @@ function roundZit(pool){
   playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesinin zıttı (tersi) hangisi?`);
+}
+function roundZitEvetHayir(pool, cands){
+  // (b) YENİ: iki kelime söylenir, çocuk "zıt anlamlı mı?" sorusuna evet/hayır ile karar verir —
+  // (a)'daki çoktan seçmeliden farklı bir beceri: bir kelimeyi hatırlamak yerine iki kelimeyi
+  // karşılaştırıp YARGI vermek (Kafiye Bulma'daki roundKafiyeEvetHayir deseniyle aynı).
+  const it=rnd(cands);
+  const a={w:it.a,e:it.ea};
+  const wantYes=Math.random()<0.5;
+  let b;
+  if(wantYes){
+    b={w:it.b,e:it.eb};
+  }else{
+    const others=cands.filter(p=>p!==it);
+    if(!others.length){ roundZitSec(pool, cands); return; }
+    const ob=rnd(others);
+    const useA=Math.random()<0.5;
+    b=useA?{w:ob.a,e:ob.ea}:{w:ob.b,e:ob.eb};
+    if(b.w===it.b) b=useA?{w:ob.b,e:ob.eb}:{w:ob.a,e:ob.ea};
+  }
+  curTargets=[...new Set((a.w+b.w).split(''))];
+  qtext.textContent=`«${a.w}» ile «${b.w}» zıt anlamlı (ters) mi?`;
+  playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
+  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
+  sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} zıt anlamlı mı?`);
 }
 /* Eş Anlamlı Kelimeler (rutin, yeni mini oyun, Çözümleme modu — Zıt Kelimeler'in kod deseniyle aynı
    ama farklı semantik beceri): iki kelimenin AYNI anlama geldiğini (zıt değil, eş anlamlı/anlamdaş)
@@ -2171,6 +2201,11 @@ function roundEsanlam(pool){
   locked=false; curWrongCount=0;
   const cands=SYNONYMS.filter(p=>(p.a+p.b).split('').every(c=>pool.includes(c)));
   if(!cands.length){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundEsanlamSec(pool, cands);
+  else roundEsanlamEvetHayir(pool, cands);
+}
+function roundEsanlamSec(pool, cands){
+  // (a) mevcut: hedef kelimeyle aynı anlama geleni çoktan seçmeliden bul.
   const it=rnd(cands);
   const aFirst=Math.random()<0.5;
   const shown=aFirst?it:{a:it.b,b:it.a,ea:it.eb,eb:it.ea};
@@ -2184,6 +2219,31 @@ function roundEsanlam(pool){
   playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesiyle aynı anlama gelen hangisi?`);
+}
+function roundEsanlamEvetHayir(pool, cands){
+  // (b) YENİ: iki kelime söylenir, çocuk "aynı anlama mı geliyor?" sorusuna evet/hayır ile karar
+  // verir — (a)'daki çoktan seçmeliden farklı bir beceri (Zıt Kelimeler'in evet/hayır varyantıyla
+  // aynı desen, ters yönde: burada ANLAM AYNILIĞI test ediliyor).
+  const it=rnd(cands);
+  const a={w:it.a,e:it.ea};
+  const wantYes=Math.random()<0.5;
+  let b;
+  if(wantYes){
+    b={w:it.b,e:it.eb};
+  }else{
+    const others=cands.filter(p=>p!==it);
+    if(!others.length){ roundEsanlamSec(pool, cands); return; }
+    const ob=rnd(others);
+    const useA=Math.random()<0.5;
+    b=useA?{w:ob.a,e:ob.ea}:{w:ob.b,e:ob.eb};
+    if(b.w===it.b) b=useA?{w:ob.b,e:ob.eb}:{w:ob.a,e:ob.ea};
+  }
+  curTargets=[...new Set((a.w+b.w).split(''))];
+  qtext.textContent=`«${a.w}» ile «${b.w}» aynı anlama (eş anlamlı) mı?`;
+  playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
+  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
+  sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} aynı anlama mı geliyor?`);
 }
 /* Kategori Bulmaca (rutin, yeni mini oyun): önceki oyunlardan (ses/harf/hece/kafiye/zıt) farklı bir
    beceri — sözcük dağarcığı SINIFLANDIRMASI (semantik kategori farkındalığı, zıt anlamdan ayrı: bu

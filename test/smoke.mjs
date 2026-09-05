@@ -1480,18 +1480,29 @@ const testDriver = `
       ['uzun', 'kolay', 'ileri', 'var', 'ağır'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
+    const origRandomZit = Math.random;
     state = fresh();
     play = null;
+    Math.random = () => 0.1; // (a) roundZitSec varyantı
     roundZit(fullPool);
-    check('roundZit() "zıttı (tersi)" sorusu soruyor', qtext.textContent.includes('zıttı (tersi) hangisi?'));
-    check('roundZit() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
-    check('roundZit() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundZit() (a) "zıttı (tersi)" sorusu soruyor', qtext.textContent.includes('zıttı (tersi) hangisi?'));
+    check('roundZit() (a) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundZit() (a) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
     check('roundZit() curTargets soru+cevap kelimelerinin harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
 
     const rBtnZit = document.querySelector('#choices .choice[data-right="1"]');
     const correctBeforeZit = state.correct;
     choose(rBtnZit, true);
     check('roundZit() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeZit + 1);
+
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // (b) YENİ: roundZitEvetHayir varyantı
+    roundZit(fullPool);
+    check('roundZit() (b) "zıt anlamlı (ters) mi?" soruyor', qtext.textContent.endsWith('zıt anlamlı (ters) mi?'));
+    check('roundZit() (b) tam olarak 2 şık (Evet/Hayır) sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundZit() (b) tam 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    Math.random = origRandomZit;
 
     state = fresh();
     play = null;
@@ -2079,18 +2090,29 @@ const testDriver = `
       SYNONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
 
     const fullPoolEs = ALL_LETTERS;
+    const origRandomEs = Math.random;
     state = fresh();
     play = null;
+    Math.random = () => 0.1; // (a) roundEsanlamSec varyantı
     roundEsanlam(fullPoolEs);
-    check('roundEsanlam() "eş anlamlı" sorusu soruyor', qtext.textContent.includes('eş anlamlı) hangisi?'));
-    check('roundEsanlam() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
-    check('roundEsanlam() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundEsanlam() (a) "eş anlamlı" sorusu soruyor', qtext.textContent.includes('eş anlamlı) hangisi?'));
+    check('roundEsanlam() (a) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundEsanlam() (a) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
     check('roundEsanlam() curTargets soru+cevap kelimelerinin harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
 
     const rBtnEs = document.querySelector('#choices .choice[data-right="1"]');
     const correctBeforeEs = state.correct;
     choose(rBtnEs, true);
     check('roundEsanlam() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeEs + 1);
+
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // (b) YENİ: roundEsanlamEvetHayir varyantı
+    roundEsanlam(fullPoolEs);
+    check('roundEsanlam() (b) "aynı anlama (eş anlamlı) mı?" soruyor', qtext.textContent.endsWith('aynı anlama (eş anlamlı) mı?'));
+    check('roundEsanlam() (b) tam olarak 2 şık (Evet/Hayır) sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundEsanlam() (b) tam 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    Math.random = origRandomEs;
 
     state = fresh();
     play = null;
