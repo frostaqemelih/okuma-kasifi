@@ -1529,7 +1529,7 @@ const testDriver = `
 
   // --- Kategori Bulmaca (rutin, yeni mini oyun): sözcük dağarcığı sınıflandırması ---
   try {
-    check('CATEGORY_WORDS dizisi tanımlı ve en az 10 kategori içeriyor', Array.isArray(CATEGORY_WORDS) && CATEGORY_WORDS.length >= 10);
+    check('CATEGORY_WORDS dizisi tanımlı ve en az 12 kategori içeriyor', Array.isArray(CATEGORY_WORDS) && CATEGORY_WORDS.length >= 12);
     check('CATEGORY_WORDS her kelime yalnız Türk alfabesi harflerinden kurulu',
       CATEGORY_WORDS.every(c => c.words.every(x => x.w.split('').every(ch => ALL_LETTERS.includes(ch)))));
     check('CATEGORY_WORDS "renk" ve "giysi" kategorilerini içeriyor',
@@ -1538,6 +1538,8 @@ const testDriver = `
       ['bir meslek', 'bir spor'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
     check('CATEGORY_WORDS yeni "sebze" ve "oyuncak" kategorilerini içeriyor',
       ['bir sebze', 'bir oyuncak'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS yeni "mevsim" ve "yiyecek" kategorilerini içeriyor',
+      ['bir mevsim', 'bir yiyecek'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
     check('CATEGORY_WORDS "meyve" ve "taşıt" kategorileri genişletildi (en az 8 kelime)',
       CATEGORY_WORDS.find(c => c.label === 'bir meyve').words.length >= 8 &&
       CATEGORY_WORDS.find(c => c.label === 'bir taşıt').words.length >= 8);
