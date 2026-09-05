@@ -372,6 +372,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-05 — Kategori Bulmaca'ya 2. varyant: "hangisi gruba ait değil?" (rutin, backlog sırası — yeni içerik/varyant): `roundKategori()` artık `roundKategoriIsim()` (mevcut (a), kategori adı verilir) ile YENİ `roundKategoriFarkli()` (b) arasında rastgele seçiyor — (b): kategori adı VERİLMİYOR, birkaç kelime aynı kategoriden + biri farklı kategoriden gösterilip "Hangisi gruba ait değil (farklı)?" soruluyor (odd-one-out). (a)'dan farklı bir beceri: verilen bir etikete kelime eşlemek yerine, örneklerden ortak özelliği kendi çıkarıp aykırı olanı bulmak. Yeterli aynı-kategori/farklı-kategori kelimesi yoksa (a)'ya güvenle düşüyor. Smoke test'e 3 yeni kontrol + mevcut (a) testi `Math.random` mock'landı (613 test toplamda). Sıradaki öncelik: yeni içerik/varyant veya E7.5 (i18n iskeleti, düşük öncelik, saf refactor).
 
+- 2026-09-05 — ANTONYMS içerik genişletme (rutin, backlog sırası — Zıt Kelimeler oyununa içerik zenginleştirme): 5 yeni zıt anlamlı çift eklendi — `uzun🐍/kısa🐛`, `kolay😄/zor😣`, `ileri➡️/geri⬅️`, `var✅/yok❌`, `ağır🏋️/hafif🪶` — hepsi farklı ses gruplarını (z/y/g/v/ğ,h,f) kapsayan, kolay decoratif emojili gerçek Türkçe zıt anlamlı kelime çiftleri (önceden 9 sabit çiftti, artık 14). `roundZit()` kodu değişmeden yeni çiftleri otomatik kapsadı (mevcut pool-filtreleme mantığı). Smoke test'e 1 yeni kontrol + eşik 5→14 güncellendi (614 test toplamda). Sıradaki öncelik: yeni içerik/varyant veya E7.5 (i18n iskeleti, düşük öncelik, saf refactor).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

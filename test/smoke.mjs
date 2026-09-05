@@ -1473,9 +1473,11 @@ const testDriver = `
 
   // --- Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri ---
   try {
-    check('ANTONYMS dizisi tanımlı ve dolu', Array.isArray(ANTONYMS) && ANTONYMS.length >= 5);
+    check('ANTONYMS dizisi tanımlı ve en az 14 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 14);
     check('ANTONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       ANTONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (uzun/kısa, kolay/zor, ileri/geri, var/yok, ağır/hafif)',
+      ['uzun', 'kolay', 'ileri', 'var', 'ağır'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     state = fresh();
