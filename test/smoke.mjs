@@ -2062,6 +2062,40 @@ const testDriver = `
     check('Sesli mi Sessiz mi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Eş Anlamlı Kelimeler (rutin, yeni mini oyun): Zıt Kelimeler'le aynı desen, farklı beceri ---
+  try {
+    check('SYNONYMS dizisi tanımlı ve en az 9 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 9);
+    check('SYNONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
+      SYNONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
+
+    const fullPoolEs = ALL_LETTERS;
+    state = fresh();
+    play = null;
+    roundEsanlam(fullPoolEs);
+    check('roundEsanlam() "eş anlamlı" sorusu soruyor', qtext.textContent.includes('eş anlamlı) hangisi?'));
+    check('roundEsanlam() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundEsanlam() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundEsanlam() curTargets soru+cevap kelimelerinin harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
+
+    const rBtnEs = document.querySelector('#choices .choice[data-right="1"]');
+    const correctBeforeEs = state.correct;
+    choose(rBtnEs, true);
+    check('roundEsanlam() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeEs + 1);
+
+    state = fresh();
+    play = null;
+    roundEsanlam(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiçbir çift tam uymuyor) -> güvenli şekilde roundBul içine düşmeli
+    check('roundEsanlam() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !qtext.textContent.includes('eş anlamlı'));
+
+    state = fresh();
+    play = null;
+    freeGame = 'esanlam';
+    startFree('esanlam');
+    check('startFree("esanlam") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Eş Anlamlı Kelimeler hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -2095,6 +2129,9 @@ pushCheck('Serbest oyun menüsünde "Kategori Bulmaca" kartı mevcut', html.incl
 // --- Sesli mi Sessiz mi: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
 pushCheck('Serbest oyun menüsünde "Sesli mi Sessiz mi?" kartı mevcut', html.includes("startFree('sesli')") && html.includes('Sesli mi Sessiz mi?'));
 pushCheck('"Sesli mi Sessiz mi?" kartı Çözümleme moduna özel gizleniyor (freeSesli)', /getElementById\('freeSesli'\)\.style\.display=h/.test(html));
+// --- Eş Anlamlı Kelimeler: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
+pushCheck('Serbest oyun menüsünde "Eş Anlamlı Kelimeler" kartı mevcut', html.includes("startFree('esanlam')") && html.includes('Eş Anlamlı Kelimeler'));
+pushCheck('"Eş Anlamlı Kelimeler" kartı Çözümleme moduna özel gizleniyor (freeEsanlam)', /getElementById\('freeEsanlam'\)\.style\.display=h/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -2103,7 +2140,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (17 statik + 1 renderWho() şablonu = 18 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 18);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (18 statik + 1 renderWho() şablonu = 19 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 19);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));

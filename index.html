@@ -430,6 +430,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeZit" onclick="startFree('zit')"><span class="big">🔀</span><span><b>Zıt Kelimeler</b><span>Kelimenin tersini (zıttını) bul</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeSesli" onclick="startFree('sesli')"><span class="big">🎶</span><span><b>Sesli mi Sessiz mi?</b><span>Harf ünlü mü, ünsüz mü?</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeEsanlam" onclick="startFree('esanlam')"><span class="big">🟰</span><span><b>Eş Anlamlı Kelimeler</b><span>Aynı anlama gelen kelimeyi bul</span></span></div>
     </div>
   </section>
 
@@ -1429,6 +1430,7 @@ function go(id){
     document.getElementById('freeHikaye').style.display=h; // Kendi Hikayeni Kur de Çözümleme moduna özel
     document.getElementById('freeZit').style.display=h; // Zıt Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
     document.getElementById('freeSesli').style.display=h; // Sesli mi Sessiz mi de Çözümleme moduna özel (ses bilgisi)
+    document.getElementById('freeEsanlam').style.display=h; // Eş Anlamlı Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
   }
 }
 function onStart(){
@@ -1696,7 +1698,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz, esanlam:roundEsanlam})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -2128,6 +2130,39 @@ function roundZit(pool){
   playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesinin zıttı (tersi) hangisi?`);
+}
+/* Eş Anlamlı Kelimeler (rutin, yeni mini oyun, Çözümleme modu — Zıt Kelimeler'in kod deseniyle aynı
+   ama farklı semantik beceri): iki kelimenin AYNI anlama geldiğini (zıt değil, eş anlamlı/anlamdaş)
+   tanıma. Yalnızca ikisi de bilinen (pool'a uyan) çiftler arasından seçilir; yeterli çift yoksa
+   (erken oyun, dar havuz) roundBul()'a düşer — mevcut fallback deseniyle aynı. */
+const SYNONYMS=[
+  {a:'büyük',b:'kocaman',ea:'🐘',eb:'🐋'},
+  {a:'küçük',b:'ufak',ea:'🐭',eb:'🐁'},
+  {a:'hızlı',b:'çabuk',ea:'🐆',eb:'⚡'},
+  {a:'mutlu',b:'neşeli',ea:'😊',eb:'🥳'},
+  {a:'güzel',b:'hoş',ea:'🌸',eb:'🌼'},
+  {a:'akıllı',b:'zeki',ea:'🦉',eb:'🐬'},
+  {a:'yorgun',b:'bitkin',ea:'😪',eb:'🥱'},
+  {a:'kirli',b:'pis',ea:'💩',eb:'🤢'},
+  {a:'korkmuş',b:'ürkmüş',ea:'😨',eb:'😱'}
+];
+function roundEsanlam(pool){
+  locked=false; curWrongCount=0;
+  const cands=SYNONYMS.filter(p=>(p.a+p.b).split('').every(c=>pool.includes(c)));
+  if(!cands.length){ roundBul(pool); return; }
+  const it=rnd(cands);
+  const aFirst=Math.random()<0.5;
+  const shown=aFirst?it:{a:it.b,b:it.a,ea:it.eb,eb:it.ea};
+  curTargets=[...new Set((shown.a+shown.b).split(''))];
+  const lvl=difficultyLevel(), total=lvl==='zor'?3:2, need=total-1;
+  const distrPool=cands.filter(p=>p!==it).flatMap(p=>[{w:p.a,e:p.ea},{w:p.b,e:p.eb}])
+    .filter(w=>w.w!==shown.a && w.w!==shown.b);
+  const distr=shuffle(distrPool).slice(0,Math.min(need,distrPool.length));
+  const opts=shuffle([{emoji:shown.eb,cap:shown.b,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  qtext.textContent=`«${shown.a}» kelimesiyle aynı anlama gelen (eş anlamlı) hangisi?`;
+  playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesiyle aynı anlama gelen hangisi?`);
 }
 /* Kategori Bulmaca (rutin, yeni mini oyun): önceki oyunlardan (ses/harf/hece/kafiye/zıt) farklı bir
    beceri — sözcük dağarcığı SINIFLANDIRMASI (semantik kategori farkındalığı, zıt anlamdan ayrı: bu
