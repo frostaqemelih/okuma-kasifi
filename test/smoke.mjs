@@ -1482,11 +1482,13 @@ const testDriver = `
 
   // --- Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri ---
   try {
-    check('ANTONYMS dizisi tanımlı ve en az 14 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 14);
+    check('ANTONYMS dizisi tanımlı ve en az 18 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 18);
     check('ANTONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       ANTONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (uzun/kısa, kolay/zor, ileri/geri, var/yok, ağır/hafif)',
       ['uzun', 'kolay', 'ileri', 'var', 'ağır'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (açık/kapalı, yukarı/aşağı, kalın/ince, temiz/kirli)',
+      ['açık', 'yukarı', 'kalın', 'temiz'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
