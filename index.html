@@ -427,6 +427,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeBuyuk" onclick="startFree('buyuk')"><span class="big">🅰️</span><span><b>Büyük mü Küçük mü?</b><span>Cümle başı ve isimler büyük harfle</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeZit" onclick="startFree('zit')"><span class="big">🔀</span><span><b>Zıt Kelimeler</b><span>Kelimenin tersini (zıttını) bul</span></span></div>
     </div>
   </section>
 
@@ -1424,6 +1425,7 @@ function go(id){
     document.getElementById('freeBuyuk').style.display=h; // E4.6: Büyük/küçük harf kuralları da Çözümleme moduna özel
     document.getElementById('freeCizBuyuk').style.display=h; // E6.5: Büyük harf çizimi de Çözümleme moduna özel
     document.getElementById('freeHikaye').style.display=h; // Kendi Hikayeni Kur de Çözümleme moduna özel
+    document.getElementById('freeZit').style.display=h; // Zıt Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
   }
 }
 function onStart(){
@@ -1691,7 +1693,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -2083,6 +2085,39 @@ function roundKafiyeEvetHayir(pool, known, groups, rhymeSuffixes){
   const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
   paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
   sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} kafiyeli mi?`);
+}
+/* Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri —
+   önceki oyunlardan (ses/harf/hece/kafiye) farklı bir beceri: kelime dağarcığı ve anlam ilişkisi
+   (semantik) farkındalığı. Yalnızca ikisi de bilinen (pool'a uyan) çiftler arasından seçilir;
+   yeterli çift yoksa (erken oyun, dar havuz) roundBul()'a düşer — mevcut fallback deseniyle aynı. */
+const ANTONYMS=[
+  {a:'aç',b:'tok',ea:'😋',eb:'😌'},
+  {a:'sıcak',b:'soğuk',ea:'🥵',eb:'🥶'},
+  {a:'büyük',b:'küçük',ea:'🐘',eb:'🐭'},
+  {a:'eski',b:'yeni',ea:'🕰️',eb:'🎁'},
+  {a:'ıslak',b:'kuru',ea:'💧',eb:'🌵'},
+  {a:'dolu',b:'boş',ea:'🎒',eb:'📭'},
+  {a:'mutlu',b:'üzgün',ea:'😊',eb:'😢'},
+  {a:'gece',b:'gündüz',ea:'🌙',eb:'☀️'},
+  {a:'hızlı',b:'yavaş',ea:'🐆',eb:'🐢'}
+];
+function roundZit(pool){
+  locked=false; curWrongCount=0;
+  const cands=ANTONYMS.filter(p=>(p.a+p.b).split('').every(c=>pool.includes(c)));
+  if(!cands.length){ roundBul(pool); return; }
+  const it=rnd(cands);
+  const aFirst=Math.random()<0.5;
+  const shown=aFirst?it:{a:it.b,b:it.a,ea:it.eb,eb:it.ea};
+  curTargets=[...new Set((shown.a+shown.b).split(''))];
+  const lvl=difficultyLevel(), total=lvl==='zor'?3:2, need=total-1;
+  const distrPool=cands.filter(p=>p!==it).flatMap(p=>[{w:p.a,e:p.ea},{w:p.b,e:p.eb}])
+    .filter(w=>w.w!==shown.a && w.w!==shown.b);
+  const distr=shuffle(distrPool).slice(0,Math.min(need,distrPool.length));
+  const opts=shuffle([{emoji:shown.eb,cap:shown.b,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  qtext.textContent=`«${shown.a}» kelimesinin zıttı (tersi) hangisi?`;
+  playArea.innerHTML=stageHTML(`<span>${shown.ea}</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Dinle. ${shown.a}. ${shown.a} kelimesinin zıttı (tersi) hangisi?`);
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 3 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){

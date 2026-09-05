@@ -1464,6 +1464,40 @@ const testDriver = `
     check('Kafiye Bulma hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri ---
+  try {
+    check('ANTONYMS dizisi tanımlı ve dolu', Array.isArray(ANTONYMS) && ANTONYMS.length >= 5);
+    check('ANTONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
+      ANTONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
+
+    const fullPool = ALL_LETTERS;
+    state = fresh();
+    play = null;
+    roundZit(fullPool);
+    check('roundZit() "zıttı (tersi)" sorusu soruyor', qtext.textContent.includes('zıttı (tersi) hangisi?'));
+    check('roundZit() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundZit() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundZit() curTargets soru+cevap kelimelerinin harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
+
+    const rBtnZit = document.querySelector('#choices .choice[data-right="1"]');
+    const correctBeforeZit = state.correct;
+    choose(rBtnZit, true);
+    check('roundZit() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeZit + 1);
+
+    state = fresh();
+    play = null;
+    roundZit(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiçbir çift tam uymuyor) -> güvenli şekilde roundBul içine düşmeli
+    check('roundZit() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !qtext.textContent.includes('zıttı'));
+
+    state = fresh();
+    play = null;
+    freeGame = 'zit';
+    startFree('zit');
+    check('startFree("zit") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Zıt Kelimeler hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- E5.3: Ses hız/tekrar kontrolü (yavaş/normal) ---
   try {
     state = fresh();
@@ -1952,6 +1986,9 @@ pushCheck('Serbest oyun menüsünde "Büyük mü Küçük mü?" kartı mevcut', 
 pushCheck('Serbest oyun menüsünde "Büyük Harf Çiz" kartı mevcut', html.includes("startFree('cizBuyuk')") && html.includes('Büyük Harf Çiz'));
 // --- Kafiye Bulma: Serbest oyun menüsünde kart mevcut ---
 pushCheck('Serbest oyun menüsünde "Kafiye Bulma" kartı mevcut', html.includes("startFree('kafiye')") && html.includes('Kafiye Bulma'));
+// --- Zıt Kelimeler: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
+pushCheck('Serbest oyun menüsünde "Zıt Kelimeler" kartı mevcut', html.includes("startFree('zit')") && html.includes('Zıt Kelimeler'));
+pushCheck('"Zıt Kelimeler" kartı Çözümleme moduna özel gizleniyor (freeZit)', /getElementById\('freeZit'\)\.style\.display=h/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -1960,7 +1997,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (14 statik + 1 renderWho() şablonu = 15 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 15);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (15 statik + 1 renderWho() şablonu = 16 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 16);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
