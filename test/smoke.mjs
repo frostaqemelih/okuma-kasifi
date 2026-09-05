@@ -145,6 +145,15 @@ const testDriver = `
     check('Tepki çeşitliliği listeleri hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E7.5 i18n iskeleti: STR sözlüğü + T() yardımcı fonksiyonu ---
+  try {
+    check('STR sözlüğü tanımlı (i18n iskeleti)', typeof STR === 'object' && STR !== null);
+    check('T() bilinen bir anahtar için sözlükteki metni döndürüyor', T('evet') === STR.evet && T('hayir') === STR.hayir);
+    check('T() bilinmeyen bir anahtar için anahtarın kendisine güvenle düşüyor', T('hic-boyle-bir-anahtar-yok') === 'hic-boyle-bir-anahtar-yok');
+  } catch (e) {
+    check('i18n iskeleti (STR/T) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- 9) E3.3 Zayıf seslere otomatik dönüş: haritada "Tekrar turu" düğmesi ve hedefli tur ---
   try {
     state = fresh();

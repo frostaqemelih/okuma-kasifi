@@ -1228,6 +1228,16 @@ const RETRY_MSGS=['Az kaldı, tekrar dinleyelim.','Neredeyse! Bir daha dinleyeli
   'Devam, çok güzel deniyorsun.','Hiç sorun değil, bir daha dinleyelim.'];
 const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
   'Neredeyse buldun, ipucuna bak.','Harika deniyorsun, ipucu burada.','Az kaldı Kâşif, ipucuna bak.'];
+/* E7.5: i18n iskeleti — tek dil (tr) ama yapı hazır. Tekrarlanan kısa UI metinleri (düğme
+   yazıları, evet/hayır gibi) `T('anahtar')` üzerinden bu sözlükten okunur; bilinmeyen bir
+   anahtar (henüz göç etmemiş metin) çağrıldığı gibi geri döner, bu yüzden kademeli göç güvenli.
+   İlk dalga: birden çok oyunda tekrar eden "Evet/Hayır" düğme metinleri. Diğer tüm kullanıcı
+   metinleri (ders içerikleri, soru cümleleri, ekran metinleri) sonraki oturumlarda kademeli
+   olarak buraya taşınacak — büyük madde, tek seferde değil alt adımlarla. */
+const STR={
+  evet:'Evet ✅', hayir:'Hayır ❌'
+};
+function T(key){ return Object.prototype.hasOwnProperty.call(STR,key) ? STR[key] : key; }
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v','ğ','f','j'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
@@ -2108,7 +2118,7 @@ function roundKafiyeEvetHayir(pool, known, groups, rhymeSuffixes){
   curTargets=[...new Set(suf.split(''))].filter(c=>/^[a-zçğıöşü]$/.test(c));
   qtext.textContent=`«${a.w}» ile «${b.w}» kafiyeli (uyaklı) mi?`;
   playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
-  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
   paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
   sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} kafiyeli mi?`);
 }
@@ -2178,7 +2188,7 @@ function roundZitEvetHayir(pool, cands){
   curTargets=[...new Set((a.w+b.w).split(''))];
   qtext.textContent=`«${a.w}» ile «${b.w}» zıt anlamlı (ters) mi?`;
   playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
-  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
   paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
   sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} zıt anlamlı mı?`);
 }
@@ -2248,7 +2258,7 @@ function roundEsanlamEvetHayir(pool, cands){
   curTargets=[...new Set((a.w+b.w).split(''))];
   qtext.textContent=`«${a.w}» ile «${b.w}» aynı anlama (eş anlamlı) mı?`;
   playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
-  const opts=shuffle([{glyph:'Evet ✅',key:'yes'},{glyph:'Hayır ❌',key:'no'}]);
+  const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
   paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
   sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} aynı anlama mı geliyor?`);
 }
