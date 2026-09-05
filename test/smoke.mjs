@@ -2019,6 +2019,49 @@ const testDriver = `
     check('Kendi Hikayeni Kur hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- Sesli mi Sessiz mi? (rutin, yeni mini oyun): ünlü/ünsüz ayrımı ---
+  try {
+    const fullPoolVS = ALL_LETTERS;
+    const origRandomVS = Math.random;
+    state = fresh();
+    play = null;
+    Math.random = () => 0.1; // roundSesliSessizTek varyantı
+    roundSesliSessiz(fullPoolVS);
+    Math.random = origRandomVS;
+    check('roundSesliSessiz() (a) "ünlü mü, ünsüz mü?" sorusu soruyor', qtext.textContent.endsWith('ünlü mü, ünsüz mü?'));
+    check('roundSesliSessiz() (a) tam olarak 2 şık sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundSesliSessiz() (a) tam 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundSesliSessiz() (a) curTargets tek harfle doluyor', curTargets.length === 1);
+
+    const rBtnVS = document.querySelector('#choices .choice[data-right="1"]');
+    const correctBeforeVS = state.correct;
+    choose(rBtnVS, true);
+    check('roundSesliSessiz() (a) doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeVS + 1);
+
+    // (b) YENİ: iki harf gösterilir, hangisi ünlü/ünsüz?
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // roundSesliSessizIki varyantı
+    roundSesliSessiz(fullPoolVS);
+    Math.random = origRandomVS;
+    check('roundSesliSessiz() (b) "Hangisi ünlü" veya "Hangisi ünsüz" soruyor', qtext.textContent === 'Hangisi ünlü (sesli) harf?' || qtext.textContent === 'Hangisi ünsüz (sessiz) harf?');
+    check('roundSesliSessiz() (b) tam olarak 2 şık sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundSesliSessiz() (b) curTargets iki harfle doluyor', curTargets.length === 2);
+
+    state = fresh();
+    play = null;
+    roundSesliSessiz(['a']); // yalnız ünlü, ünsüz yok -> güvenli şekilde roundBul içine düşmeli
+    check('roundSesliSessiz() yetersiz pool (yalnız ünlü) ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !qtext.textContent.includes('ünlü mü'));
+
+    state = fresh();
+    play = null;
+    freeGame = 'sesli';
+    startFree('sesli');
+    check('startFree("sesli") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Sesli mi Sessiz mi hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -2049,6 +2092,9 @@ pushCheck('Serbest oyun menüsünde "Zıt Kelimeler" kartı mevcut', html.includ
 pushCheck('"Zıt Kelimeler" kartı Çözümleme moduna özel gizleniyor (freeZit)', /getElementById\('freeZit'\)\.style\.display=h/.test(html));
 // --- Kategori Bulmaca: Serbest oyun menüsünde kart mevcut (her iki yaş modunda da gorunur) ---
 pushCheck('Serbest oyun menüsünde "Kategori Bulmaca" kartı mevcut', html.includes("startFree('kategori')") && html.includes('Kategori Bulmaca'));
+// --- Sesli mi Sessiz mi: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
+pushCheck('Serbest oyun menüsünde "Sesli mi Sessiz mi?" kartı mevcut', html.includes("startFree('sesli')") && html.includes('Sesli mi Sessiz mi?'));
+pushCheck('"Sesli mi Sessiz mi?" kartı Çözümleme moduna özel gizleniyor (freeSesli)', /getElementById\('freeSesli'\)\.style\.display=h/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -2057,7 +2103,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (16 statik + 1 renderWho() şablonu = 17 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 17);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (17 statik + 1 renderWho() şablonu = 18 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 18);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));

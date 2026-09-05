@@ -429,6 +429,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeCizBuyuk" onclick="startFree('cizBuyuk')"><span class="big">🔠</span><span><b>Büyük Harf Çiz</b><span>Yeşil noktadan başla, BÜYÜK harfi yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeHikaye" onclick="requirePremium('hikaye', ()=>startFree('hikaye'))"><span class="big">📖</span><span><b>Kendi Hikayeni Kur</b><span>İstediğin kelimeleri seç, Kâşif okusun</span></span></div>
       <div class="age-card" tabindex="0" role="button" id="freeZit" onclick="startFree('zit')"><span class="big">🔀</span><span><b>Zıt Kelimeler</b><span>Kelimenin tersini (zıttını) bul</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeSesli" onclick="startFree('sesli')"><span class="big">🎶</span><span><b>Sesli mi Sessiz mi?</b><span>Harf ünlü mü, ünsüz mü?</span></span></div>
     </div>
   </section>
 
@@ -1427,6 +1428,7 @@ function go(id){
     document.getElementById('freeCizBuyuk').style.display=h; // E6.5: Büyük harf çizimi de Çözümleme moduna özel
     document.getElementById('freeHikaye').style.display=h; // Kendi Hikayeni Kur de Çözümleme moduna özel
     document.getElementById('freeZit').style.display=h; // Zıt Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
+    document.getElementById('freeSesli').style.display=h; // Sesli mi Sessiz mi de Çözümleme moduna özel (ses bilgisi)
   }
 }
 function onStart(){
@@ -1694,7 +1696,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -2197,6 +2199,41 @@ function roundKategoriFarkli(pool, avail){
   playArea.innerHTML=stageHTML(`<span class="glyph">🧐</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt('Hangisi gruba ait değil, farklı olan hangisi?');
+}
+/* Sesli mi Sessiz mi? (rutin, yeni mini oyun, Çözümleme modu): önceki oyunlardan (ses/harf/hece/kafiye/
+   zıt/kategori) farklı bir beceri — bir harfin ÜNLÜ mü ÜNSÜZ mü olduğunu tanıma (Türkçe ses bilgisi,
+   MEB müfredatının temel bir sınıflandırması). TURKISH_VOWELS (aşağıda tanımlı, hece sayma E2.4'te de
+   kullanılıyor) burada da referans alınır. */
+function roundSesliSessiz(pool){
+  locked=false; curWrongCount=0; curTargets=[];
+  const letters=pool.filter(c=>/^[a-zçğıöşü]$/.test(c));
+  const vowels=letters.filter(c=>TURKISH_VOWELS.includes(c));
+  const consonants=letters.filter(c=>!TURKISH_VOWELS.includes(c));
+  if(vowels.length<1 || consonants.length<1){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundSesliSessizTek(letters);
+  else roundSesliSessizIki(vowels,consonants);
+}
+function roundSesliSessizTek(letters){
+  // (a) tek harf gösterilir: ünlü mü ünsüz mü?
+  const t=rnd(letters); curTargets=[t];
+  const isVowel=TURKISH_VOWELS.includes(t);
+  const opts=shuffle([{glyph:'Ünlü (sesli)',key:'vowel'},{glyph:'Ünsüz (sessiz)',key:'consonant'}]);
+  qtext.textContent=`«${t}» harfi ünlü mü, ünsüz mü?`;
+  playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
+  paint(opts,'c2',o=>o.key===(isVowel?'vowel':'consonant'));
+  sayPrompt(`${t}. ${t} harfi ünlü mü, ünsüz mü?`);
+}
+function roundSesliSessizIki(vowels,consonants){
+  // (b) YENİ: iki harf gösterilir, "hangisi ünlü/ünsüz?" — (a)'dan farklı, iki seçeneği
+  // karşılaştırıp seçim yapma (kategori bulmacadaki gibi ayırt etme becerisi).
+  const wantVowel=Math.random()<0.5;
+  const v=rnd(vowels), c=rnd(consonants);
+  curTargets=[v,c];
+  const opts=shuffle([{glyph:v,key:'v'},{glyph:c,key:'c'}]);
+  qtext.textContent=wantVowel?'Hangisi ünlü (sesli) harf?':'Hangisi ünsüz (sessiz) harf?';
+  playArea.innerHTML=stageHTML(`<span class="glyph">🔤</span>`);
+  paint(opts,'c2',o=>o.key===(wantVowel?'v':'c'));
+  sayPrompt(wantVowel?'Hangisi ünlü, sesli harf?':'Hangisi ünsüz, sessiz harf?');
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 4 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){
