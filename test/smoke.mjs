@@ -218,23 +218,29 @@ const testDriver = `
     check('Aralıklı tekrar (ısınma turu) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
-  // --- 12) E2.4 Harfi Bul çeşitliliği: (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle ---
+  // --- 12) E2.4 + YENİ (d) Harfi Bul çeşitliliği: (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle, (d) görsel benzer harf ---
   try {
     const origRandom = Math.random;
     state = fresh();
     Math.random = () => 0; // (a) resim→harf
     roundBul(['a', 'n', 'e', 't']);
     check('roundBul (a) resim→harf varyantı görseli gösteriyor', playArea.innerHTML.includes(WORDS[curTargets[0]].emoji));
-    Math.random = () => 0.5; // (b) ses duy→harf
+    Math.random = () => 0.3; // (b) ses duy→harf
     roundBul(['a', 'n', 'e', 't']);
     check('roundBul (b) ses duy→harf varyantı soru metnini gösteriyor', qtext.textContent === 'Duyduğun ses hangi harf?');
     check('roundBul (b) varyantında doğru cevap seçenekler arasında', document.querySelector('#choices .choice[data-right="1"]') !== null);
-    Math.random = () => 0.99; // (c) büyük/küçük eşle
+    Math.random = () => 0.6; // (c) büyük/küçük eşle
     roundBul(['a', 'n', 'e', 't']);
     check('roundBul (c) büyük/küçük varyantı soru metninde BÜYÜK geçiyor', qtext.textContent.includes('BÜYÜK'));
     const upperTarget = UPPER_MAP[curTargets[0]];
     const rightChoice = document.querySelector('#choices .choice[data-right="1"]');
     check('roundBul (c) doğru şık hedefin büyük hâlini gösteriyor', rightChoice && rightChoice.textContent.includes(upperTarget));
+    Math.random = () => 0.9; // (d) YENİ: görsel benzer harf ayrımı — pool'daki 'i' hedef seçilir (confusable: 'ı')
+    roundBul(['a', 'n', 'e', 't', 'i']);
+    check('roundBul (d) hedefi "i" seçiyor (confusable havuzu olan harf)', curTargets[0] === 'i');
+    check('roundBul (d) görsel benzer harf sorusu soruyor', qtext.textContent === '«i» harfi hangisi?');
+    check('roundBul (d) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundBul (d) çeldiriciler arasında confusable "ı" var', Array.from(document.querySelectorAll('#choices .choice .glyph')).some(el => el.textContent === 'ı'));
     Math.random = origRandom;
   } catch (e) {
     check('Harfi Bul çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);

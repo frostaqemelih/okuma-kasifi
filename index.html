@@ -1223,6 +1223,18 @@ const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1])
 const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v','ğ','f','j'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
 const UPPER_MAP={a:'A',e:'E',i:'İ','ı':'I',o:'O',u:'U','ö':'Ö','ü':'Ü',n:'N',t:'T',l:'L',k:'K',r:'R',m:'M',s:'S',d:'D',y:'Y',b:'B',z:'Z',p:'P',g:'G',c:'C',ş:'Ş',ç:'Ç',h:'H',v:'V','ğ':'Ğ',f:'F',j:'J'};
+/* Harfi Bul (d) YENİ varyantı: görsel olarak birbirine karışan harf çiftleri (ayna/şekil benzerliği
+   veya nokta/cedilla farkı) — b/d/p, m/n, ş/s, ç/c, ı/i, o/ö/u/ü, g/ğ. 4-7 yaşta yaygın harf
+   karıştırma hataları; hedefli distractor kullanarak görsel ayrımı pekiştirir. */
+const CONFUSABLE_PAIRS={
+  b:['d','p'], d:['b'], p:['b','g'],
+  m:['n'], n:['m'],
+  ş:['s'], s:['ş'],
+  ç:['c'], c:['ç'],
+  'ı':['i'], i:['ı'],
+  o:['ö','u'], 'ö':['o','ü'], u:['ü','o'], 'ü':['ö','u'],
+  g:['ğ','p'], 'ğ':['g']
+};
 
 /* Normalize edilmiş harf yazım yolları (0–1). Her harf = vuruş dizisi; her vuruş = [x,y] noktaları.
    Vuruş sırası ve yönü MEB yazım kılavuzuna yakın (yeşil noktadan başla). */
@@ -1848,7 +1860,8 @@ function difficultyLevel(){
   return 'normal';
 }
 function roundBul(pool){
-  // E2.4: 3 varyant — (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle. Rastgele seçilir.
+  // E2.4 + YENİ (d): 4 varyant — (a) resim→harf, (b) ses duy→harf, (c) büyük/küçük eşle,
+  // (d) görsel benzer harf ayrımı (b/d/p, m/n, ş/s, ç/c, ı/i, o/ö/u/ü). Rastgele seçilir.
   locked=false; curWrongCount=0;
   const t=rnd(pool); curTargets=[t];
   const lvl=difficultyLevel(), total=lvl==='zor'?5:lvl==='kolay'?3:4, need=total-1;
@@ -1856,24 +1869,36 @@ function roundBul(pool){
   const distr=shuffle(ALL_LETTERS.filter(x=>!pool.includes(x))).slice(0,need-same.length);
   const opts=shuffle([t,...same,...distr]);
   // E4.4 (d): 'ğ' hiçbir kelimenin başında olmadığından "hangi harfle başlar?" (a) varyantı
-  // ğ hedefteyken anlamsızlaşır — bu durumda (b) veya (c) varyantına yönlendirilir.
+  // ğ hedefteyken anlamsızlaşır — bu durumda (b)/(c)/(d) varyantına yönlendirilir.
   let r=Math.random();
-  if(t==='ğ' && r<1/3) r=1/3+Math.random()*(2/3);
-  if(r<1/3){
+  if(t==='ğ' && r<1/4) r=1/4+Math.random()*(3/4);
+  // (d) yeterli görsel benzer harf yoksa (a)/(b)/(c)'ye düş.
+  const confusables=(CONFUSABLE_PAIRS[t]||[]).filter(x=>ALL_LETTERS.includes(x));
+  if(r>=3/4 && !confusables.length) r=Math.random()*(3/4);
+  if(r<1/4){
     qtext.textContent=`«${WORDS[t].word}» hangi harfle başlar?`;
     playArea.innerHTML=stageHTML(`<span>${WORDS[t].emoji}</span>`);
     sayPrompt(`${WORDS[t].word}. ${WORDS[t].word} hangi harfle başlar?`);
     paint(opts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===t);
-  }else if(r<2/3){
+  }else if(r<2/4){
     qtext.textContent='Duyduğun ses hangi harf?';
     playArea.innerHTML=stageHTML(`<span class="glyph">👂</span>`);
     sayPrompt(`Dinle. ${t}… ${t}. Duyduğun ses hangi harf?`);
     paint(opts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===t);
-  }else{
+  }else if(r<3/4){
     qtext.textContent=`«${t}» harfinin BÜYÜK hâli hangisi?`;
     playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
     sayPrompt(`${t} harfinin büyük hâli hangisi?`);
     paint(opts.map(l=>({glyph:UPPER_MAP[l]||l,key:l})),'c4',o=>o.key===t);
+  }else{
+    const cneed=Math.min(need, confusables.length);
+    const cdistr=shuffle(confusables).slice(0,cneed);
+    const filler=shuffle(ALL_LETTERS.filter(x=>x!==t && !cdistr.includes(x))).slice(0,need-cdistr.length);
+    const dopts=shuffle([t,...cdistr,...filler]);
+    qtext.textContent=`«${t}» harfi hangisi?`;
+    playArea.innerHTML=stageHTML(`<span class="glyph">${t}</span>`);
+    sayPrompt(`${t} harfini bul. «${t}» harfi hangisi?`);
+    paint(dopts.map(l=>({glyph:l,key:l})),'c4',o=>o.key===t);
   }
 }
 /* E2.4: Sesi Eşleştir yardımcıları — bir sesle başlayan / biten kelime resimleri topla. */
