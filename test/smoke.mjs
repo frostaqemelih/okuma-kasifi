@@ -1317,6 +1317,10 @@ const testDriver = `
     check('capitalize() Türkçe ı/I kuralını uyguluyor', capitalize('ışık') === 'Işık');
     check('capitalize() Türkçe i/İ kuralını uyguluyor', capitalize('iğne') === 'İğne');
     check('PROPER_NAMES en az 3 isim içeriyor', Array.isArray(PROPER_NAMES) && PROPER_NAMES.length >= 3);
+    const g1PoolNames = 'anetil'.split('');
+    const g1OnlyNames = PROPER_NAMES.filter(p => p.name.split('').every(c => g1PoolNames.includes(c)));
+    check('PROPER_NAMES en az 4 isim yalnız 1. grup seslerinden kurulu (ücretsiz katman)', g1OnlyNames.length >= 4);
+    check('PROPER_NAMES yeni isimleri (nil/ata) içeriyor', ['nil', 'ata'].every(n => PROPER_NAMES.some(p => p.name === n)));
 
     const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
     state = fresh();

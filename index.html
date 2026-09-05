@@ -1080,7 +1080,11 @@ const NUMBERS=[
 /* E4.6: Büyük/küçük harf farkındalığı — özel adlar (kişi isimleri), yalnız pool'daki seslerden. */
 const PROPER_NAMES=[
   {name:'ali',   emoji:'🧒'}, {name:'ela',  emoji:'👧'}, {name:'nur',  emoji:'👧'},
-  {name:'tuna',  emoji:'🧒'}, {name:'kerem',emoji:'🧒'}, {name:'umut', emoji:'🧒'}
+  {name:'tuna',  emoji:'🧒'}, {name:'kerem',emoji:'🧒'}, {name:'umut', emoji:'🧒'},
+  /* Ücretsiz katman zenginleştirme (rutin): yalnız 1. grup (a,n,e,t,i,l) seslerinden kurulu 2 isim
+     daha — önceden yalnız "ali"/"ela" pure 1. gruptu, ücretsiz kullanıcı bu oyunda hep aynı 2 ismi
+     görüyordu. */
+  {name:'nil',   emoji:'👧'}, {name:'ata',  emoji:'🧒'}
 ];
 function capitalize(w){
   if(!w) return w;
