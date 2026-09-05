@@ -1512,23 +1512,36 @@ const testDriver = `
       CATEGORY_WORDS.every(c => c.words.every(x => x.w.split('').every(ch => ALL_LETTERS.includes(ch)))));
 
     const fullPoolKat = ALL_LETTERS;
+    const origRandomKat = Math.random;
     state = fresh();
     play = null;
+    Math.random = () => 0.1; // (a) kategori adıyla sor varyantı
     roundKategori(fullPoolKat);
-    check('roundKategori() "Hangisi bir ...?" sorusu soruyor', /^Hangisi bir /.test(qtext.textContent));
-    check('roundKategori() tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
-    check('roundKategori() en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
-    check('roundKategori() curTargets doğru cevabın harfleriyle doluyor', Array.isArray(curTargets) && curTargets.length > 0);
+    Math.random = origRandomKat;
+    check('roundKategori() (a) "Hangisi bir ...?" sorusu soruyor', /^Hangisi bir /.test(qtext.textContent));
+    check('roundKategori() (a) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundKategori() (a) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundKategori() (a) curTargets doğru cevabın harfleriyle doluyor', Array.isArray(curTargets) && curTargets.length > 0);
 
     const rBtnKat = document.querySelector('#choices .choice[data-right="1"]');
     const correctBeforeKat = state.correct;
     choose(rBtnKat, true);
-    check('roundKategori() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeKat + 1);
+    check('roundKategori() (a) doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeKat + 1);
+
+    // (b) YENİ: "hangisi gruba ait değil?" (odd-one-out) — kategori adı verilmiyor.
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // roundKategoriFarkli varyantı
+    roundKategori(fullPoolKat);
+    Math.random = origRandomKat;
+    check('roundKategori() (b) "gruba ait değil" sorusu soruyor', qtext.textContent === 'Hangisi gruba ait değil (farklı)?');
+    check('roundKategori() (b) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundKategori() (b) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
 
     state = fresh();
     play = null;
     roundKategori(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiç kategori kelimesi uymaz) -> güvenli şekilde roundBul içine düşmeli
-    check('roundKategori() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !/^Hangisi bir /.test(qtext.textContent));
+    check('roundKategori() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !/^Hangisi bir /.test(qtext.textContent) && qtext.textContent !== 'Hangisi gruba ait değil (farklı)?');
 
     state = fresh();
     play = null;

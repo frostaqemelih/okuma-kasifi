@@ -2144,6 +2144,11 @@ function roundKategori(pool){
   const known=w=>w.split('').every(c=>pool.includes(c));
   const avail=CATEGORY_WORDS.map(c=>({label:c.label, words:c.words.filter(x=>known(x.w))})).filter(c=>c.words.length>=1);
   if(avail.length<2){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundKategoriIsim(pool, avail);
+  else roundKategoriFarkli(pool, avail);
+}
+function roundKategoriIsim(pool, avail){
+  // (a) mevcut: kategori adı verilir, o kategoriden bir kelime bulunur.
   const catIdx=Math.floor(Math.random()*avail.length);
   const cat=avail[catIdx];
   const target=rnd(cat.words);
@@ -2157,6 +2162,26 @@ function roundKategori(pool){
   playArea.innerHTML=stageHTML(`<span class="glyph">❓</span>`);
   paint(opts,'c3',o=>o.key==='right');
   sayPrompt(`Hangisi ${cat.label}?`);
+}
+function roundKategoriFarkli(pool, avail){
+  // (b) YENİ: "hangisi gruba ait değil?" (odd-one-out) — birkaç kelime aynı kategoriden, biri
+  // farklı kategoriden. (a)'dan farklı bir beceri: kategori adı VERİLMİYOR, çocuk kendisi ortak
+  // özelliği çıkarıp aykırı olanı bulmalı.
+  const mainCands=avail.filter(c=>c.words.length>=2);
+  if(!mainCands.length){ roundKategoriIsim(pool, avail); return; }
+  const mainCat=rnd(mainCands);
+  const otherCats=avail.filter(c=>c!==mainCat);
+  if(!otherCats.length){ roundKategoriIsim(pool, avail); return; }
+  const lvl=difficultyLevel(), sameCount=lvl==='zor'?3:lvl==='kolay'?1:2;
+  const sameWords=shuffle(mainCat.words).slice(0,Math.min(sameCount,mainCat.words.length));
+  const oddCat=rnd(otherCats);
+  const oddWord=rnd(oddCat.words);
+  curTargets=[...new Set(oddWord.w.split(''))];
+  const opts=shuffle([{emoji:oddWord.e,cap:oddWord.w,key:'right'},...sameWords.map((w,i)=>({emoji:w.e,cap:w.w,key:'s'+i}))]);
+  qtext.textContent='Hangisi gruba ait değil (farklı)?';
+  playArea.innerHTML=stageHTML(`<span class="glyph">🧐</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt('Hangisi gruba ait değil, farklı olan hangisi?');
 }
 /* E4.7: Rakam ve sayı sesleri mini-modülü — 4 varyant, harf havuzundan bağımsız (her zaman oynanabilir). */
 function roundRakam(){
