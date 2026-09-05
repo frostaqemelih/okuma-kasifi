@@ -1064,7 +1064,11 @@ const WORDBANK=[
      kümülatif ses havuzundan (mufredat.json sesGruplari.tymm), yeni sesleri pekiştiren, net emojili kelimeler. */
   {w:'yıldız',e:'⭐'},{w:'dondurma',e:'🍦'},{w:'deniz',e:'🌊'},
   {w:'güneş',e:'☀️'},{w:'çiçek',e:'🌸'},{w:'balık',e:'🐟'},
-  {w:'top',e:'⚽'},{w:'fırın',e:'🥖'},{w:'kağıt',e:'📄'}
+  {w:'top',e:'⚽'},{w:'fırın',e:'🥖'},{w:'kağıt',e:'📄'},
+  /* WORDBANK genişletme (rutin, ücretsiz katman zenginleştirme): 1. grup (a,n,e,t,i,l) TEK BAŞINA
+     kurulan yeni kelimeler — çoğu genişletme 3.-5. grup hedeflediğinden ücretsiz kullanıcı (henüz
+     yalnız 1. grubu açmış) uzun süre aynı ~6 kelimeyi görüyordu. */
+  {w:'lale',e:'🌷'},{w:'nane',e:'🌿'},{w:'alet',e:'🔧'},{w:'tel',e:'🧵'},{w:'tatil',e:'🧳'}
 ];
 /* E4.7: Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik, harf havuzundan bağımsız. */
 const NUMBERS=[
@@ -1109,10 +1113,16 @@ const SENTENCES=[
   /* Cümle Bahçesi genişlemesi (rutin): WORDBANK genişletmesindeki yeni kelimelerle 3.-5. grup pekiştirmesi. */
   {w:['nine','dondurma','al'], t:'Nine dondurma al.'},
   {w:['anne','çiçek','al'],    t:'Anne çiçek al.'},
-  {w:['baba','top','al'],      t:'Baba top al.'}
+  {w:['baba','top','al'],      t:'Baba top al.'},
+  /* 1. grup (a,n,e,t,i,l) TEK BAŞINA yeni cümleler — WORDBANK genişletmesindeki lale/nane/tel kelimeleriyle;
+     ücretsiz kullanıcı henüz yalnız 1. grubu açmışken de Cümle Bahçesi'nde çeşitlilik olsun diye. */
+  {w:['anne','lale','al'], t:'Anne lale al.'},
+  {w:['nine','nane','al'], t:'Nine nane al.'},
+  {w:['ali','tel','al'],   t:'Ali tel al.'}
 ];
 const SENT_WORDS=['at','al','el','ele','o','kola','kalem','nine','elma','kutu','armut','kral','roket','market','tekne',
-  'su','domates','yumurta','çay','gül','şeker','baba','fil','horoz','dondurma','çiçek','top'];
+  'su','domates','yumurta','çay','gül','şeker','baba','fil','horoz','dondurma','çiçek','top',
+  'lale','nane','tel','ali'];
 /* E3.5: Okuma Kulübü metin bankası — data/metinler.json ile senkron. Her metin yalnız kendi
    `gerekli` seslerinden kurulu (Kâşif metni okusa da çocuk seslerini tanıyabilsin diye); anlama
    soruları/şıkları TTS ile dinlenir, daha esnek kelimeler içerebilir. pickText() çocuğun açtığı

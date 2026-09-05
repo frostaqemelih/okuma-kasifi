@@ -536,6 +536,25 @@ const testDriver = `
     check('Cumle Bahcesi 3.-5. grup pekistirmesi hatasiz calisti (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK/Cümle Bahçesi ücretsiz katman zenginleştirme (rutin): 1. grup (a,n,e,t,i,l) TEK BAŞINA yeni içerik ---
+  try {
+    const g1Pool = 'anetil'.split('');
+    const newG1Words = ['lale', 'nane', 'alet', 'tel', 'tatil'];
+    check('Yeni WORDBANK kelimeleri (lale/nane/alet/tel/tatil) tanımlı',
+      newG1Words.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni WORDBANK kelimeleri yalnız 1. grup seslerinden kurulu (ücretsiz katmanda hemen erişilebilir)',
+      newG1Words.every(w => w.split('').every(c => g1Pool.includes(c))));
+    const g1CandsFor = SENTENCES.filter(s => s.w.every(w => w.split('').every(c => g1Pool.includes(c))));
+    check('1. grup pool (yalnız a,n,e,t,i,l) "Anne lale al." cümlesini içeriyor',
+      g1CandsFor.some(s => s.t === 'Anne lale al.'));
+    check('1. grup pool "Nine nane al." cümlesini içeriyor', g1CandsFor.some(s => s.t === 'Nine nane al.'));
+    check('1. grup pool "Ali tel al." cümlesini içeriyor', g1CandsFor.some(s => s.t === 'Ali tel al.'));
+    check('SENT_WORDS yeni kelimeleri (lale/nane/tel/ali) içeriyor',
+      ['lale', 'nane', 'tel', 'ali'].every(w => SENT_WORDS.includes(w)));
+  } catch (e) {
+    check('WORDBANK/Cümle Bahçesi 1. grup zenginleştirme hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- 24) E4.2 3. grup başlangıcı: ü sesi tam donanımlı eklendi (WORDS/STROKES/LESSONS/WORDBANK) ---
   try {
     check('WORDS.ü tanımlı ve ü ile başlıyor', !!WORDS['ü'] && WORDS['ü'].word[0] === 'ü');
