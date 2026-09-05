@@ -323,12 +323,12 @@ const testDriver = `
     state = fresh();
     recentRounds = [];
 
-    Math.random = () => 0.5; // (b) hangisi farklı sesle başlıyor
+    Math.random = () => 0.4; // (b) hangisi farklı sesle başlıyor (4 varyant: <.25 baş, .25-.5 farklı, .5-.75 son, >=.75 içeriyor)
     roundSes(fullPool);
     check('roundSes (b) varyantı doğru soru metnini gösteriyor', qtext.textContent === 'Hangisi farklı sesle başlıyor?');
     check('roundSes (b) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
 
-    Math.random = () => 0.99; // (c) son ses
+    Math.random = () => 0.6; // (c) son ses
     roundSes(fullPool);
     check('roundSes (c) varyantı "bitiyor" soru metnini gösteriyor', qtext.textContent.includes('bitiyor'));
     check('roundSes (c) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
@@ -336,6 +336,25 @@ const testDriver = `
     Math.random = origRandom;
   } catch (e) {
     check('Sesi Eşleştir çeşitliliği (E2.4 b/c) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- Sesi Eşleştir 4. varyant (rutin, yeni içerik): (d) "hangisinde bu ses var?" (herhangi bir konumda) ---
+  try {
+    const origRandom = Math.random;
+    const fullPool = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
+    state = fresh();
+    recentRounds = [];
+
+    Math.random = () => 0.9; // (d) içeriyor mu
+    roundSes(fullPool);
+    check('roundSes (d) varyantı "sesi var" soru metnini gösteriyor', qtext.textContent.includes('sesi var'));
+    check('roundSes (d) varyantında tam olarak 1 doğru şık var', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundSes (d) doğru şık hedef sesi gerçekten içeriyor',
+      curTargets.length === 1 && document.querySelector('#choices .choice[data-right="1"]').textContent.includes(curTargets[0]));
+
+    Math.random = origRandom;
+  } catch (e) {
+    check('Sesi Eşleştir 4. varyant (roundSesMid) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
   // --- 17) E2.4 Hece Kur çeşitliliği: (b) hece→resim, (c) eksik harfi bul ---
