@@ -1134,11 +1134,28 @@ const TEXTS=[
       {soru:'Metinde ne alınıyor?', secenekler:['At','Tel','Anne'], dogru:'At'},
       {soru:'Kim anlatıyor?', secenekler:['Nine','Anne','Tel'], dogru:'Nine'}
     ]},
+  /* Okuma Kulübü ikinci metin (rutin): 1. grup (ücretsiz katman) için de alternatif metin —
+     önceden yalnız 3.-5. grupta vardı, en uzun süre tek metinle kalan ücretsiz kullanıcı şimdi
+     kapsandı. WORDBANK'a yeni eklenen lale/nane/tel kelimelerini kullanıyor. */
+  { id:'els-1b', tier:1, gerekli:['a','n','e','l','i','t'],
+    metin:'Anne lale al. Nine nane al. Ali tel al.',
+    sorular:[
+      {soru:'Anne ne alıyor?', secenekler:['Lale','Nane','Tel'], dogru:'Lale'},
+      {soru:'Ali ne alıyor?', secenekler:['Tel','Lale','Nane'], dogru:'Tel'}
+    ]},
   { id:'els-2', tier:2, gerekli:['a','e','l','m','r','k','t','n','u'],
     metin:'Ela markette. Elma al. Anne mutlu.',
     sorular:[
       {soru:'Ela nerede?', secenekler:['Market','Otel','Kule'], dogru:'Market'},
       {soru:'Anne nasıl?', secenekler:['Mutlu','Kral','Roket'], dogru:'Mutlu'}
+    ]},
+  /* Okuma Kulübü ikinci metin (rutin): 1.+2. grup için de alternatif metin — mevcut, önceden
+     vetted Cümle Bahçesi cümleleriyle (E4.1) kurulu, aynı harf kısıtına uygun. */
+  { id:'els-2b', tier:2, gerekli:['n','i','e','k','u','t','a','l','r','m','o'],
+    metin:'Nine kutu al. Kral armut al. O roket al.',
+    sorular:[
+      {soru:'Nine ne alıyor?', secenekler:['Kutu','Armut','Roket'], dogru:'Kutu'},
+      {soru:'Kral ne alıyor?', secenekler:['Armut','Kutu','Roket'], dogru:'Armut'}
     ]},
   { id:'els-3', tier:3, gerekli:['k','u','z','o','r','m','a','n','d','y','ü','ö','t','i','l','e','s'],
     metin:'Kuzu ormanda yürür. Tilki kuzuyu arar. Kuzu korkar, annesine döner.',

@@ -476,22 +476,27 @@ const testDriver = `
     const lettersOf = s => Array.from(new Set(s.toLowerCase().replace(/[^a-zçğıöşü]/g, '').split('')));
     const allValid = TEXTS.every(t => lettersOf(t.metin).every(c => t.gerekli.includes(c)));
     check('Her metin yalnız kendi gerekli seslerinden kurulu', allValid);
-    check('pickText() dar pool için en basit metni seçiyor',
-      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === 'els-1');
-    check('pickText() 1.+2. grup pool için els-2 seçiyor (3. grup sesleri henüz yok)',
-      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === 'els-2');
 
-    // pickText() artık ayni tier'da birden fazla metin varsa (3.-5. grup: els-3/els-3b, els-4/els-4b,
-    // els-5/els-5b — tekrar oynanabilirlik icin eklendi) Math.random() ile aralarindan rastgele seciyor.
+    // pickText() artık ayni tier'da birden fazla metin varsa (1./1.+2. grup dahil tüm gruplar:
+    // els-1/els-1b, els-2/els-2b, els-3/els-3b, els-4/els-4b, els-5/els-5b — tekrar oynanabilirlik
+    // icin eklendi) Math.random() ile aralarindan rastgele seciyor.
     const origRandomText = Math.random;
     const poolT3 = ['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i', 'ü', 's', 'ö', 'y', 'd', 'z'];
     const poolT4 = poolT3.concat(['ç', 'b', 'g', 'c', 'ş']);
     const poolT5 = poolT4.concat(['p', 'h', 'v', 'ğ', 'f', 'j']);
     Math.random = () => 0;
+    check('pickText() dar pool için (rastgele=0) en basit metni (els-1) seçiyor',
+      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === 'els-1');
+    check('pickText() 1.+2. grup pool için (rastgele=0) els-2 seçiyor (3. grup sesleri henüz yok)',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === 'els-2');
     check('pickText() 3. grup dahil pool icin (rastgele=0) els-3 seçiyor', pickText(poolT3).id === 'els-3');
     check('pickText() 4. grup dahil pool icin (rastgele=0) els-4 seçiyor', pickText(poolT4).id === 'els-4');
     check('pickText() tüm alfabe (5. grup) pool icin (rastgele=0) els-5 seçiyor', pickText(poolT5).id === 'els-5');
     Math.random = () => 0.9;
+    check('pickText() dar pool için (rastgele=0.9) els-1b (alternatif metin) seçiyor',
+      pickText(['a', 'n', 'e', 't', 'i', 'l']).id === 'els-1b');
+    check('pickText() 1.+2. grup pool için (rastgele=0.9) els-2b (alternatif metin) seçiyor',
+      pickText(['a', 'e', 'l', 'm', 'r', 'k', 't', 'n', 'u', 'o', 'ı', 'i']).id === 'els-2b');
     check('pickText() 3. grup dahil pool icin (rastgele=0.9) els-3b (alternatif metin) seçiyor', pickText(poolT3).id === 'els-3b');
     check('pickText() 4. grup dahil pool icin (rastgele=0.9) els-4b (alternatif metin) seçiyor', pickText(poolT4).id === 'els-4b');
     check('pickText() tüm alfabe (5. grup) pool icin (rastgele=0.9) els-5b (alternatif metin) seçiyor', pickText(poolT5).id === 'els-5b');
@@ -499,10 +504,10 @@ const testDriver = `
 
     const origSay2 = say;
     say = (text, cb) => { if (cb) cb(); };
-    state = fresh(); // taze durumda pool sadece 1. grup (a,n,e,t,i,l) -> els-1 seçilmeli
+    state = fresh(); // taze durumda pool sadece 1. grup (a,n,e,t,i,l) -> els-1/els-1b'den biri seçilmeli
     play = null;
     roundOkuma();
-    check('roundOkuma() taze durumda en basit metni (els-1) seçiyor', READING.id === 'els-1');
+    check('roundOkuma() taze durumda en basit metinlerden birini (els-1/els-1b) seçiyor', ['els-1', 'els-1b'].includes(READING.id));
     say = origSay2;
   } catch (e) {
     check('Okuma Kulübü metin bankası (E3.5) hatasız çalıştı (hata: ' + e.message + ')', false);
