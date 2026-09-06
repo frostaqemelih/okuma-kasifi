@@ -415,6 +415,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e doğru/yanlış, ilk/son, sabah/akşam, yaz/kış eklendi (30'dan 34 çifte). Smoke test'e 1 yeni kontrol + eşik 30→34 güncellendi (718 test toplamda). Sıradaki öncelik: SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e yaramaz/haylaz, çevik/atik, nazik/kibar, gürültülü/şamatacı eklendi (28'den 32 çifte). Smoke test'e 1 yeni kontrol + eşik 28→32 güncellendi (719 test toplamda). Sıradaki öncelik: CATEGORY_WORDS/PROPER_NAMES/WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

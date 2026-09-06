@@ -2146,7 +2146,7 @@ const testDriver = `
 
   // --- Eş Anlamlı Kelimeler (rutin, yeni mini oyun): Zıt Kelimeler'le aynı desen, farklı beceri ---
   try {
-    check('SYNONYMS dizisi tanımlı ve en az 28 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 28);
+    check('SYNONYMS dizisi tanımlı ve en az 32 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 32);
     check('SYNONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       SYNONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (sinirli/kızgın, tembel/uyuşuk, güçlü/kuvvetli, cesur/yürekli, şişman/tombul)',
@@ -2157,6 +2157,8 @@ const testDriver = `
       ['ufacık', 'komik', 'sessiz', 'hüzünlü'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (şaşkın/şaşırmış, korkak/ürkek, yeni/taze, meraklı/ilgili)',
       ['şaşkın', 'korkak', 'yeni', 'meraklı'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (yaramaz/haylaz, çevik/atik, nazik/kibar, gürültülü/şamatacı)',
+      ['yaramaz', 'çevik', 'nazik', 'gürültülü'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
