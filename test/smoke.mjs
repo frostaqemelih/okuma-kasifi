@@ -2195,6 +2195,54 @@ const testDriver = `
     check('Eş Anlamlı Kelimeler hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Önce mi Sonra mı? (rutin, yeni mini oyun): Zıt/Eş Anlamlı Kelimeler'le aynı desen, olay sırası becerisi ---
+  try {
+    check('SEQUENCES dizisi tanımlı ve en az 8 çift içeriyor', Array.isArray(SEQUENCES) && SEQUENCES.length >= 8);
+    check('SEQUENCES her çift yalnız Türk alfabesi harflerinden kurulu',
+      SEQUENCES.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
+    check('SEQUENCES bilinen örnekleri içeriyor (yumurta/civciv, tohum/çiçek, tırtıl/kelebek)',
+      ['yumurta', 'tohum', 'tırtıl'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+
+    const fullPoolSira = ALL_LETTERS;
+    const origRandomSira = Math.random;
+    state = fresh();
+    play = null;
+    Math.random = () => 0.1; // (a) roundSiraSec varyantı
+    roundSira(fullPoolSira);
+    check('roundSira() (a) "önce ne olur?" sorusu soruyor', qtext.textContent.includes("'dan önce ne olur?"));
+    check('roundSira() (a) tam 1 doğru şık sunuyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    check('roundSira() (a) en az 2 şık sunuyor', document.querySelectorAll('#choices .choice').length >= 2);
+    check('roundSira() curTargets soru+cevap kelimelerinin harfleriyle dolduruluyor', Array.isArray(curTargets) && curTargets.length > 0);
+
+    const rBtnSira = document.querySelector('#choices .choice[data-right="1"]');
+    const correctBeforeSira = state.correct;
+    choose(rBtnSira, true);
+    check('roundSira() doğru cevapta doğru sayacını artırıyor', state.correct === correctBeforeSira + 1);
+    recentRounds = []; // choose() E2.5 zorluk uyarlamasına recentRounds ekliyor - sonraki testlere sızmasın
+
+    state = fresh();
+    play = null;
+    Math.random = () => 0.9; // (b) roundSiraEvetHayir varyantı
+    roundSira(fullPoolSira);
+    check('roundSira() (b) "önce mi olur?" soruyor', qtext.textContent.endsWith("'dan önce mi olur?"));
+    check('roundSira() (b) tam olarak 2 şık (Evet/Hayır) sunuyor', document.querySelectorAll('#choices .choice').length === 2);
+    check('roundSira() (b) tam 1 doğru şık işaretliyor', document.querySelectorAll('#choices .choice[data-right="1"]').length === 1);
+    Math.random = origRandomSira;
+
+    state = fresh();
+    play = null;
+    roundSira(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiçbir çift tam uymuyor) -> güvenli şekilde roundBul içine düşmeli
+    check('roundSira() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !qtext.textContent.includes('önce'));
+
+    state = fresh();
+    play = null;
+    freeGame = 'sira';
+    startFree('sira');
+    check('startFree("sira") s-game ekranına geçiyor ve tur render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#choices .choice').length > 0);
+  } catch (e) {
+    check('Önce mi Sonra mı hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- Rakam Çiz (rutin, yeni mini oyun): STROKES_RAKAM + cizLevelRakam + digit creditSounds ---
   // Not: setupTrace()/checkTrace() jsdom'da canvas 2D context'i olmadığından (mevcut Harf Çiz
   // testlerinde de aynı sebeple) doğrudan çağrılmıyor — yalnız saf/durum fonksiyonları test edilir.
@@ -2318,6 +2366,10 @@ pushCheck('nextFreeRound() dağıtım haritası cizRakam:roundRakamCiz içeriyor
 pushCheck('Serbest oyun menüsünde "Eşleştirme Oyunu" kartı mevcut', html.includes("startFree('eslestirme')") && html.includes('Eşleştirme Oyunu'));
 pushCheck('nextFreeRound() dağıtım haritası eslestirme:roundEslestirme içeriyor', /eslestirme:roundEslestirme/.test(html));
 pushCheck('CSS: .mem-grid/.mem-card hafıza kartı stilleri tanımlı', /\.mem-grid\{/.test(html) && /\.mem-card\{/.test(html) && /\.mem-card\.matched\{/.test(html));
+// --- Önce mi Sonra mı?: Serbest oyun menüsünde kart mevcut (Çözümleme moduna özel) ---
+pushCheck('Serbest oyun menüsünde "Önce mi Sonra mı?" kartı mevcut', html.includes("startFree('sira')") && html.includes('Önce mi Sonra mı?'));
+pushCheck('"Önce mi Sonra mı?" kartı Çözümleme moduna özel gizleniyor (freeSira)', /getElementById\('freeSira'\)\.style\.display=h/.test(html));
+pushCheck('nextFreeRound() dağıtım haritası sira:roundSira içeriyor', /sira:roundSira/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -2326,7 +2378,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (20 statik + 1 renderWho() şablonu = 21 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 21);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (21 statik + 1 renderWho() şablonu = 22 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 22);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));

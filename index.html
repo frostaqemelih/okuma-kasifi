@@ -444,6 +444,7 @@
       <div class="age-card" tabindex="0" role="button" id="freeEsanlam" onclick="startFree('esanlam')"><span class="big">🟰</span><span><b>Eş Anlamlı Kelimeler</b><span>Aynı anlama gelen kelimeyi bul</span></span></div>
       <div class="age-card" tabindex="0" role="button" onclick="startFree('cizRakam')"><span class="big">🔢✏️</span><span><b>Rakam Çiz</b><span>Yeşil noktadan başla, rakamı yaz</span></span></div>
       <div class="age-card" tabindex="0" role="button" onclick="startFree('eslestirme')"><span class="big">🃏</span><span><b>Eşleştirme Oyunu</b><span>Kartları çevir, harfle resmini eşle</span></span></div>
+      <div class="age-card" tabindex="0" role="button" id="freeSira" onclick="startFree('sira')"><span class="big">⏭️</span><span><b>Önce mi Sonra mı?</b><span>Hangisi önce olur, hangisi sonra?</span></span></div>
     </div>
   </section>
 
@@ -1483,6 +1484,7 @@ function go(id){
     document.getElementById('freeZit').style.display=h; // Zıt Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
     document.getElementById('freeSesli').style.display=h; // Sesli mi Sessiz mi de Çözümleme moduna özel (ses bilgisi)
     document.getElementById('freeEsanlam').style.display=h; // Eş Anlamlı Kelimeler de Çözümleme moduna özel (anlam ilişkisi)
+    document.getElementById('freeSira').style.display=h; // Önce mi Sonra mı de Çözümleme moduna özel (olay sırası ilişkisi)
   }
 }
 function onStart(){
@@ -1750,7 +1752,7 @@ function startFree(g){
 function nextFreeRound(){
   closeOverlay('reward'); hideFeedback();
   const pool=unlockedPool();
-  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz, esanlam:roundEsanlam, cizRakam:roundRakamCiz, eslestirme:roundEslestirme})[freeGame](pool);
+  ({bul:roundBul, ses:roundSes, hece:roundHece, ciz:roundCiz, cizBuyuk:roundCizBuyuk, kelime:roundKelime, cumle:roundCumle, okuma:roundOkuma, rakam:roundRakam, buyuk:roundBuyuk, hikaye:roundHikaye, kafiye:roundKafiye, zit:roundZit, kategori:roundKategori, sesli:roundSesliSessiz, esanlam:roundEsanlam, cizRakam:roundRakamCiz, eslestirme:roundEslestirme, sira:roundSira})[freeGame](pool);
 }
 
 /* ================= TURLAR ================= */
@@ -2394,6 +2396,66 @@ function roundEsanlamEvetHayir(pool, cands){
   const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
   paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
   sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w} ile ${b.w} aynı anlama mı geliyor?`);
+}
+/* Önce mi Sonra mı? (rutin, yeni mini oyun, Çözümleme modu — Zıt/Eş Anlamlı Kelimeler'in kod
+   deseniyle aynı ama farklı beceri): zıt/eş anlam ilişkisi değil, iki durum arasındaki ZAMANSAL/
+   NEDENSEL SIRA farkındalığı (hangisi önce olur — okuma anlama/olay sırası becerisinin temeli).
+   Yalnızca ikisi de bilinen (pool'a uyan) çiftler arasından seçilir; yeterli çift yoksa roundBul()'a
+   düşer — mevcut fallback deseniyle aynı. */
+const SEQUENCES=[
+  {a:'yumurta',b:'civciv',ea:'🥚',eb:'🐣'},
+  {a:'tohum',b:'çiçek',ea:'🌱',eb:'🌸'},
+  {a:'tırtıl',b:'kelebek',ea:'🐛',eb:'🦋'},
+  {a:'bebek',b:'çocuk',ea:'👶',eb:'🧒'},
+  {a:'fidan',b:'ağaç',ea:'🌿',eb:'🌳'},
+  {a:'kar',b:'su',ea:'❄️',eb:'💧'},
+  {a:'bulut',b:'yağmur',ea:'☁️',eb:'🌧️'},
+  {a:'gündüz',b:'gece',ea:'☀️',eb:'🌙'}
+];
+function roundSira(pool){
+  locked=false; curWrongCount=0;
+  const cands=SEQUENCES.filter(p=>(p.a+p.b).split('').every(c=>pool.includes(c)));
+  if(!cands.length){ roundBul(pool); return; }
+  if(Math.random()<0.5) roundSiraSec(pool, cands);
+  else roundSiraEvetHayir(pool, cands);
+}
+function roundSiraSec(pool, cands){
+  // (a) "X'den önce ne olur?" — doğru öncül durumu çoktan seçmeliden bul.
+  const it=rnd(cands);
+  curTargets=[...new Set((it.a+it.b).split(''))];
+  const lvl=difficultyLevel(), total=lvl==='zor'?3:2, need=total-1;
+  const distrPool=cands.filter(p=>p!==it).flatMap(p=>[{w:p.a,e:p.ea},{w:p.b,e:p.eb}])
+    .filter(w=>w.w!==it.a && w.w!==it.b);
+  const distr=shuffle(distrPool).slice(0,Math.min(need,distrPool.length));
+  const opts=shuffle([{emoji:it.ea,cap:it.a,key:'right'},...distr.map((w,i)=>({emoji:w.e,cap:w.w,key:'d'+i}))]);
+  qtext.textContent=`«${it.b}»'dan önce ne olur?`;
+  playArea.innerHTML=stageHTML(`<span>${it.eb}</span>`);
+  paint(opts,'c3',o=>o.key==='right');
+  sayPrompt(`Dinle. ${it.b}. ${it.b}'dan önce ne olur?`);
+}
+function roundSiraEvetHayir(pool, cands){
+  // (b) iki durum söylenir, çocuk "A, B'den önce mi olur?" sorusuna evet/hayır ile karar verir —
+  // Zıt/Eş Anlamlı Kelimeler'in evet/hayır varyantıyla aynı desen, burada SIRA doğruluğu test edilir.
+  const it=rnd(cands);
+  const a={w:it.a,e:it.ea}, correctB={w:it.b,e:it.eb};
+  const wantYes=Math.random()<0.5;
+  let b;
+  if(wantYes){
+    b=correctB;
+  }else{
+    const others=cands.filter(p=>p!==it);
+    if(!others.length){ roundSiraSec(pool, cands); return; }
+    const ob=rnd(others);
+    const useA=Math.random()<0.5;
+    b=useA?{w:ob.a,e:ob.ea}:{w:ob.b,e:ob.eb};
+    if(b.w===it.b) b=useA?{w:ob.b,e:ob.eb}:{w:ob.a,e:ob.ea};
+  }
+  curTargets=[...new Set((a.w+b.w).split(''))];
+  qtext.textContent=`«${a.w}», «${b.w}»'dan önce mi olur?`;
+  playArea.innerHTML=stageHTML(`<span>${a.e}</span><span>${b.e}</span>`);
+  const opts=shuffle([{glyph:T('evet'),key:'yes'},{glyph:T('hayir'),key:'no'}]);
+  paint(opts,'c2',o=>o.key===(wantYes?'yes':'no'));
+  sayPrompt(`Dinle. ${a.w}. ${b.w}. ${a.w}, ${b.w}'dan önce mi olur?`);
 }
 /* Kategori Bulmaca (rutin, yeni mini oyun): önceki oyunlardan (ses/harf/hece/kafiye/zıt) farklı bir
    beceri — sözcük dağarcığı SINIFLANDIRMASI (semantik kategori farkındalığı, zıt anlamdan ayrı: bu
