@@ -417,6 +417,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e yaramaz/haylaz, çevik/atik, nazik/kibar, gürültülü/şamatacı eklendi (28'den 32 çifte). Smoke test'e 1 yeni kontrol + eşik 28→32 güncellendi (719 test toplamda). Sıradaki öncelik: CATEGORY_WORDS/PROPER_NAMES/WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — Kategori Bulmaca'ya 2 yeni kategori: vücut bölümü ve okul eşyası (rutin, backlog sırası — gökyüzü nesnesi/bina eklemesiyle aynı desen): `CATEGORY_WORDS`'e "bir vücut bölümü" (el✋/göz👁️/kulak👂/burun👃/ayak🦶) ve "bir okul eşyası" (kalem✏️/defter📓/cetvel📏/kitap📖/çanta🎒) eklendi (18'den 20 kategoriye). Smoke test'e 1 yeni kontrol + eşik 18→20 güncellendi (720 test toplamda). Sıradaki öncelik: PROPER_NAMES/WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
