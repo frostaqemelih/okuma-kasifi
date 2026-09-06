@@ -1482,7 +1482,7 @@ const testDriver = `
 
   // --- Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri ---
   try {
-    check('ANTONYMS dizisi tanımlı ve en az 18 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 18);
+    check('ANTONYMS dizisi tanımlı ve en az 22 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 22);
     check('ANTONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       ANTONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (uzun/kısa, kolay/zor, ileri/geri, var/yok, ağır/hafif)',
