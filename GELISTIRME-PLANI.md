@@ -408,6 +408,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — Kategori Bulmaca'ya 2 yeni kategori: gökyüzü nesnesi ve bina (rutin, backlog sırası — çiçek/müzik aleti eklemesiyle aynı desen): `CATEGORY_WORDS`'e "bir gökyüzü nesnesi" (ay🌙/güneş☀️/yıldız⭐/bulut☁️) ve "bir bina" (ev🏠/okul🏫/cami🕌/hastane🏥) eklendi (16'dan 18 kategoriye). Smoke test'e 1 yeni kontrol + eşik 16→18 güncellendi (697 test toplamda). Sıradaki öncelik: PROPER_NAMES genişletmesi veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — cem/yusuf eklemesiyle aynı desen): 2 isim daha eklendi — "elif" (f, 5. grup) ve "cihan" (h, 5. grup + c, 4. grup), farklı ses kombinasyonları. Smoke test'e 1 yeni kontrol (698 test toplamda). Bu oturumda toplam 5 madde tamamlandı (Eşleştirme Oyunu — yeni mini oyun/hafıza kartları, Zıt Kelimeler 4 yeni çift, Eş Anlamlı Kelimeler 4 yeni çift, Kategori Bulmaca'ya gökyüzü nesnesi+bina, PROPER_NAMES 2 yeni isim). Sıradaki öncelik: yeni içerik/varyant veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
