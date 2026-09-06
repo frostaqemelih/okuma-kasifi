@@ -2233,11 +2233,13 @@ const testDriver = `
 
   // --- Önce mi Sonra mı? (rutin, yeni mini oyun): Zıt/Eş Anlamlı Kelimeler'le aynı desen, olay sırası becerisi ---
   try {
-    check('SEQUENCES dizisi tanımlı ve en az 8 çift içeriyor', Array.isArray(SEQUENCES) && SEQUENCES.length >= 8);
+    check('SEQUENCES dizisi tanımlı ve en az 11 çift içeriyor', Array.isArray(SEQUENCES) && SEQUENCES.length >= 11);
     check('SEQUENCES her çift yalnız Türk alfabesi harflerinden kurulu',
       SEQUENCES.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('SEQUENCES bilinen örnekleri içeriyor (yumurta/civciv, tohum/çiçek, tırtıl/kelebek)',
       ['yumurta', 'tohum', 'tırtıl'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (un/ekmek, süt/peynir, gece/sabah)',
+      ['un', 'süt', 'sabah'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
