@@ -2125,13 +2125,15 @@ const testDriver = `
 
   // --- Eş Anlamlı Kelimeler (rutin, yeni mini oyun): Zıt Kelimeler'le aynı desen, farklı beceri ---
   try {
-    check('SYNONYMS dizisi tanımlı ve en az 20 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 20);
+    check('SYNONYMS dizisi tanımlı ve en az 24 çift içeriyor', Array.isArray(SYNONYMS) && SYNONYMS.length >= 24);
     check('SYNONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       SYNONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (sinirli/kızgın, tembel/uyuşuk, güçlü/kuvvetli, cesur/yürekli, şişman/tombul)',
       ['sinirli', 'tembel', 'güçlü', 'cesur', 'şişman'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (kocaman/dev, ıslak/nemli, kırık/bozuk)',
       ['kocaman', 'ıslak', 'kırık'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (ufacık/minicik, komik/eğlenceli, sessiz/sakin, hüzünlü/kederli)',
+      ['ufacık', 'komik', 'sessiz', 'hüzünlü'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
