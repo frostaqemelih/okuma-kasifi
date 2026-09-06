@@ -1324,6 +1324,17 @@ const testDriver = `
     check('WORDBANK genisletme (ğ/v/h/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme (rutin): h/ö seslerinin çeşitliliğini artıran 4 yeni kelime ---
+  try {
+    check('WORDBANK en az 89 kelime içeriyor (h/ö genişletmesi sonrası)', WORDBANK.length >= 89);
+    const newHOWords = ['hindi', 'böcek', 'civciv', 'fındık'];
+    check('Yeni h/ö kelimeleri WORDBANK icinde tanimli', newHOWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni h/ö kelimelerinin hepsi emoji tasiyor',
+      newHOWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (h/ö) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
