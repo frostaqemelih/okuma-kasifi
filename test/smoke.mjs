@@ -2205,6 +2205,9 @@ const testDriver = `
       ['yaramaz', 'çevik', 'nazik', 'gürültülü'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (öfkeli/hiddetli, cılız/zayıf, düzgün/pürüzsüz, ferah/geniş)',
       ['öfkeli', 'cılız', 'düzgün', 'ferah'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 40 çift içeriyor (yavaş/ağır genişletmesi sonrası)', SYNONYMS.length >= 40);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (yavaş/ağır, kolay/basit, temiz/düzenli, sıcak/samimi)',
+      ['yavaş', 'kolay', 'temiz', 'sıcak'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
