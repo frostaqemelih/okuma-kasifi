@@ -1379,6 +1379,7 @@ const testDriver = `
     check('PROPER_NAMES ileri katman isimleri (poyraz/gökçe) içeriyor', ['poyraz', 'gökçe'].every(n => PROPER_NAMES.some(p => p.name === n)));
     check('PROPER_NAMES ileri katman isimleri 1.+2. grup dışına çıkıyor (3.-5. grup seslerini de kullanıyor)',
       ['poyraz', 'gökçe'].every(n => !n.split('').every(c => g1PoolNames.concat('okurım'.split('')).includes(c))));
+    check('PROPER_NAMES yeni isimleri (deniz/berk) içeriyor', ['deniz', 'berk'].every(n => PROPER_NAMES.some(p => p.name === n)));
 
     const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
     state = fresh();
