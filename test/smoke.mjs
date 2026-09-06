@@ -1531,7 +1531,7 @@ const testDriver = `
 
   // --- Kategori Bulmaca (rutin, yeni mini oyun): sözcük dağarcığı sınıflandırması ---
   try {
-    check('CATEGORY_WORDS dizisi tanımlı ve en az 12 kategori içeriyor', Array.isArray(CATEGORY_WORDS) && CATEGORY_WORDS.length >= 12);
+    check('CATEGORY_WORDS dizisi tanımlı ve en az 14 kategori içeriyor', Array.isArray(CATEGORY_WORDS) && CATEGORY_WORDS.length >= 14);
     check('CATEGORY_WORDS her kelime yalnız Türk alfabesi harflerinden kurulu',
       CATEGORY_WORDS.every(c => c.words.every(x => x.w.split('').every(ch => ALL_LETTERS.includes(ch)))));
     check('CATEGORY_WORDS "renk" ve "giysi" kategorilerini içeriyor',
@@ -1548,6 +1548,8 @@ const testDriver = `
     check('CATEGORY_WORDS "bir eşya" kategorisi 1. grup kelimelerini içeriyor (tel, alet)',
       CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'tel') &&
       CATEGORY_WORDS.find(c => c.label === 'bir eşya').words.some(w => w.w === 'alet'));
+    check('CATEGORY_WORDS yeni "böcek" ve "mutfak eşyası" kategorilerini içeriyor',
+      ['bir böcek', 'bir mutfak eşyası'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
