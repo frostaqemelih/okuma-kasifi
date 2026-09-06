@@ -2202,6 +2202,61 @@ const testDriver = `
     check('Rakam Çiz hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- Eşleştirme Oyunu (rutin, yeni mini oyun): hafıza kartları, buildMemoryPairs/flipMemCard ---
+  try {
+    const fullPoolMem = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r'];
+    const pairsMem = buildMemoryPairs(fullPoolMem, 4);
+    check('buildMemoryPairs() istenen sayıda çift üretiyor (yeterli pool)', pairsMem.length === 4);
+    check('buildMemoryPairs() her çiftin harfi pool içinde ve kelime tümüyle pool seslerinden kurulu', pairsMem.every(p => fullPoolMem.includes(p.letter) && p.word.split('').every(c => fullPoolMem.includes(c))));
+    check('buildMemoryPairs() tekrarsız baş harfler üretiyor', new Set(pairsMem.map(p => p.letter)).size === pairsMem.length);
+
+    state = fresh();
+    play = null;
+    roundEslestirme(fullPoolMem);
+    check('roundEslestirme() kart ızgarasını render ediyor', document.querySelectorAll('#memGrid .mem-card').length === 8);
+    check('roundEslestirme() memState 4 çift + toplam 8 kart tutuyor', memState.total === 4 && memState.cards.length === 8);
+    check('roundEslestirme() curTargets kullanılan harflerle doluyor', Array.isArray(curTargets) && curTargets.length === 4);
+    check('roundEslestirme() kartlar başta kapalı (❓) gösteriliyor', document.querySelectorAll('#memGrid .mem-card.up').length === 0);
+
+    // eşleşen bir çift bul (aynı pairId'ye sahip iki kart index'i) ve çevir
+    const pairIdx = memState.cards.findIndex((c, i) => memState.cards.findIndex((c2, i2) => i2 > i && c2.pairId === c.pairId) >= 0);
+    const partnerIdx = memState.cards.findIndex((c, i) => i > pairIdx && c.pairId === memState.cards[pairIdx].pairId);
+    flipMemCard(pairIdx);
+    check('flipMemCard() ilk kartı çeviriyor', memState.cards[pairIdx].flipped === true);
+    const correctBeforeMem = state.correct;
+    flipMemCard(partnerIdx);
+    check('flipMemCard() eşleşen çift matched=true oluyor', memState.cards[pairIdx].matched === true && memState.cards[partnerIdx].matched === true);
+    check('flipMemCard() eşleşen çiftte found sayacı artıyor', memState.found === 1);
+    check('flipMemCard() eşleşme puanı değiştirmiyor (state.correct choose() dışı akış)', state.correct === correctBeforeMem);
+
+    // eşleşmeyen bir çift dene (varsa)
+    state = fresh();
+    play = null;
+    roundEslestirme(fullPoolMem);
+    const nonMatch1 = 0;
+    const nonMatch2 = memState.cards.findIndex((c, i) => i !== nonMatch1 && c.pairId !== memState.cards[nonMatch1].pairId);
+    if (nonMatch2 >= 0) {
+      flipMemCard(nonMatch1);
+      flipMemCard(nonMatch2);
+      check('flipMemCard() eşleşmeyen çiftte busy=true olup kartları geçici açık tutuyor', memState.busy === true && memState.cards[nonMatch1].flipped === true);
+    } else {
+      check('flipMemCard() eşleşmeyen çift senaryosu (pool yeterince büyük)', true);
+    }
+
+    state = fresh();
+    play = null;
+    roundEslestirme(['a', 'e']); // yetersiz pool (çok az farklı baş harfli kelime) -> güvenli şekilde roundBul içine düşmeli
+    check('roundEslestirme() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0);
+
+    state = fresh();
+    play = null;
+    freeGame = 'eslestirme';
+    startFree('eslestirme');
+    check('startFree("eslestirme") s-game ekranına geçiyor ve kart ızgarası render ediyor', document.getElementById('s-game').classList.contains('active') && document.querySelectorAll('#memGrid .mem-card').length > 0);
+  } catch (e) {
+    check('Eşleştirme Oyunu hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   return results;
 })()
 `;
@@ -2241,6 +2296,10 @@ pushCheck('"Eş Anlamlı Kelimeler" kartı Çözümleme moduna özel gizleniyor 
 // --- Rakam Çiz: Serbest oyun menüsünde kart mevcut (her iki yaş modunda da gorunur, Sayılar/Harf Çiz gibi) ---
 pushCheck('Serbest oyun menüsünde "Rakam Çiz" kartı mevcut', html.includes("startFree('cizRakam')") && html.includes('Rakam Çiz'));
 pushCheck('nextFreeRound() dağıtım haritası cizRakam:roundRakamCiz içeriyor', /cizRakam:roundRakamCiz/.test(html));
+// --- Eşleştirme Oyunu: Serbest oyun menüsünde kart mevcut (her iki yaş modunda da gorunur) ---
+pushCheck('Serbest oyun menüsünde "Eşleştirme Oyunu" kartı mevcut', html.includes("startFree('eslestirme')") && html.includes('Eşleştirme Oyunu'));
+pushCheck('nextFreeRound() dağıtım haritası eslestirme:roundEslestirme içeriyor', /eslestirme:roundEslestirme/.test(html));
+pushCheck('CSS: .mem-grid/.mem-card hafıza kartı stilleri tanımlı', /\.mem-grid\{/.test(html) && /\.mem-card\{/.test(html) && /\.mem-card\.matched\{/.test(html));
 // --- E5.5: CSS'te disleksi-dostu sicak zemin (dusuk kontrastli beyaz yerine) tanimli ---
 pushCheck('CSS: .dys sicak/kremsi zemin (bg/surface/ink) tanimliyor', /:root\.dys\{[^}]*--bg:#faf1de[^}]*--surface:#fffaf0/.test(html));
 // --- E5.7: fbMsg elementi aria-live="polite" ile ekranda mevcut (sessiz modda yazili geri bildirim) ---
@@ -2249,7 +2308,7 @@ pushCheck('HTML: #fbMsg aria-live="polite" ile tanimli', /id="fbMsg" aria-live="
 pushCheck('HTML: #s-error ekranı "yeniden başlat" düğmesiyle tanımlı', /id="s-error"/.test(html) && /location\.reload\(\)/.test(html));
 // --- E5.4: erişilebilirlik geçişi ---
 pushCheck('CSS: genel :focus-visible odak halkası tanımlı', /(^|\s):focus-visible\{outline:3px/.test(html));
-pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (19 statik + 1 renderWho() şablonu = 20 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 20);
+pushCheck('Tüm .age-card kartları tabindex+role="button" taşıyor (20 statik + 1 renderWho() şablonu = 21 eşleşme)', (html.match(/class="age-card" tabindex="0" role="button"/g) || []).length === 21);
 pushCheck('Eski (klavyesiz) .age-card kalıbı kalmamış', !/class="age-card" onclick=/.test(html) && !/class="age-card" id="/.test(html));
 pushCheck('Harf Çiz canvas\'ı role="img" + aria-label taşıyor', /id="traceCanvas" role="img" aria-label="/.test(html));
 pushCheck('Global keydown dinleyicisi role="button" öğeleri için Enter/Boşluk\'u işliyor', /role'\)==='button'/.test(html));
