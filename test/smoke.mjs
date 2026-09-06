@@ -1618,6 +1618,9 @@ const testDriver = `
       ['bir vücut bölümü', 'bir okul eşyası'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
     check('CATEGORY_WORDS yeni "içecek" ve "doğa olayı" kategorilerini içeriyor',
       ['bir içecek', 'bir doğa olayı'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS dizisi en az 24 kategori içeriyor (deniz canlısı/kuş genişletmesi sonrası)', CATEGORY_WORDS.length >= 24);
+    check('CATEGORY_WORDS yeni "deniz canlısı" ve "kuş" kategorilerini içeriyor',
+      ['bir deniz canlısı', 'bir kuş'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
