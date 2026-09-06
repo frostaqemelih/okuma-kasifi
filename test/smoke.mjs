@@ -1999,15 +1999,20 @@ const testDriver = `
     check('Kelime Kur çeşitliliği hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
-  // --- Cümle Bahçesi çeşitliliği: (a) kelime taşlarını sırala, (b) YENİ cümleyi tamamla (cloze) ---
+  // --- Cümle Bahçesi çeşitliliği: (a) kelime taşlarını sırala, (b) cümleyi tamamla (cloze), (c) YENİ hangisi doğru cümle ---
   try {
     const origRandomCumle = Math.random;
     state = fresh();
-    Math.random = () => 0.9; // (b) tamamla (r>=0.5)
+    Math.random = () => 0.5; // (b) tamamla (1/3<=r<2/3)
     roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
     check('roundCumle (b) tamamla varyantı boşluklu cümle gösteriyor', qtext.textContent.includes('____'));
     check('roundCumle (b) tamamla varyantı çoktan seçmeli (choices) kullanıyor', document.getElementById('choices') && document.getElementById('choices').children.length > 0);
     check('roundCumle (b) tamamla varyantında doğru şık işaretli', !!document.querySelector('#choices .choice[data-right="1"]'));
+    Math.random = () => 0.9; // (c) YENİ hangisi doğru cümle (r>=2/3)
+    roundCumle(['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm']);
+    check('roundCumle (c) doğru cümle varyantı doğru soruyu gösteriyor', qtext.textContent === 'Hangisi doğru cümle?');
+    check('roundCumle (c) doğru cümle varyantı 2 seçenek sunuyor', document.getElementById('choices').children.length === 2);
+    check('roundCumle (c) doğru cümle varyantında doğru şık işaretli', !!document.querySelector('#choices .choice[data-right="1"]'));
     Math.random = origRandomCumle;
     state = fresh();
     play = null;
