@@ -419,6 +419,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — Kategori Bulmaca'ya 2 yeni kategori: vücut bölümü ve okul eşyası (rutin, backlog sırası — gökyüzü nesnesi/bina eklemesiyle aynı desen): `CATEGORY_WORDS`'e "bir vücut bölümü" (el✋/göz👁️/kulak👂/burun👃/ayak🦶) ve "bir okul eşyası" (kalem✏️/defter📓/cetvel📏/kitap📖/çanta🎒) eklendi (18'den 20 kategoriye). Smoke test'e 1 yeni kontrol + eşik 18→20 güncellendi (720 test toplamda). Sıradaki öncelik: PROPER_NAMES/WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — elif/cihan eklemesiyle aynı desen): 2 isim daha eklendi — "ömer" (ö, 3. grup) ve "gizem" (g, 4. grup + z, 3. grup), farklı ses kombinasyonları. Smoke test'e 1 yeni kontrol (721 test toplamda). Sıradaki öncelik: WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
