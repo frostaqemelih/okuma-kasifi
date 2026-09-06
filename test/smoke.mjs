@@ -2261,6 +2261,9 @@ const testDriver = `
       ['yumurta', 'tohum', 'tırtıl'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
     check('SEQUENCES yeni eklenen çiftleri içeriyor (un/ekmek, süt/peynir, gece/sabah)',
       ['un', 'süt', 'sabah'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 14 çift içeriyor (yağmur/gökkuşağı genişletmesi sonrası)', SEQUENCES.length >= 14);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (yağmur/gökkuşağı, çocuk/yetişkin, kış/bahar)',
+      ['gökkuşağı', 'yetişkin', 'bahar'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
