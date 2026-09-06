@@ -410,6 +410,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — cem/yusuf eklemesiyle aynı desen): 2 isim daha eklendi — "elif" (f, 5. grup) ve "cihan" (h, 5. grup + c, 4. grup), farklı ses kombinasyonları. Smoke test'e 1 yeni kontrol (698 test toplamda). Bu oturumda toplam 5 madde tamamlandı (Eşleştirme Oyunu — yeni mini oyun/hafıza kartları, Zıt Kelimeler 4 yeni çift, Eş Anlamlı Kelimeler 4 yeni çift, Kategori Bulmaca'ya gökyüzü nesnesi+bina, PROPER_NAMES 2 yeni isim). Sıradaki öncelik: yeni içerik/varyant veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — WORDBANK'e ğ/v/h/j seslerinin çeşitliliğini artıran 4 yeni kelime (rutin, backlog sırası — bu 4 ses önceden yalnız 1'er kelimede geçiyordu: dağ, vazo, horoz, jeton): `WORDBANK`'e ağaç🌳, kivi🥝, tavuk🐔 (v'yi de pekiştiriyor), jaguar🐆 eklendi (49'dan 53 kelimeye) — Eşleştirme Oyunu ve Kelime Kur gibi oyunlarda bu seslerin havuz derinliği arttı. Smoke test'e 3 yeni kontrol (701 test toplamda). Bu oturumda toplam 6 madde tamamlandı: Eşleştirme Oyunu (yeni mini oyun), Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, Kategori Bulmaca +2 kategori, PROPER_NAMES +2 isim, WORDBANK +4 kelime. Sıradaki öncelik: yeni içerik/varyant veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

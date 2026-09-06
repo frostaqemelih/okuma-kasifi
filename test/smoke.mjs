@@ -1313,6 +1313,17 @@ const testDriver = `
     check('WORDBANK genisletme (3.-5. grup) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme (rutin): ğ/v/h/j seslerinin çeşitliliğini artıran 4 yeni kelime ---
+  try {
+    check('WORDBANK en az 53 kelime içeriyor (ğ/v/h/j genişletmesi sonrası)', WORDBANK.length >= 53);
+    const newRareWords = ['ağaç', 'kivi', 'tavuk', 'jaguar'];
+    check('Yeni ğ/v/h/j kelimeleri WORDBANK icinde tanimli', newRareWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni ğ/v/h/j kelimelerinin hepsi emoji tasiyor',
+      newRareWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (ğ/v/h/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
