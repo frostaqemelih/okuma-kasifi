@@ -422,6 +422,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-06 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — elif/cihan eklemesiyle aynı desen): 2 isim daha eklendi — "ömer" (ö, 3. grup) ve "gizem" (g, 4. grup + z, 3. grup), farklı ses kombinasyonları. Smoke test'e 1 yeni kontrol (721 test toplamda). Sıradaki öncelik: WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
 
 - 2026-09-06 — WORDBANK'e h/ö seslerinin çeşitliliğini artıran 4 yeni kelime (rutin, backlog sırası — ğ/v/h/j eklemesiyle aynı desen): bu 2 ses önceden yalnız 1'er kelimede geçiyordu (horoz, körük) — `WORDBANK`'e hindi🦃, böcek🐞, civciv🐥, fındık🌰 eklendi (85'ten 89 kelimeye). Smoke test'e 3 yeni kontrol (724 test toplamda). Bu oturumda toplam 6 madde tamamlandı: Önce mi Sonra mı? (yeni mini oyun), Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, Kategori Bulmaca +2 kategori (vücut bölümü/okul eşyası), PROPER_NAMES +2 isim (ömer/gizem), WORDBANK +4 kelime (h/ö). Sıradaki öncelik: yeni içerik/varyant veya E7.5b (i18n göçünü sürdür).
+- 2026-09-06 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e geniş/dar, derin/sığ, kalabalık/ıssız, keskin/küt eklendi (34'ten 38 çifte). Smoke test'e 1 yeni kontrol + eşik 34→38 güncellendi (725 test toplamda). Sıradaki öncelik: SYNONYMS/CATEGORY_WORDS/PROPER_NAMES/WORDBANK genişletmesi veya E7.5b (i18n göçünü sürdür).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
