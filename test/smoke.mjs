@@ -1335,6 +1335,17 @@ const testDriver = `
     check('WORDBANK genisletme (h/ö) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme (rutin): p/s/ş/f seslerinin çeşitliliğini artıran 4 yeni kelime ---
+  try {
+    check('WORDBANK en az 93 kelime içeriyor (p/s/ş/f genişletmesi sonrası)', WORDBANK.length >= 93);
+    const newPSSFWords = ['pasta', 'sepet', 'kuş', 'fare'];
+    check('Yeni p/s/ş/f kelimeleri WORDBANK icinde tanimli', newPSSFWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni p/s/ş/f kelimelerinin hepsi emoji tasiyor',
+      newPSSFWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (p/s/ş/f) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
@@ -2257,7 +2268,13 @@ const testDriver = `
     state = fresh();
     play = null;
     roundSira(['a', 'n', 'e', 't', 'i', 'l']); // yetersiz pool (hiçbir çift tam uymuyor) -> güvenli şekilde roundBul içine düşmeli
-    check('roundSira() yetersiz pool ile hatasız roundBul içine düşüyor', document.querySelectorAll('#choices .choice').length > 0 && !qtext.textContent.includes('önce'));
+    // Not: qtext'in "önce" içermediğini kontrol etmek YANLIŞ varsayımdı — roundBul()'un "Alfabede
+    // «X»'den önce hangi harf gelir?" varyantı da meşru şekilde "önce" kelimesini içeriyor (ara sıra
+    // Math.random bu varyantı seçtiğinde testi rastgele başarısız kılıyordu). Doğru kontrol: roundSira'ya
+    // özgü "'dan önce mi olur?" / "'dan önce ne olur?" kalıplarının GÖRÜNMEDİĞİni doğrulamak.
+    check('roundSira() yetersiz pool ile hatasız roundBul içine düşüyor',
+      document.querySelectorAll('#choices .choice').length > 0 &&
+      !qtext.textContent.endsWith("'dan önce mi olur?") && !qtext.textContent.endsWith("'dan önce ne olur?"));
 
     state = fresh();
     play = null;
