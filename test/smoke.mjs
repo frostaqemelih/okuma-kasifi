@@ -1496,7 +1496,7 @@ const testDriver = `
 
   // --- Zıt Kelimeler (rutin, yeni mini oyun, Çözümleme modu): temel zıt anlamlı kelime çiftleri ---
   try {
-    check('ANTONYMS dizisi tanımlı ve en az 30 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 30);
+    check('ANTONYMS dizisi tanımlı ve en az 34 çift içeriyor', Array.isArray(ANTONYMS) && ANTONYMS.length >= 34);
     check('ANTONYMS her çift yalnız Türk alfabesi harflerinden kurulu',
       ANTONYMS.every(p => (p.a + p.b).split('').every(c => ALL_LETTERS.includes(c))));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (uzun/kısa, kolay/zor, ileri/geri, var/yok, ağır/hafif)',
@@ -1507,6 +1507,8 @@ const testDriver = `
       ['yumuşak', 'tatlı', 'uzak', 'aydınlık'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (genç/yaşlı, cesur/korkak, zengin/fakir, içeride/dışarıda)',
       ['genç', 'cesur', 'zengin', 'içeride'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (doğru/yanlış, ilk/son, sabah/akşam, yaz/kış)',
+      ['doğru', 'ilk', 'sabah', 'yaz'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
