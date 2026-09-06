@@ -1546,6 +1546,9 @@ const testDriver = `
       ['doğru', 'ilk', 'sabah', 'yaz'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (geniş/dar, derin/sığ, kalabalık/ıssız, keskin/küt)',
       ['geniş', 'derin', 'kalabalık', 'keskin'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 42 çift içeriyor (sağ/sol genişletmesi sonrası)', ANTONYMS.length >= 42);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (sağ/sol, eğri/düz, hasta/sağlıklı, erkek/kız)',
+      ['sağ', 'eğri', 'hasta', 'erkek'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
