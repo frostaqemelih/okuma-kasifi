@@ -406,6 +406,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-06 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e şaşkın/şaşırmış, korkak/ürkek, yeni/taze, meraklı/ilgili eklendi (24'ten 28 çifte). Smoke test'e 1 yeni kontrol + eşik 24→28 güncellendi (696 test toplamda). Sıradaki öncelik: CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b (i18n göçünü sürdür).
 
+- 2026-09-06 — Kategori Bulmaca'ya 2 yeni kategori: gökyüzü nesnesi ve bina (rutin, backlog sırası — çiçek/müzik aleti eklemesiyle aynı desen): `CATEGORY_WORDS`'e "bir gökyüzü nesnesi" (ay🌙/güneş☀️/yıldız⭐/bulut☁️) ve "bir bina" (ev🏠/okul🏫/cami🕌/hastane🏥) eklendi (16'dan 18 kategoriye). Smoke test'e 1 yeni kontrol + eşik 16→18 güncellendi (697 test toplamda). Sıradaki öncelik: PROPER_NAMES genişletmesi veya E7.5b (i18n göçünü sürdür).
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
