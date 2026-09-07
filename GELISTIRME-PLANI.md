@@ -455,6 +455,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e vahşi/evcil, tembel/çalışkan, düzenli/dağınık, yüksek/alçak eklendi (50'den 54 çifte). Smoke test'e 2 yeni kontrol + eşik 50→54 güncellendi (786 test toplamda). Sıradaki öncelik: SYNONYMS/CATEGORY_WORDS/PROPER_NAMES/SEQUENCES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e keskin/sivri, tok/doymuş, evcil/uysal, sağlıklı/zinde eklendi (48'den 52 çifte) — "evcil/uysal" ANTONYMS'teki yeni "vahşi/evcil" çiftiyle kavramsal bağ kuruyor. Smoke test'e 2 yeni kontrol + eşik 48→52 güncellendi (788 test toplamda). Bu oturumda toplam 3 madde tamamlandı: WORDBANK +4 kelime (f/ğ/h/j/ö/ş), Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4. Sıradaki öncelik: CATEGORY_WORDS/PROPER_NAMES/SEQUENCES genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
