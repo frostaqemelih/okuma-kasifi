@@ -477,6 +477,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — WORDBANK'e h/ğ/j seslerinin çeşitliliğini artıran 4 yeni kelime (rutin, backlog sırası — önceki WORDBANK genişletme turlarıyla aynı desen, letter-count analiziyle en az temsil edilen sesler tespit edildi: h/ğ/j hâlâ 6'şar kelimede geçiyordu): `WORDBANK`'e hamster🐹 (h), boğa🐂 ve yağmur☔ (ğ), jaguar🐆 (j) eklendi (117'den 121 kelimeye). Smoke test'e 3 yeni kontrol (815 test toplamda). Sıradaki öncelik: SEQUENCES/ANTONYMS/SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Önce mi Sonra mı?'ya 3 yeni içerik çifti (rutin, backlog sırası — önceki SEQUENCES genişletme turlarıyla aynı desen): `SEQUENCES`'e pamuk/iplik ve ağaç/kütük (tekstil/marangoz — önceki çiftlerde olmayan bir üretim/dönüşüm alanı), ekmek/tost (süt/peynir'le aynı "hammadde→işlenmiş ürün" türü, farklı mutfak bağlamı) eklendi (26'dan 29 çifte). Smoke test'e 2 yeni kontrol + eşik 26→29 güncellendi (817 test toplamda). Sıradaki öncelik: ANTONYMS/SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

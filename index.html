@@ -2572,7 +2572,14 @@ const SEQUENCES=[
      (kış→bahar→yaz) son kalan geçişi tamamlıyor. */
   {a:'gündüz',b:'akşam',ea:'☀️',eb:'🌆'},
   {a:'tomurcuk',b:'çiçek',ea:'🌿',eb:'🌸'},
-  {a:'yaz',b:'sonbahar',ea:'☀️',eb:'🍂'}
+  {a:'yaz',b:'sonbahar',ea:'☀️',eb:'🍂'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — pamuk/iplik ve ağaç/kütük şimdiye kadar olmayan bir üretim/dönüşüm alanı (tekstil/marangoz)
+     getiriyor, ekmek/tost süt/peynir'le aynı "hammadde→işlenmiş ürün" türünü farklı bir mutfak
+     bağlamında pekiştiriyor. */
+  {a:'pamuk',b:'iplik',ea:'🏵️',eb:'🧵'},
+  {a:'ağaç',b:'kütük',ea:'🌳',eb:'🪵'},
+  {a:'ekmek',b:'tost',ea:'🍞',eb:'🥪'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
