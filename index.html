@@ -1330,7 +1330,8 @@ const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
    olarak buraya taşınacak — büyük madde, tek seferde değil alt adımlarla. */
 const STR={
   evet:'Evet ✅', hayir:'Hayır ❌', tekrarDinle:'Tekrar dinle',
-  temizle:'↺ Temizle', bitti:'Bitti'
+  temizle:'↺ Temizle', bitti:'Bitti',
+  yesilNoktadanBasla:'Yeşil noktadan başla 👇', goster:'👀 Göster'
 };
 function T(key){ return Object.prototype.hasOwnProperty.call(STR,key) ? STR[key] : key; }
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
@@ -3419,9 +3420,9 @@ function roundCiz(sounds){
   qtext.textContent=`«${t}» harfini yaz`;
   playArea.innerHTML=`
     <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${t} harfini parmağınla çizme alanı"></canvas></div>
-    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <p id="traceMsg">${T('yesilNoktadanBasla')}</p>
     <div class="trace-actions">
-      <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
+      <button class="btn ghost tiny" onclick="showHint()">${T('goster')}</button>
       <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
       <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
@@ -3437,21 +3438,24 @@ function roundCiz(sounds){
 function roundCizBuyuk(sounds){
   locked=false;
   const t=rnd(sounds); curTargets=[t];
-  const T=UPPER_MAP[t]||t.toUpperCase();
-  qtext.textContent=`«${T}» BÜYÜK harfini yaz`;
+  /* Yerel değişken adı global T() i18n fonksiyonunu gölgelememeli — daha önce burada `T` adı
+     hem BÜYÜK harf hem i18n fonksiyonu için kullanılıyordu, bu da ${T('temizle')} gibi çağrılarda
+     "T is not a function" hatasına yol açıyordu (Büyük Harf Çiz her açılışta patlıyordu). */
+  const Tup=UPPER_MAP[t]||t.toUpperCase();
+  qtext.textContent=`«${Tup}» BÜYÜK harfini yaz`;
   playArea.innerHTML=`
-    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="Büyük ${T} harfini parmağınla çizme alanı"></canvas></div>
-    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="Büyük ${Tup} harfini parmağınla çizme alanı"></canvas></div>
+    <p id="traceMsg">${T('yesilNoktadanBasla')}</p>
     <div class="trace-actions">
-      <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
+      <button class="btn ghost tiny" onclick="showHint()">${T('goster')}</button>
       <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
       <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevelUpper(t),true);
-  roundPrompt=`Büyük ${T} harfini yaz. Yeşil noktadan başla.`;
+  roundPrompt=`Büyük ${Tup} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
-  say(`Büyük ${T} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
+  say(`Büyük ${Tup} harfi. Şimdi göster, sonra sen yaz.`, ()=>{
     if(trace.hint) trace.hint(()=>{ locked=false; }); else locked=false;
   });
 }
@@ -3463,9 +3467,9 @@ function roundRakamCiz(){
   qtext.textContent=`«${t}» rakamını yaz`;
   playArea.innerHTML=`
     <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${t} rakamını parmağınla çizme alanı"></canvas></div>
-    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <p id="traceMsg">${T('yesilNoktadanBasla')}</p>
     <div class="trace-actions">
-      <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
+      <button class="btn ghost tiny" onclick="showHint()">${T('goster')}</button>
       <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
       <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
@@ -3517,7 +3521,7 @@ function stepHazirlikSekil(key){
   qtext.textContent=`${sh.acc} parmağınla takip et ${sh.emoji}`;
   playArea.innerHTML=`
     <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${sh.ad} kılavuz çizgisini parmağınla takip etme alanı"></canvas></div>
-    <p id="traceMsg">Yeşil noktadan başla 👇</p>
+    <p id="traceMsg">${T('yesilNoktadanBasla')}</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
       <button class="btn ok tiny" onclick="checkWarmupTrace()">${T('bitti')}</button>
@@ -3717,7 +3721,7 @@ function setupTrace(letter,level,upper){
     hint(cb){ strokes.length=0; activeStroke=0; playHint(cb); }};
 }
 function traceMsg(t){ const m=document.getElementById('traceMsg'); if(m) m.textContent=t; }
-function clearTrace(){ if(trace.reset) trace.reset(); traceMsg('Yeşil noktadan başla 👇'); }
+function clearTrace(){ if(trace.reset) trace.reset(); traceMsg(T('yesilNoktadanBasla')); }
 function showHint(){ if(!trace.hint) return; locked=true; traceMsg('İzle…'); trace.hint(()=>{ locked=false; traceMsg('Şimdi sen yaz 👇'); }); }
 function checkTrace(){
   if(locked) return;

@@ -29,6 +29,19 @@ window.matchMedia = window.matchMedia || (() => ({
 delete window.speechSynthesis; // 'speechSynthesis' in window => false, kod TTS'i atlar
 window.scrollTo = () => {};
 window.HTMLElement.prototype.scrollIntoView = window.HTMLElement.prototype.scrollIntoView || (() => {});
+// jsdom canvas 2D context'i desteklemiyor (getContext() null döner) — Harf/Büyük Harf/Rakam Çiz ve
+// ısınma çizimleri gerçekten render edilip çalıştırılabilsin diye no-op bir taklit context veriliyor
+// (yalnız çizim metodlarını çağırır, gerçek piksel üretmez — testler görsel çıktıyı değil hatasız
+// çalışmayı ve DOM/state güncellemelerini doğrular).
+window.HTMLCanvasElement.prototype.getContext = function () {
+  const size = Math.max(this.width || 0, this.height || 0);
+  return new Proxy({
+    getImageData: (x, y, w, h) => ({ data: new Uint8ClampedArray((w || size) * (h || size) * 4) }),
+  }, {
+    get: (t, prop) => prop in t ? t[prop] : (() => {}),
+    set: (t, prop, val) => { t[prop] = val; return true; },
+  });
+};
 
 const scriptMatch = html.match(/<script>([\s\S]*)<\/script>/);
 if (!scriptMatch) {
@@ -170,6 +183,16 @@ const testDriver = `
     check("T('bitti') beklenen metni döndürüyor", T('bitti') === 'Bitti');
   } catch (e) {
     check('E7.5b i18n göçü (temizle/bitti) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
+  // --- E7.5b i18n göçü devamı: "Yeşil noktadan başla 👇" / "👀 Göster" STR/T() üzerine taşındı ---
+  try {
+    check('STR sözlüğünde yesilNoktadanBasla anahtarı tanımlı', STR.yesilNoktadanBasla === 'Yeşil noktadan başla 👇');
+    check('STR sözlüğünde goster anahtarı tanımlı', STR.goster === '👀 Göster');
+    check("T('yesilNoktadanBasla') beklenen metni döndürüyor", T('yesilNoktadanBasla') === 'Yeşil noktadan başla 👇');
+    check("T('goster') beklenen metni döndürüyor", T('goster') === '👀 Göster');
+  } catch (e) {
+    check('E7.5b i18n göçü (yesilNoktadanBasla/goster) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
   // --- 9) E3.3 Zayıf seslere otomatik dönüş: haritada "Tekrar turu" düğmesi ve hedefli tur ---
@@ -1928,6 +1951,16 @@ const testDriver = `
     setMode('cozumleme');
     go('s-free');
     check('Çözümleme modunda "Büyük Harf Çiz" kartı görünür', document.getElementById('freeCizBuyuk').style.display !== 'none');
+
+    // Regresyon: roundCizBuyuk() içinde BÜYÜK harfi tutan yerel T değişkeni global i18n T()
+    // fonksiyonunu gölgeleyip T('temizle') gibi çağrılarda "T is not a function" hatasına
+    // yol açıyordu — startFree('cizBuyuk') gerçekten çağrılıp hatasız render ettiği doğrulanıyor.
+    startFree('cizBuyuk');
+    check('startFree("cizBuyuk") hatasız render ediyor (yerel BÜYÜK harf değişkeni artık global T() fonksiyonunu gölgelemiyor)',
+      document.getElementById('s-game').classList.contains('active') && document.getElementById('traceCanvas') !== null);
+    check('roundCizBuyuk() Temizle/Bitti/Göster/Tekrar dinle düğmeleri i18n metniyle render ediliyor',
+      playArea.innerHTML.includes(T('temizle')) && playArea.innerHTML.includes(T('bitti')) &&
+      playArea.innerHTML.includes(T('goster')) && playArea.innerHTML.includes(T('yesilNoktadanBasla')));
   } catch (e) {
     check('E6.5 büyük harf çizimi hatasız çalıştı (hata: ' + e.message + ')', false);
   }
@@ -2580,6 +2613,9 @@ pushCheck('Kaynakta artık sabit-kodlanmış >↺ Temizle< kalmadı (T() üzerin
 pushCheck('Kaynakta artık sabit-kodlanmış >Bitti< kalmadı (T() üzerinden geliyor)', !html.includes('>Bitti<'));
 pushCheck("Kaynakta en az 8 yerde T('temizle') kullanılıyor (temizle düğmeleri göçürüldü)", (html.match(/T\('temizle'\)/g) || []).length >= 8);
 pushCheck("Kaynakta en az 5 yerde T('bitti') kullanılıyor (bitti düğmeleri göçürüldü)", (html.match(/T\('bitti'\)/g) || []).length >= 5);
+pushCheck("Kaynakta en az 5 yerde T('yesilNoktadanBasla') kullanılıyor (Harf/Büyük Harf/Rakam Çiz + ısınma ekranları göçürüldü)", (html.match(/T\('yesilNoktadanBasla'\)/g) || []).length >= 5);
+pushCheck("Kaynakta en az 3 yerde T('goster') kullanılıyor (Göster düğmeleri göçürüldü)", (html.match(/T\('goster'\)/g) || []).length >= 3);
+pushCheck("Kaynakta artık sabit-kodlanmış 'Yeşil noktadan başla 👇' metni kalmamış (STR tanımı hariç)", (html.match(/Yeşil noktadan başla 👇/g) || []).length === 1);
 // --- E5.6: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (renk körlüğü desteği). ---
 function pushCheck(name, cond) { results.push({ name, pass: !!cond }); }
 pushCheck('CSS: .choice.right icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.right::after\{[^}]*content:'✓'/.test(html));
