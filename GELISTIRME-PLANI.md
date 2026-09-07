@@ -467,6 +467,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e solmuş/taze (çiçek tazeliği, eski/yeni'den ayrı bir tazelik kavramı), şişman/zayıf (vücut büyüklüğü, büyük/küçük'ten ayrı), cömert/cimri (SYNONYMS'teki cömert/paylaşımcı ile kavramsal bağ kuruyor), yağmurlu/güneşli (hava durumu, sıcak/soğuk'tan ayrı bir hava kavramı) eklendi (54'ten 58 çifte). Smoke test'e 2 yeni kontrol + eşik 54→58 güncellendi (799 test toplamda). Bu oturumda toplam 2 madde tamamlandı: WORDBANK +4 kelime, Zıt Kelimeler +4. Sıradaki öncelik: SYNONYMS/PROPER_NAMES/CATEGORY_WORDS genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e güzel/şirin, minik/küçük, akıllı/becerikli, sevimli/tatlı eklendi (52'den 56 çifte). Smoke test'e 2 yeni kontrol + eşik 52→56 güncellendi (801 test toplamda). Bu oturumda toplam 3 madde tamamlandı: WORDBANK +4 kelime, Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4. Sıradaki öncelik: PROPER_NAMES/CATEGORY_WORDS genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
