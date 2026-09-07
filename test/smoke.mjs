@@ -2322,6 +2322,9 @@ const testDriver = `
     check('SEQUENCES dizisi en az 20 çift içeriyor (arı/bal genişletmesi sonrası)', SEQUENCES.length >= 20);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (arı/bal, çekirdek/fidan, inek/süt)',
       ['bal', 'çekirdek', 'inek'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 23 çift içeriyor (bahar/yaz genişletmesi sonrası)', SEQUENCES.length >= 23);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (bahar/yaz, meyve/çekirdek, koyun/yün)',
+      ['bahar', 'koyun', 'yün'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;

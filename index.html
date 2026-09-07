@@ -2511,7 +2511,14 @@ const SEQUENCES=[
   /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra çifti. */
   {a:'arı',b:'bal',ea:'🐝',eb:'🍯'},
   {a:'çekirdek',b:'fidan',ea:'🌰',eb:'🌱'},
-  {a:'inek',b:'süt',ea:'🐄',eb:'🥛'}
+  {a:'inek',b:'süt',ea:'🐄',eb:'🥛'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — bahar/yaz mevsim döngüsünü (kış→bahar) tamamlıyor, meyve/çekirdek de çiçek→meyve→çekirdek→
+     fidan→ağaç zincirini kapatan tam bir döngü oluşturuyor, koyun/yün inek/süt ile aynı üretim
+     nedenselliği türünü farklı bir çiftlikte pekiştiriyor. */
+  {a:'bahar',b:'yaz',ea:'🌸',eb:'☀️'},
+  {a:'meyve',b:'çekirdek',ea:'🍎',eb:'🌰'},
+  {a:'koyun',b:'yün',ea:'🐑',eb:'🧶'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
