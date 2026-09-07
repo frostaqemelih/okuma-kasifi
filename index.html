@@ -2763,6 +2763,13 @@ const CATEGORY_WORDS=[
   ]},
   {label:'bir zaman dilimi', words:[
     {w:'sabah',e:'🌅'},{w:'öğle',e:'🕛'},{w:'akşam',e:'🌆'},{w:'gece',e:'🌙'}
+  ]},
+  /* İçerik genişletme (rutin, önceki kategori ekleme turlarıyla aynı desen): 1 yeni kategori — yön
+     (önceki tüm kategorilerden farklı bir sınıflandırma türü: somut nesne yerine UZAMSAL KAVRAM
+     kelimeleri; ANTONYMS'teki sağ/sol, yukarı/aşağı, ileri/geri çiftleriyle aynı kelimeleri kullanır,
+     burada zıtlık değil "hangisi bir yön kelimesi" sınıflandırması test edilir). */
+  {label:'bir yön', words:[
+    {w:'sağ',e:'👉'},{w:'sol',e:'👈'},{w:'yukarı',e:'⬆️'},{w:'aşağı',e:'⬇️'},{w:'ileri',e:'➡️'},{w:'geri',e:'⬅️'}
   ]}
 ];
 function roundKategori(pool){
