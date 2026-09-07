@@ -154,6 +154,14 @@ const testDriver = `
     check('i18n iskeleti (STR/T) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E7.5b i18n göçü devamı: "Tekrar dinle" aria-label'ı STR/T() üzerine taşındı ---
+  try {
+    check('STR sözlüğünde tekrarDinle anahtarı tanımlı', STR.tekrarDinle === 'Tekrar dinle');
+    check("T('tekrarDinle') beklenen metni döndürüyor", T('tekrarDinle') === 'Tekrar dinle');
+  } catch (e) {
+    check('E7.5b i18n göçü (tekrarDinle) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- 9) E3.3 Zayıf seslere otomatik dönüş: haritada "Tekrar turu" düğmesi ve hedefli tur ---
   try {
     state = fresh();
@@ -2427,6 +2435,9 @@ try {
   process.exit(1);
 }
 
+// --- E7.5b i18n göçü devamı: "Tekrar dinle" aria-label'ı artık STR/T() üzerinden geliyor ---
+pushCheck('Kaynakta artık sabit-kodlanmış aria-label="Tekrar dinle" kalmadı (T() üzerinden geliyor)', !html.includes('aria-label="Tekrar dinle"'));
+pushCheck("Kaynakta en az 8 yerde T('tekrarDinle') kullanılıyor (dinle düğmeleri göçürüldü)", (html.match(/T\('tekrarDinle'\)/g) || []).length >= 8);
 // --- E5.6: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (renk körlüğü desteği). ---
 function pushCheck(name, cond) { results.push({ name, pass: !!cond }); }
 pushCheck('CSS: .choice.right icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.right::after\{[^}]*content:'✓'/.test(html));

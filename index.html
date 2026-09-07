@@ -1287,7 +1287,7 @@ const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
    metinleri (ders içerikleri, soru cümleleri, ekran metinleri) sonraki oturumlarda kademeli
    olarak buraya taşınacak — büyük madde, tek seferde değil alt adımlarla. */
 const STR={
-  evet:'Evet ✅', hayir:'Hayır ❌'
+  evet:'Evet ✅', hayir:'Hayır ❌', tekrarDinle:'Tekrar dinle'
 };
 function T(key){ return Object.prototype.hasOwnProperty.call(STR,key) ? STR[key] : key; }
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
@@ -1925,7 +1925,7 @@ function consumeReview(){
 
 function stageHTML(inner){
   return `<div class="stage">${inner}</div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="choices" id="choices"></div>`;
 }
 function paint(items,cls,isRight){
@@ -2997,7 +2997,7 @@ function roundKelimeTile(pool,listenOnly){
   qtext.textContent=listenOnly?'Dinle ve kelimeyi kur':'Harfleri sırayla koy';
   playArea.innerHTML=`
     <div class="stage" style="aspect-ratio:16/9"><span>${listenOnly?'🎧':it.e}</span></div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="word-slots" id="slots"></div>
     <div class="tiles" id="tiles"></div>
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
@@ -3097,7 +3097,7 @@ function roundCumleSirala(pool){
   qtext.textContent='Kelimeleri sırala, cümleyi kur';
   playArea.innerHTML=`
     <div class="stage" style="aspect-ratio:16/7; font-size:38px"><span>🌱</span></div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="word-slots" id="slots"></div>
     <div class="tiles" id="tiles"></div>
     <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
@@ -3206,7 +3206,7 @@ function roundOkuma(){
   qtext.textContent='Kâşif ile oku';
   playArea.innerHTML=`
     <div class="stage" style="font-size:22px; line-height:1.7; padding:24px 22px; text-align:center">${READING.metin}</div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <button class="btn ok tiny" onclick="startOkumaQuestions()">Anladım, sorulara geç →</button>`;
   sayPrompt(READING.metin);
 }
@@ -3219,7 +3219,7 @@ function askOkuma(){
   qtext.textContent=q.soru;
   playArea.innerHTML=`
     <div class="stage"><span class="glyph">❓</span></div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="choices c3" id="choices"></div>`;
   const box=document.getElementById('choices');
   shuffle(q.secenekler).forEach(s=>{
@@ -3267,7 +3267,7 @@ function roundCiz(sounds){
       <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
       <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
     </div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevel(t));
   roundPrompt=`${t} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
@@ -3289,7 +3289,7 @@ function roundCizBuyuk(sounds){
       <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
       <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
     </div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevelUpper(t),true);
   roundPrompt=`Büyük ${T} harfini yaz. Yeşil noktadan başla.`;
   locked=true;
@@ -3311,7 +3311,7 @@ function roundRakamCiz(){
       <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
       <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
     </div>
-    <button class="listen" onclick="repeatPrompt()" aria-label="Tekrar dinle">🔊</button>`;
+    <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevelRakam(t),'rakam');
   roundPrompt=`${t} rakamını yaz. Yeşil noktadan başla.`;
   locked=true;
