@@ -469,6 +469,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e güzel/şirin, minik/küçük, akıllı/becerikli, sevimli/tatlı eklendi (52'den 56 çifte). Smoke test'e 2 yeni kontrol + eşik 52→56 güncellendi (801 test toplamda). Bu oturumda toplam 3 madde tamamlandı: WORDBANK +4 kelime, Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4. Sıradaki öncelik: PROPER_NAMES/CATEGORY_WORDS genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — büşra/doğan eklemesiyle aynı desen): letter-count analiziyle h/j/ş/ü/v PROPER_NAMES'te hâlâ en az temsil edilen sesler arasındaydı (1'er isimde geçiyordu) — "şevval" (ş VE v) ve "hüseyin" (h VE ü) eklendi. Smoke test'e 1 yeni kontrol (802 test toplamda). Bu oturumda toplam 4 madde tamamlandı: WORDBANK +4 kelime, Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, PROPER_NAMES +2 isim (şevval/hüseyin). Sıradaki öncelik: CATEGORY_WORDS genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
