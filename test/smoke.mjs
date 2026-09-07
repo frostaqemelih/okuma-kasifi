@@ -1486,6 +1486,17 @@ const testDriver = `
     check('WORDBANK genisletme (g/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: c/ç/f/h/j/v/y sesleri (rutin) ---
+  try {
+    check('WORDBANK en az 133 kelime içeriyor (hayvan/çocuk/fiyonk/jet genişletmesi sonrası)', WORDBANK.length >= 133);
+    const newCFHJVYWords = ['hayvan', 'çocuk', 'fiyonk', 'jet'];
+    check('Yeni c/ç/f/h/j/v/y kelimeleri WORDBANK icinde tanimli', newCFHJVYWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni c/ç/f/h/j/v/y kelimelerinin hepsi emoji tasiyor',
+      newCFHJVYWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (c/ç/f/h/j/v/y) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
