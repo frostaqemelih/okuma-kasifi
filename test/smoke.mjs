@@ -1497,6 +1497,17 @@ const testDriver = `
     check('WORDBANK genisletme (c/ç/f/h/j/v/y) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: c/ç/f/ğ/h/ı/j/ö/p/s/ş/ü/v sesleri (rutin) ---
+  try {
+    check('WORDBANK en az 137 kelime içeriyor (papağan/sincap/ejder/fıstık genişletmesi sonrası)', WORDBANK.length >= 137);
+    const newPSEFWords = ['papağan', 'sincap', 'ejder', 'fıstık'];
+    check('Yeni papağan/sincap/ejder/fıstık kelimeleri WORDBANK icinde tanimli', newPSEFWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni papağan/sincap/ejder/fıstık kelimelerinin hepsi emoji tasiyor',
+      newPSEFWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (papağan/sincap/ejder/fıstık) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
