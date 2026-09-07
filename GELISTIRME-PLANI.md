@@ -459,6 +459,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — PROPER_NAMES (Büyük mü Küçük mü?) ileri katman zenginleştirmesi devamı (rutin, backlog sırası — efe/ceren eklemesiyle aynı desen): letter-count analiziyle PROPER_NAMES'te ş ve ü hiç geçmiyordu — "büşra" ikisini birlikte pekiştiren isim eklendi, "doğan" ise en az temsil edilen diğer sesleri (d/ğ/o, 1'er isimde geçiyordu) farklı bir kombinasyonla güçlendiriyor. Smoke test'e 2 yeni kontrol (790 test toplamda). Bu oturumda toplam 4 madde tamamlandı: WORDBANK +4 kelime (f/ğ/h/j/ö/ş), Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, PROPER_NAMES +2 isim (büşra/doğan — ilk ş/ü). Sıradaki öncelik: CATEGORY_WORDS/SEQUENCES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Önce mi Sonra mı?'ya 3 yeni içerik çifti (rutin, backlog sırası — önceki SEQUENCES genişletme turlarıyla aynı desen): `SEQUENCES`'e gündüz/akşam (gün döngüsünde gündüz/gece'den ayrı bir ara aşama), tomurcuk/çiçek (tohum/çiçek zincirine yeni bir ara aşama), yaz/sonbahar (kış→bahar→yaz mevsim döngüsündeki son kalan geçişi tamamlıyor) eklendi (23'ten 26 çifte). Smoke test'e 2 yeni kontrol + eşik 23→26 güncellendi (792 test toplamda). Bu oturumda toplam 5 madde tamamlandı: WORDBANK +4 kelime (f/ğ/h/j/ö/ş), Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, PROPER_NAMES +2 isim (büşra/doğan), Önce mi Sonra mı? +3 çift. Sıradaki öncelik: CATEGORY_WORDS genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

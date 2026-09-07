@@ -2542,7 +2542,14 @@ const SEQUENCES=[
      nedenselliği türünü farklı bir çiftlikte pekiştiriyor. */
   {a:'bahar',b:'yaz',ea:'🌸',eb:'☀️'},
   {a:'meyve',b:'çekirdek',ea:'🍎',eb:'🌰'},
-  {a:'koyun',b:'yün',ea:'🐑',eb:'🧶'}
+  {a:'koyun',b:'yün',ea:'🐑',eb:'🧶'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — gündüz/akşam gün döngüsündeki gündüz/gece'den ayrı bir ara aşamayı ekliyor, tomurcuk/çiçek
+     tohum/çiçek zincirine yeni bir ara aşama (tomurcuklanma) katıyor, yaz/sonbahar mevsim döngüsündeki
+     (kış→bahar→yaz) son kalan geçişi tamamlıyor. */
+  {a:'gündüz',b:'akşam',ea:'☀️',eb:'🌆'},
+  {a:'tomurcuk',b:'çiçek',ea:'🌿',eb:'🌸'},
+  {a:'yaz',b:'sonbahar',ea:'☀️',eb:'🍂'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
