@@ -1475,6 +1475,17 @@ const testDriver = `
     check('WORDBANK genisletme (ö/p/c/ç/ş/h/v/f/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: g/j sesleri (rutin) ---
+  try {
+    check('WORDBANK en az 129 kelime içeriyor (gökkuşağı/gitar/jimnastik/gezegen genişletmesi sonrası)', WORDBANK.length >= 129);
+    const newGJWords = ['gökkuşağı', 'gitar', 'jimnastik', 'gezegen'];
+    check('Yeni g/j kelimeleri WORDBANK icinde tanimli', newGJWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni g/j kelimelerinin hepsi emoji tasiyor',
+      newGJWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (g/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
