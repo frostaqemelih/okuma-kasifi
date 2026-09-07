@@ -1179,7 +1179,11 @@ const PROPER_NAMES=[
   /* İleri katman zenginleştirme devamı (rutin, aynı desen): 2 isim daha — letter-count analiziyle
      h/j/ş/ü/v PROPER_NAMES'te hâlâ en az temsil edilen sesler arasındaydı (1'er isimde geçiyordu);
      "şevval" ş VE v'yi, "hüseyin" h VE ü'yü birlikte pekiştiriyor. */
-  {name:'şevval', emoji:'👧'}, {name:'hüseyin',emoji:'🧒'}
+  {name:'şevval', emoji:'👧'}, {name:'hüseyin',emoji:'🧒'},
+  /* İleri katman zenginleştirme devamı (rutin, aynı desen): 2 isim daha — letter-count analiziyle j
+     PROPER_NAMES'te yalnız 1 isimde ("jale") geçiyordu, o/ö/g/h ise 2'şer isimde; "müjde" j'yi ikinci
+     kez farklı bir sesle (ü,d) birlikte pekiştiriyor, "gökhan" g/ö/h'yi tek bir isimde birleştiriyor. */
+  {name:'müjde', emoji:'👧'}, {name:'gökhan', emoji:'🧒'}
 ];
 function capitalize(w){
   if(!w) return w;
