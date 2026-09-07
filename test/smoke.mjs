@@ -1486,6 +1486,9 @@ const testDriver = `
     check('PROPER_NAMES ilk kez "v" ve "j" seslerini içeren isimler taşıyor',
       PROPER_NAMES.some(p => p.name.includes('v')) && PROPER_NAMES.some(p => p.name.includes('j')));
     check('PROPER_NAMES yeni isimleri (efe/ceren) içeriyor', ['efe', 'ceren'].every(n => PROPER_NAMES.some(p => p.name === n)));
+    check('PROPER_NAMES yeni isimleri (büşra/doğan) içeriyor', ['büşra', 'doğan'].every(n => PROPER_NAMES.some(p => p.name === n)));
+    check('PROPER_NAMES ilk kez "ş" ve "ü" seslerini içeren isimler taşıyor',
+      PROPER_NAMES.some(p => p.name.includes('ş')) && PROPER_NAMES.some(p => p.name.includes('ü')));
 
     const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
     state = fresh();
