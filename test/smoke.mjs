@@ -1561,6 +1561,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 42 çift içeriyor (sağ/sol genişletmesi sonrası)', ANTONYMS.length >= 42);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (sağ/sol, eğri/düz, hasta/sağlıklı, erkek/kız)',
       ['sağ', 'eğri', 'hasta', 'erkek'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 46 çift içeriyor (üst/alt genişletmesi sonrası)', ANTONYMS.length >= 46);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (üst/alt, ön/arka, sıkı/gevşek, çok/az)',
+      ['üst', 'ön', 'sıkı', 'çok'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
