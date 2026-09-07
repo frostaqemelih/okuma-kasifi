@@ -1700,6 +1700,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 30 kategori içeriyor (banyo eşyası/spor malzemesi genişletmesi sonrası)', CATEGORY_WORDS.length >= 30);
     check('CATEGORY_WORDS yeni "banyo eşyası" ve "spor malzemesi" kategorilerini içeriyor',
       ['bir banyo eşyası', 'bir spor malzemesi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS dizisi en az 32 kategori içeriyor (çiftlik hayvanı/zaman dilimi genişletmesi sonrası)', CATEGORY_WORDS.length >= 32);
+    check('CATEGORY_WORDS yeni "çiftlik hayvanı" ve "zaman dilimi" kategorilerini içeriyor',
+      ['bir çiftlik hayvanı', 'bir zaman dilimi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
