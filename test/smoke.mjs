@@ -2285,6 +2285,9 @@ const testDriver = `
     check('SEQUENCES dizisi en az 14 çift içeriyor (yağmur/gökkuşağı genişletmesi sonrası)', SEQUENCES.length >= 14);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (yağmur/gökkuşağı, çocuk/yetişkin, kış/bahar)',
       ['gökkuşağı', 'yetişkin', 'bahar'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 17 çift içeriyor (civciv/tavuk genişletmesi sonrası)', SEQUENCES.length >= 17);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (civciv/tavuk, çiçek/meyve, ateş/duman)',
+      ['tavuk', 'meyve', 'duman'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
