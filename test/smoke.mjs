@@ -1705,6 +1705,9 @@ const testDriver = `
       ['ekşi', 'gürültülü', 'yanlış', 'yumuşak'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (solmuş/taze, şişman/zayıf, cömert/cimri, yağmurlu/güneşli)',
       ['solmuş', 'şişman', 'cömert', 'yağmurlu'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 66 çift içeriyor (dost/düşman genişletmesi sonrası)', ANTONYMS.length >= 66);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (canlı/donuk, bol/dar, sabırlı/sabırsız, dost/düşman)',
+      ['donuk', 'bol', 'sabırsız', 'düşman'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
