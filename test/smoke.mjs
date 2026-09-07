@@ -1456,7 +1456,7 @@ const testDriver = `
   // --- WORDBANK genişletme: h/ğ/j sesleri (rutin) ---
   try {
     check('WORDBANK en az 121 kelime içeriyor (h/ğ/j genişletmesi sonrası)', WORDBANK.length >= 121);
-    const newHGJWords = ['hamster', 'boğa', 'jaguar', 'yağmur'];
+    const newHGJWords = ['hamster', 'boğa', 'jambon', 'yağmur'];
     check('Yeni h/ğ/j kelimeleri WORDBANK icinde tanimli', newHGJWords.every(w => WORDBANK.some(it => it.w === w)));
     check('Yeni h/ğ/j kelimelerinin hepsi emoji tasiyor',
       newHGJWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
@@ -2592,6 +2592,34 @@ const testDriver = `
   } catch (e) {
     check('Eşleştirme Oyunu hatasız çalıştı (hata: ' + e.message + ')', false);
   }
+
+  // --- Regresyon koruması (2026-09-07): ANTONYMS/SYNONYMS'te birebir tekrar eden çiftler bulundu
+  // (rutin "yeni çift ekle" turlarında yanlışlıkla var olan bir çift ikinci kez eklenmişti — bkz.
+  // GELISTIRME-PLANI.md değişiklik günlüğü). Bu kontroller aynı hatanın sessizce tekrarlanmasını önler:
+  // her a/b çift-dizisinde (sırasız) aynı kelime çifti yalnızca bir kez geçmeli, WORDBANK/PROPER_NAMES'te
+  // aynı kelime/isim yalnızca bir kez geçmeli.
+  function noDuplicatePairs(arr){
+    const seen = new Set();
+    for (const p of arr) {
+      const key = [p.a, p.b].sort().join('|');
+      if (seen.has(key)) return false;
+      seen.add(key);
+    }
+    return true;
+  }
+  function noDuplicateValues(arr, field){
+    const seen = new Set();
+    for (const it of arr) {
+      if (seen.has(it[field])) return false;
+      seen.add(it[field]);
+    }
+    return true;
+  }
+  check('ANTONYMS içinde birebir tekrar eden çift yok', noDuplicatePairs(ANTONYMS));
+  check('SYNONYMS içinde birebir tekrar eden çift yok', noDuplicatePairs(SYNONYMS));
+  check('SEQUENCES içinde birebir tekrar eden çift yok', noDuplicatePairs(SEQUENCES));
+  check('WORDBANK içinde birebir tekrar eden kelime yok', noDuplicateValues(WORDBANK, 'w'));
+  check('PROPER_NAMES içinde birebir tekrar eden isim yok', noDuplicateValues(PROPER_NAMES, 'name'));
 
   return results;
 })()

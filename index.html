@@ -1122,8 +1122,10 @@ const WORDBANK=[
   {w:'vişne',e:'🍒'},{w:'fıçı',e:'🛢️'},{w:'gergedan',e:'🦏'},{w:'örümcek',e:'🕷️'},
   /* WORDBANK genişletme (rutin, önceki turlarla aynı desen — letter-count analiziyle en az temsil
      edilen sesler tespit edildi: h/ğ/j hâlâ 6'şar kelimede geçiyordu, diğerlerinden daha az): "hamster"
-     h'yi, "boğa" ve "yağmur" ğ'yi, "jaguar" j'yi pekiştiriyor. */
-  {w:'hamster',e:'🐹'},{w:'boğa',e:'🐂'},{w:'jaguar',e:'🐆'},{w:'yağmur',e:'☔'},
+     h'yi, "boğa" ve "yağmur" ğ'yi, "jambon" j'yi pekiştiriyor. (Bu satırda ilk taslakta "jaguar"
+     yazılmıştı ama o kelime WORDBANK'te zaten vardı — bkz. 84. satır — 2026-09-07 hata düzeltmesiyle
+     "jambon" ile değiştirildi, gerçek bir yeni kelime.) */
+  {w:'hamster',e:'🐹'},{w:'boğa',e:'🐂'},{w:'jambon',e:'🥓'},{w:'yağmur',e:'☔'},
   /* WORDBANK genişletme (rutin, önceki turlarla aynı desen — letter-count analiziyle en az temsil
      edilen sesler tespit edildi: ö/p/c/ç/ş/h/v/f/j hâlâ 7'şer kelimede geçiyordu): "havuç" h/v/ç'yi,
      "köpek" ö/p'yi, "fincan" f/c'yi, "şapka" ş/p'yi birlikte pekiştiriyor. */
@@ -2367,12 +2369,13 @@ const ANTONYMS=[
   {a:'cömert',b:'cimri',ea:'🎁',eb:'🤏'},
   {a:'yağmurlu',b:'güneşli',ea:'🌧️',eb:'☀️'},
   /* İçerik genişletme (rutin, önceki ANTONYMS turlarıyla aynı desen): 4 yeni zıt anlamlı çift —
-     tatlı/ekşi tat kavramı, sessiz/gürültülü ses düzeyi, doğru/yanlış değerlendirme kavramı,
-     sert/yumuşak doku kavramı — hiçbiri önceki çiftlerle örtüşmüyor. */
+     tatlı/ekşi tat kavramı. (sessiz/gürültülü, doğru/yanlış, sert/yumuşak BURADA daha önce
+     birebir tekrar olarak eklenmişti — bkz. 21/30/22 — 2026-09-07 hata düzeltmesiyle kazanan/
+     kaybeden, kaba/nazik, şanslı/şanssız ile değiştirildi, hiçbiri önceki çiftlerle örtüşmüyor.) */
   {a:'tatlı',b:'ekşi',ea:'🍬',eb:'🍋'},
-  {a:'sessiz',b:'gürültülü',ea:'🤫',eb:'📢'},
-  {a:'doğru',b:'yanlış',ea:'👍',eb:'👎'},
-  {a:'sert',b:'yumuşak',ea:'🪨',eb:'🧸'}
+  {a:'kazanan',b:'kaybeden',ea:'🏆',eb:'😢'},
+  {a:'kaba',b:'nazik',ea:'😤',eb:'🙏'},
+  {a:'şanslı',b:'şanssız',ea:'🍀',eb:'😔'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
@@ -2496,13 +2499,14 @@ const SYNONYMS=[
   {a:'minik',b:'küçük',ea:'🐣',eb:'🐭'},
   {a:'akıllı',b:'becerikli',ea:'🦉',eb:'🛠️'},
   {a:'sevimli',b:'tatlı',ea:'🐶',eb:'🍭'},
-  /* İçerik genişletme (rutin, önceki SYNONYMS turlarıyla aynı desen): 4 yeni eş anlamlı çift —
-     neşeli/şen ve yorgun/bitkin önceki çiftlerde olmayan duygu/durum kavramları, cesur/yürekli
-     ve kuvvetli/güçlü fiziksel/karakter özelliği kavramları. */
-  {a:'neşeli',b:'şen',ea:'😄',eb:'🎈'},
-  {a:'yorgun',b:'bitkin',ea:'😴',eb:'🥱'},
-  {a:'cesur',b:'yürekli',ea:'🦁',eb:'💪'},
-  {a:'kuvvetli',b:'güçlü',ea:'🏋️',eb:'💪'}
+  /* İçerik genişletme (rutin, önceki SYNONYMS turlarıyla aynı desen): 4 yeni eş anlamlı çift.
+     (neşeli/şen, yorgun/bitkin, cesur/yürekli, kuvvetli/güçlü BURADA daha önce birebir tekrar
+     olarak eklenmişti — bkz. 41/6/12/11 — 2026-09-07 hata düzeltmesiyle mutlu/sevinçli,
+     yorgun/bezgin, cesur/mert, hızlı/seri ile değiştirildi, hiçbiri önceki çiftlerle örtüşmüyor.) */
+  {a:'mutlu',b:'sevinçli',ea:'😊',eb:'🥳'},
+  {a:'yorgun',b:'bezgin',ea:'😴',eb:'😪'},
+  {a:'cesur',b:'mert',ea:'🦁',eb:'💪'},
+  {a:'hızlı',b:'seri',ea:'🏃',eb:'⚡'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
