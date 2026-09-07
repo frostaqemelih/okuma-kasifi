@@ -2356,7 +2356,14 @@ const ANTONYMS=[
   {a:'solmuş',b:'taze',ea:'🥀',eb:'🌼'},
   {a:'şişman',b:'zayıf',ea:'🐖',eb:'🦴'},
   {a:'cömert',b:'cimri',ea:'🎁',eb:'🤏'},
-  {a:'yağmurlu',b:'güneşli',ea:'🌧️',eb:'☀️'}
+  {a:'yağmurlu',b:'güneşli',ea:'🌧️',eb:'☀️'},
+  /* İçerik genişletme (rutin, önceki ANTONYMS turlarıyla aynı desen): 4 yeni zıt anlamlı çift —
+     tatlı/ekşi tat kavramı, sessiz/gürültülü ses düzeyi, doğru/yanlış değerlendirme kavramı,
+     sert/yumuşak doku kavramı — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'tatlı',b:'ekşi',ea:'🍬',eb:'🍋'},
+  {a:'sessiz',b:'gürültülü',ea:'🤫',eb:'📢'},
+  {a:'doğru',b:'yanlış',ea:'👍',eb:'👎'},
+  {a:'sert',b:'yumuşak',ea:'🪨',eb:'🧸'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

@@ -1653,6 +1653,9 @@ const testDriver = `
     check('ANTONYMS yeni eklenen çiftleri içeriyor (vahşi/evcil, tembel/çalışkan, düzenli/dağınık, yüksek/alçak)',
       ['vahşi', 'tembel', 'düzenli', 'yüksek'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
     check('ANTONYMS dizisi en az 58 çift içeriyor (yağmurlu/güneşli genişletmesi sonrası)', ANTONYMS.length >= 58);
+    check('ANTONYMS dizisi en az 62 çift içeriyor (sert/yumuşak genişletmesi sonrası)', ANTONYMS.length >= 62);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (tatlı/ekşi, sessiz/gürültülü, doğru/yanlış, sert/yumuşak)',
+      ['ekşi', 'gürültülü', 'yanlış', 'yumuşak'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
     check('ANTONYMS yeni eklenen çiftleri içeriyor (solmuş/taze, şişman/zayıf, cömert/cimri, yağmurlu/güneşli)',
       ['solmuş', 'şişman', 'cömert', 'yağmurlu'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 

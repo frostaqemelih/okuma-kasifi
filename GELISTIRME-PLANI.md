@@ -479,6 +479,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Önce mi Sonra mı?'ya 3 yeni içerik çifti (rutin, backlog sırası — önceki SEQUENCES genişletme turlarıyla aynı desen): `SEQUENCES`'e pamuk/iplik ve ağaç/kütük (tekstil/marangoz — önceki çiftlerde olmayan bir üretim/dönüşüm alanı), ekmek/tost (süt/peynir'le aynı "hammadde→işlenmiş ürün" türü, farklı mutfak bağlamı) eklendi (26'dan 29 çifte). Smoke test'e 2 yeni kontrol + eşik 26→29 güncellendi (817 test toplamda). Sıradaki öncelik: ANTONYMS/SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e tatlı/ekşi (tat kavramı), sessiz/gürültülü (ses düzeyi), doğru/yanlış (değerlendirme kavramı), sert/yumuşak (doku kavramı) eklendi (58'den 62 çifte) — hiçbiri önceki çiftlerle örtüşmüyor. Smoke test'e 2 yeni kontrol + eşik 58→62 güncellendi (819 test toplamda). Sıradaki öncelik: SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
