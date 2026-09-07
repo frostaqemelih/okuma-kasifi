@@ -1430,6 +1430,17 @@ const testDriver = `
     check('WORDBANK genisletme (c/ç/f/g/ğ/h/j/ö/ş/v) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: h/ğ/j sesleri (rutin) ---
+  try {
+    check('WORDBANK en az 121 kelime içeriyor (h/ğ/j genişletmesi sonrası)', WORDBANK.length >= 121);
+    const newHGJWords = ['hamster', 'boğa', 'jaguar', 'yağmur'];
+    check('Yeni h/ğ/j kelimeleri WORDBANK icinde tanimli', newHGJWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni h/ğ/j kelimelerinin hepsi emoji tasiyor',
+      newHGJWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (h/ğ/j) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);

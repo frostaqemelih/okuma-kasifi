@@ -475,6 +475,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Kategori Bulmaca'ya 1 yeni kategori: yön (rutin, backlog sırası — önceki kategori ekleme turlarıyla aynı desen, önceki kategorilerden farklı bir sınıflandırma türü): `CATEGORY_WORDS`'e "bir yön" (sağ👉/sol👈/yukarı⬆️/aşağı⬇️/ileri➡️/geri⬅️ — somut nesne yerine UZAMSAL KAVRAM kelimeleri; ANTONYMS'teki sağ/sol, yukarı/aşağı, ileri/geri çiftleriyle aynı kelimeleri kullanır ama burada zıtlık değil "hangisi bir yön kelimesi" sınıflandırması test edilir) eklendi (32'den 33 kategoriye). Smoke test'e 2 yeni kontrol + eşik 32→33 güncellendi (812 test toplamda). Bu oturumda toplam 6 madde tamamlandı: WORDBANK +4 kelime, Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4, PROPER_NAMES +2 isim, E7.5b (temizle/bitti göçü), Kategori Bulmaca +1 kategori (yön). Sıradaki öncelik: SEQUENCES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — WORDBANK'e h/ğ/j seslerinin çeşitliliğini artıran 4 yeni kelime (rutin, backlog sırası — önceki WORDBANK genişletme turlarıyla aynı desen, letter-count analiziyle en az temsil edilen sesler tespit edildi: h/ğ/j hâlâ 6'şar kelimede geçiyordu): `WORDBANK`'e hamster🐹 (h), boğa🐂 ve yağmur☔ (ğ), jaguar🐆 (j) eklendi (117'den 121 kelimeye). Smoke test'e 3 yeni kontrol (815 test toplamda). Sıradaki öncelik: SEQUENCES/ANTONYMS/SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)
