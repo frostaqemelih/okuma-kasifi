@@ -481,6 +481,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 
 - 2026-09-07 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e tatlı/ekşi (tat kavramı), sessiz/gürültülü (ses düzeyi), doğru/yanlış (değerlendirme kavramı), sert/yumuşak (doku kavramı) eklendi (58'den 62 çifte) — hiçbiri önceki çiftlerle örtüşmüyor. Smoke test'e 2 yeni kontrol + eşik 58→62 güncellendi (819 test toplamda). Sıradaki öncelik: SYNONYMS/CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
 
+- 2026-09-07 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e neşeli/şen, yorgun/bitkin (önceki çiftlerde olmayan duygu/durum kavramları), cesur/yürekli, kuvvetli/güçlü (fiziksel/karakter özelliği) eklendi (56'dan 60 çifte). Smoke test'e 2 yeni kontrol + eşik 56→60 güncellendi (821 test toplamda). Bu oturumda toplam 4 madde tamamlandı: WORDBANK +4 kelime (h/ğ/j), Önce mi Sonra mı? +3 çift, Zıt Kelimeler +4, Eş Anlamlı Kelimeler +4. Sıradaki öncelik: CATEGORY_WORDS/PROPER_NAMES genişletmesi veya E7.5b'ye devam.
+
 ## 4. Fikir havuzu (henüz planlanmadı)
 
 - ~~Dokunmayla "kendi hikâyeni kur" (bilinen kelimelerden cümle) — premium~~ → **hayata geçirildi** (2026-09-04, "Kendi Hikayeni Kur", bkz. Değişiklik günlüğü)

@@ -2486,7 +2486,14 @@ const SYNONYMS=[
   {a:'güzel',b:'şirin',ea:'🌼',eb:'😊'},
   {a:'minik',b:'küçük',ea:'🐣',eb:'🐭'},
   {a:'akıllı',b:'becerikli',ea:'🦉',eb:'🛠️'},
-  {a:'sevimli',b:'tatlı',ea:'🐶',eb:'🍭'}
+  {a:'sevimli',b:'tatlı',ea:'🐶',eb:'🍭'},
+  /* İçerik genişletme (rutin, önceki SYNONYMS turlarıyla aynı desen): 4 yeni eş anlamlı çift —
+     neşeli/şen ve yorgun/bitkin önceki çiftlerde olmayan duygu/durum kavramları, cesur/yürekli
+     ve kuvvetli/güçlü fiziksel/karakter özelliği kavramları. */
+  {a:'neşeli',b:'şen',ea:'😄',eb:'🎈'},
+  {a:'yorgun',b:'bitkin',ea:'😴',eb:'🥱'},
+  {a:'cesur',b:'yürekli',ea:'🦁',eb:'💪'},
+  {a:'kuvvetli',b:'güçlü',ea:'🏋️',eb:'💪'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
