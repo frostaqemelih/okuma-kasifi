@@ -1743,6 +1743,11 @@ const testDriver = `
     check('CATEGORY_WORDS yeni "çiftlik hayvanı" ve "zaman dilimi" kategorilerini içeriyor',
       ['bir çiftlik hayvanı', 'bir zaman dilimi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
     check('CATEGORY_WORDS dizisi en az 33 kategori içeriyor (yön genişletmesi sonrası)', CATEGORY_WORDS.length >= 33);
+    check('CATEGORY_WORDS dizisi en az 35 kategori içeriyor (doğa nesnesi/oyun genişletmesi sonrası)', CATEGORY_WORDS.length >= 35);
+    check('CATEGORY_WORDS yeni kategorileri içeriyor (doğa nesnesi, oyun)',
+      ['bir doğa nesnesi', 'bir oyun'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS kelimeleri boşluk içermiyor (pool-tabanlı harf filtresi boşlukla çalışmaz)',
+      CATEGORY_WORDS.every(c => c.words.every(w => !w.w.includes(' '))));
     check('CATEGORY_WORDS yeni "yön" kategorisini içeriyor', CATEGORY_WORDS.some(c => c.label === 'bir yön'));
 
     const fullPoolKat = ALL_LETTERS;
