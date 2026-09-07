@@ -162,6 +162,16 @@ const testDriver = `
     check('E7.5b i18n göçü (tekrarDinle) hatasız çalıştı (hata: ' + e.message + ')', false);
   }
 
+  // --- E7.5b i18n göçü devamı: "↺ Temizle" / "Bitti" düğme metinleri STR/T() üzerine taşındı ---
+  try {
+    check('STR sözlüğünde temizle anahtarı tanımlı', STR.temizle === '↺ Temizle');
+    check('STR sözlüğünde bitti anahtarı tanımlı', STR.bitti === 'Bitti');
+    check("T('temizle') beklenen metni döndürüyor", T('temizle') === '↺ Temizle');
+    check("T('bitti') beklenen metni döndürüyor", T('bitti') === 'Bitti');
+  } catch (e) {
+    check('E7.5b i18n göçü (temizle/bitti) hatasız çalıştı (hata: ' + e.message + ')', false);
+  }
+
   // --- 9) E3.3 Zayıf seslere otomatik dönüş: haritada "Tekrar turu" düğmesi ve hedefli tur ---
   try {
     state = fresh();
@@ -2526,6 +2536,11 @@ try {
 // --- E7.5b i18n göçü devamı: "Tekrar dinle" aria-label'ı artık STR/T() üzerinden geliyor ---
 pushCheck('Kaynakta artık sabit-kodlanmış aria-label="Tekrar dinle" kalmadı (T() üzerinden geliyor)', !html.includes('aria-label="Tekrar dinle"'));
 pushCheck("Kaynakta en az 8 yerde T('tekrarDinle') kullanılıyor (dinle düğmeleri göçürüldü)", (html.match(/T\('tekrarDinle'\)/g) || []).length >= 8);
+// --- E7.5b i18n göçü devamı: "↺ Temizle" / "Bitti" düğme metinleri artık STR/T() üzerinden geliyor ---
+pushCheck('Kaynakta artık sabit-kodlanmış >↺ Temizle< kalmadı (T() üzerinden geliyor)', !html.includes('>↺ Temizle<'));
+pushCheck('Kaynakta artık sabit-kodlanmış >Bitti< kalmadı (T() üzerinden geliyor)', !html.includes('>Bitti<'));
+pushCheck("Kaynakta en az 8 yerde T('temizle') kullanılıyor (temizle düğmeleri göçürüldü)", (html.match(/T\('temizle'\)/g) || []).length >= 8);
+pushCheck("Kaynakta en az 5 yerde T('bitti') kullanılıyor (bitti düğmeleri göçürüldü)", (html.match(/T\('bitti'\)/g) || []).length >= 5);
 // --- E5.6: doğru/yanlış yalnız renkle değil ikon+konumla da belli olsun (renk körlüğü desteği). ---
 function pushCheck(name, cond) { results.push({ name, pass: !!cond }); }
 pushCheck('CSS: .choice.right icin koseye sabit konumlu ikon rozeti tanimli', /\.choice\.right::after\{[^}]*content:'✓'/.test(html));

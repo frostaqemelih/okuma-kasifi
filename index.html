@@ -1317,7 +1317,8 @@ const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
    metinleri (ders içerikleri, soru cümleleri, ekran metinleri) sonraki oturumlarda kademeli
    olarak buraya taşınacak — büyük madde, tek seferde değil alt adımlarla. */
 const STR={
-  evet:'Evet ✅', hayir:'Hayır ❌', tekrarDinle:'Tekrar dinle'
+  evet:'Evet ✅', hayir:'Hayır ❌', tekrarDinle:'Tekrar dinle',
+  temizle:'↺ Temizle', bitti:'Bitti'
 };
 function T(key){ return Object.prototype.hasOwnProperty.call(STR,key) ? STR[key] : key; }
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
@@ -3107,7 +3108,7 @@ function roundKelimeTile(pool,listenOnly){
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="word-slots" id="slots"></div>
     <div class="tiles" id="tiles"></div>
-    <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
+    <button class="btn ghost tiny" onclick="clearWord()">${T('temizle')}</button>`;
   renderWord();
   sayPrompt(`${it.w}. ${it.w} kelimesini kur.`);
 }
@@ -3207,7 +3208,7 @@ function roundCumleSirala(pool){
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>
     <div class="word-slots" id="slots"></div>
     <div class="tiles" id="tiles"></div>
-    <button class="btn ghost tiny" onclick="clearWord()">↺ Temizle</button>`;
+    <button class="btn ghost tiny" onclick="clearWord()">${T('temizle')}</button>`;
   renderWord();
   sayPrompt(`${it.t} Kelimeleri sırala.`);
 }
@@ -3262,7 +3263,7 @@ function roundHikaye(pool){
     <div class="word-slots" id="storyLine" aria-live="polite"></div>
     <div class="tiles" id="storyTiles"></div>
     <div class="row" style="margin-top:10px">
-      <button class="btn ghost tiny" onclick="clearStory()">↺ Temizle</button>
+      <button class="btn ghost tiny" onclick="clearStory()">${T('temizle')}</button>
       <button class="btn ok tiny" id="storyDoneBtn" onclick="finishStory()" disabled>Bitti, oku! 📖</button>
     </div>`;
   renderStory();
@@ -3371,8 +3372,8 @@ function roundCiz(sounds){
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
-      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
-      <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
+      <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevel(t));
@@ -3393,8 +3394,8 @@ function roundCizBuyuk(sounds){
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
-      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
-      <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
+      <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevelUpper(t),true);
@@ -3415,8 +3416,8 @@ function roundRakamCiz(){
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
       <button class="btn ghost tiny" onclick="showHint()">👀 Göster</button>
-      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
-      <button class="btn ok tiny" onclick="checkTrace()">Bitti</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
+      <button class="btn ok tiny" onclick="checkTrace()">${T('bitti')}</button>
     </div>
     <button class="listen" onclick="repeatPrompt()" aria-label="${T('tekrarDinle')}">🔊</button>`;
   setupTrace(t,cizLevelRakam(t),'rakam');
@@ -3433,8 +3434,8 @@ function stepHazirlik(){
     <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="Serbest çizim alanı"></canvas></div>
     <p id="traceMsg">Kalem tutar gibi, istediğin çizgiyi çiz ✏️</p>
     <div class="trace-actions">
-      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
-      <button class="btn ok tiny" onclick="checkHazirlik()">Bitti</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
+      <button class="btn ok tiny" onclick="checkHazirlik()">${T('bitti')}</button>
     </div>`;
   setupTrace(null);
   sayPrompt('Parmağınla ekranda istediğin gibi çiz. Hazır olunca Bitti de.');
@@ -3468,8 +3469,8 @@ function stepHazirlikSekil(key){
     <div id="traceWrap"><canvas id="traceCanvas" role="img" aria-label="${sh.ad} kılavuz çizgisini parmağınla takip etme alanı"></canvas></div>
     <p id="traceMsg">Yeşil noktadan başla 👇</p>
     <div class="trace-actions">
-      <button class="btn ghost tiny" onclick="clearTrace()">↺ Temizle</button>
-      <button class="btn ok tiny" onclick="checkWarmupTrace()">Bitti</button>
+      <button class="btn ghost tiny" onclick="clearTrace()">${T('temizle')}</button>
+      <button class="btn ok tiny" onclick="checkWarmupTrace()">${T('bitti')}</button>
     </div>`;
   setupWarmupTrace(key);
   sayPrompt(`${sh.acc} parmağınla takip et. Yeşil noktadan başla.`);
