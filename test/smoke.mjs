@@ -1814,6 +1814,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 37 kategori içeriyor (şekil/kahvaltılık genişletmesi sonrası)', CATEGORY_WORDS.length >= 37);
     check('CATEGORY_WORDS yeni "şekil" ve "kahvaltılık" kategorilerini içeriyor',
       ['bir şekil', 'bir kahvaltılık'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS dizisi en az 39 kategori içeriyor (sürüngen/uzay nesnesi genişletmesi sonrası)', CATEGORY_WORDS.length >= 39);
+    check('CATEGORY_WORDS yeni "sürüngen" ve "uzay nesnesi" kategorilerini içeriyor',
+      ['bir sürüngen', 'bir uzay nesnesi'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;

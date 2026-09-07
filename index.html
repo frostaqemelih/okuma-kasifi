@@ -2864,6 +2864,16 @@ const CATEGORY_WORDS=[
   ]},
   {label:'bir kahvaltılık', words:[
     {w:'yumurta',e:'🥚'},{w:'bal',e:'🍯'},{w:'zeytin',e:'🫒'},{w:'tereyağı',e:'🧈'}
+  ]},
+  /* İçerik genişletme (rutin, önceki kategori ekleme turlarıyla aynı desen): 2 yeni kategori — sürüngen
+     (hayvan/böcek/kuş/deniz canlısından ayrı, pullu/sürünen canlı sınıflandırması) ve uzay nesnesi
+     (gökyüzü nesnesinden ayrı, GÖKYÜZÜNDE DOĞAL OLARAK GÖRÜLMEYEN uzay/keşif temalı nesneler —
+     kelime çakışmasını önlemek için "gökyüzü nesnesi" kategorisiyle ORTAK kelime kullanmaz). */
+  {label:'bir sürüngen', words:[
+    {w:'yılan',e:'🐍'},{w:'kaplumbağa',e:'🐢'},{w:'kertenkele',e:'🦎'},{w:'timsah',e:'🐊'}
+  ]},
+  {label:'bir uzay nesnesi', words:[
+    {w:'gezegen',e:'🪐'},{w:'uydu',e:'🛰️'},{w:'kuyrukluyıldız',e:'☄️'},{w:'uzaylı',e:'👽'}
   ]}
 ];
 function roundKategori(pool){
