@@ -2261,6 +2261,9 @@ const testDriver = `
     check('SYNONYMS dizisi en az 44 çift içeriyor (yetenekli/becerikli genişletmesi sonrası)', SYNONYMS.length >= 44);
     check('SYNONYMS yeni eklenen çiftleri içeriyor (üzgün/mahzun, şen/neşeli, cömert/paylaşımcı, yetenekli/becerikli)',
       ['üzgün', 'şen', 'cömert', 'yetenekli'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 48 çift içeriyor (sabırlı/sakin genişletmesi sonrası)', SYNONYMS.length >= 48);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (dikkatli/özenli, utangaç/çekingen, eğlenceli/keyifli, sabırlı/sakin)',
+      ['dikkatli', 'utangaç', 'eğlenceli', 'sabırlı'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
