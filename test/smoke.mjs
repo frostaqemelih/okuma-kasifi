@@ -1720,6 +1720,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 66 çift içeriyor (dost/düşman genişletmesi sonrası)', ANTONYMS.length >= 66);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (canlı/donuk, bol/dar, sabırlı/sabırsız, dost/düşman)',
       ['donuk', 'bol', 'sabırsız', 'düşman'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 70 çift içeriyor (paylaşımcı/bencil genişletmesi sonrası)', ANTONYMS.length >= 70);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (aktif/durgun, cılız/gürbüz, neşeli/kederli, paylaşımcı/bencil)',
+      ['durgun', 'gürbüz', 'kederli', 'bencil'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
