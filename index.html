@@ -2615,7 +2615,14 @@ const SEQUENCES=[
      bağlamında pekiştiriyor. */
   {a:'pamuk',b:'iplik',ea:'🏵️',eb:'🧵'},
   {a:'ağaç',b:'kütük',ea:'🌳',eb:'🪵'},
-  {a:'ekmek',b:'tost',ea:'🍞',eb:'🥪'}
+  {a:'ekmek',b:'tost',ea:'🍞',eb:'🥪'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — sonbahar/kış mevsim döngüsünü tamamlıyor (kış→bahar→yaz→sonbahar zincirinin son halkası,
+     ÖNCEKİ ÇİFTLERİN TERSİ DEĞİL, yeni bir bağlantı), zeytin/zeytinyağı yeni bir işlenme zinciri
+     (un→ekmek desenine benzer ama farklı bağlam), buz/su kar/su'dan ayrı bir erime örneği. */
+  {a:'sonbahar',b:'kış',ea:'🍂',eb:'❄️'},
+  {a:'zeytin',b:'zeytinyağı',ea:'🫒',eb:'🫙'},
+  {a:'buz',b:'su',ea:'🧊',eb:'💧'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
