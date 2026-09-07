@@ -2661,7 +2661,14 @@ const SEQUENCES=[
      (un→ekmek desenine benzer ama farklı bağlam), buz/su kar/su'dan ayrı bir erime örneği. */
   {a:'sonbahar',b:'kış',ea:'🍂',eb:'❄️'},
   {a:'zeytin',b:'zeytinyağı',ea:'🫒',eb:'🫙'},
-  {a:'buz',b:'su',ea:'🧊',eb:'💧'}
+  {a:'buz',b:'su',ea:'🧊',eb:'💧'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — yetişkin/yaşlı insan yaşam evresi zincirine (bebek→çocuk→yetişkin) yeni bir ileri aşama
+     ekliyor, kozalak/çam daha önce olmayan bir bitki üreme alanı (kozalaklı ağaç) getiriyor,
+     dana/inek hayvan büyümesinde önceki inek/süt'ten ayrı bir erken evreyi (yavru→yetişkin) ekliyor. */
+  {a:'yetişkin',b:'yaşlı',ea:'🧑',eb:'👴'},
+  {a:'kozalak',b:'çam',ea:'🌰',eb:'🌲'},
+  {a:'dana',b:'inek',ea:'🐮',eb:'🐄'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
