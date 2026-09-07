@@ -503,6 +503,7 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - 2026-09-07 — Zıt Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki ANTONYMS genişletme turlarıyla aynı desen): `ANTONYMS`'e yorgun/dinç (enerji düzeyi), tek/çift (sayı kavramı), parlak/mat (yüzey görünümü), gölgeli/güneşli (hava/aydınlanma) eklendi (70'ten 74 çifte; dedup regresyon kontrolüyle doğrulandı — birebir tekrar yok). Smoke test'e 2 yeni kontrol (867 test toplamda). Sıradaki öncelik: SEQUENCES/SYNONYMS genişletmesi veya E7.5b'ye devam.
 - 2026-09-07 — Önce mi Sonra mı?'ya 3 yeni içerik çifti (rutin, backlog sırası — önceki SEQUENCES genişletme turlarıyla aynı desen): `SEQUENCES`'e yetişkin/yaşlı (insan yaşam evresi zincirine yeni bir ileri aşama), kozalak/çam (yeni bir bitki üreme alanı), dana/inek (hayvan büyümesinde yavru→yetişkin evresi, inek/süt'ten ayrı) eklendi (32'den 35 çifte). Smoke test'e 2 yeni kontrol (869 test toplamda). Sıradaki öncelik: SYNONYMS genişletmesi veya E7.5b'ye devam.
 - 2026-09-07 — Eş Anlamlı Kelimeler'e 4 yeni içerik çifti (rutin, backlog sırası — önceki SYNONYMS genişletme turlarıyla aynı desen): `SYNONYMS`'e lezzetli/nefis (tat), soğuk/buzlu (sıcaklık), karanlık/loş (aydınlanma), iri/kocaman (boyut kavramı) eklendi (64'ten 68 çifte; dedup regresyon kontrolüyle doğrulandı — birebir tekrar yok). Smoke test'e 2 yeni kontrol (871 test toplamda). Sıradaki öncelik: E7.5b'ye devam (ekran başlıkları/ortak soru kalıpları) veya PROPER_NAMES/CATEGORY_WORDS genişletmesi.
+- 2026-09-07 — Kategori Bulmaca'ya 2 yeni kategori (rutin, önceki kategori ekleme turlarıyla aynı desen): `CATEGORY_WORDS`'e "bir orman hayvanı" (tilki/ayı/geyik/kirpi — çiftlik hayvanından ayrı bir vahşi/orman sınıflandırması) ve "bir ağaç" (çam/palmiye/kavak/bambu — çiçek/doğa nesnesinden ayrı bir bitki türü sınıflandırması, önceki kategorilerle ortak kelime kullanmıyor) eklendi (39'dan 41 kategoriye). Smoke test'e 2 yeni kontrol (873 test toplamda). Not: E7.5b (kalan ekran başlığı/soru kalıbı i18n göçü) bu turda incelendi — kalan tekrarlı görünen metinler ("Haritaya dön" x4, "Kapat" x2) `<script>` etiketinden ÖNCEKİ statik HTML'de bulunuyor, `${T()}` orada JS tarafından değerlendirilmiyor (yalnızca script içindeki template literal'larda çalışır) — bu nedenle güvenli bir T() göçü için ayrı bir mekanizma (DOM'a yüklemede aria-label/metin doldurma) gerekir; kapsamı aşan bir mimari değişiklik olduğundan bu tura dahil edilmedi, backlog'a not düşüldü (bkz. § 4 Fikir havuzu).
 
 ## 4. Fikir havuzu (henüz planlanmadı)
 
@@ -512,3 +513,8 @@ tek seferlik ünite paketi ~299–399 TL. Yerel TL, yerel ödeme, şeffaf iptal 
 - Ebeveyne haftalık WhatsApp özeti (çift opt-in, dış servis gerektirir — kullanıcı kararı)
 - Sesli okuma değerlendirmesi (Faz 2, `arastirma/teknik-mimari.md` — Azure Pronunciation Assessment)
 - Yıllık aboneye fiziksel "Kâşif rozet/çıkartma seti" (kargo — kullanıcı kararı)
+- E7.5b devamı için mimari not: `<script>` etiketinden önceki statik HTML'deki tekrarlı metinler
+  (ör. "Haritaya dön" x4, "Kapat" x2) `${T()}` ile göç edilemiyor (yalnızca script içindeki template
+  literal'larda çalışır). Göç etmek istenirse `DOMContentLoaded`'da `data-i18n-key`/`data-i18n-aria`
+  attribute'larını okuyup `STR`'den dolduran küçük bir yardımcı fonksiyon gerekir — küçük ama ayrı bir
+  mimari değişiklik, şimdilik backlog'da bekliyor.

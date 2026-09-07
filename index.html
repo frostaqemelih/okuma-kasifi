@@ -2907,6 +2907,16 @@ const CATEGORY_WORDS=[
   ]},
   {label:'bir uzay nesnesi', words:[
     {w:'gezegen',e:'🪐'},{w:'uydu',e:'🛰️'},{w:'kuyrukluyıldız',e:'☄️'},{w:'uzaylı',e:'👽'}
+  ]},
+  /* İçerik genişletme (rutin, önceki kategori ekleme turlarıyla aynı desen): 2 yeni kategori — orman
+     hayvanı (hayvan/çiftlik hayvanından ayrı, VAHŞİ ORMAN canlısı alt sınıflandırması) ve ağaç
+     (çiçek/doğa nesnesinden ayrı, BİTKİ TÜRÜ sınıflandırması — kelime çakışmasını önlemek için
+     önceki kategorilerle ORTAK kelime kullanmaz). */
+  {label:'bir orman hayvanı', words:[
+    {w:'tilki',e:'🦊'},{w:'ayı',e:'🐻'},{w:'geyik',e:'🦌'},{w:'kirpi',e:'🦔'}
+  ]},
+  {label:'bir ağaç', words:[
+    {w:'çam',e:'🌲'},{w:'palmiye',e:'🌴'},{w:'kavak',e:'🌳'},{w:'bambu',e:'🎋'}
   ]}
 ];
 function roundKategori(pool){
