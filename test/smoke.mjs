@@ -1596,6 +1596,17 @@ const testDriver = `
     check('WORDBANK genisletme (cadı/beşik/öğrenci/pijama) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: çiftlik/fırça/halı/jokey (rutin, YOĞUN mod devamı) ---
+  try {
+    check('WORDBANK en az 173 kelime içeriyor (çiftlik/fırça/halı/jokey genişletmesi sonrası)', WORDBANK.length >= 173);
+    const newCFHJWords = ['çiftlik', 'fırça', 'halı', 'jokey'];
+    check('Yeni çiftlik/fırça/halı/jokey kelimeleri WORDBANK icinde tanimli', newCFHJWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni çiftlik/fırça/halı/jokey kelimelerinin hepsi emoji tasiyor',
+      newCFHJWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (çiftlik/fırça/halı/jokey) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
