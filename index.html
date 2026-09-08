@@ -2512,7 +2512,16 @@ const ANTONYMS=[
   {a:'sıvı',b:'katı',ea:'💧',eb:'🧊'},
   {a:'tatlı',b:'tuzlu',ea:'🍬',eb:'🧂'},
   {a:'uyanık',b:'uykulu',ea:'😃',eb:'😴'},
-  {a:'gel',b:'git',ea:'🙋',eb:'🚶'}
+  {a:'gel',b:'git',ea:'🙋',eb:'🚶'},
+  /* İçerik genişletme (rutin, YOĞUN mod devamı, backlog sırası): 4 yeni zıt anlamlı çift — kokulu/kokusuz
+     (koku kavramı, ilk kez), nemli/kuru (nem kavramı, "kuru" daha önce ıslak/kuru çiftinde vardı ama
+     bu tamamen farklı bir eş; SYNONYMS'teki ıslak/nemli ile de kavramsal bağ kuruyor), çocuk/yetişkin
+     (yaş/gelişim evresi, "Kâşif" temasıyla uyumlu), doğal/yapay (köken kavramı, ilk kez) — hiçbiri
+     önceki çiftlerle örtüşmüyor. */
+  {a:'kokulu',b:'kokusuz',ea:'🌸',eb:'🪨'},
+  {a:'nemli',b:'kuru',ea:'🌫️',eb:'🌵'},
+  {a:'çocuk',b:'yetişkin',ea:'🧒',eb:'🧑'},
+  {a:'doğal',b:'yapay',ea:'🌿',eb:'🤖'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
