@@ -1519,6 +1519,17 @@ const testDriver = `
     check('WORDBANK genisletme (şoför/üçgen/vagon/hamburger) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: zürafa/cami/yılan/televizyon (rutin) ---
+  try {
+    check('WORDBANK en az 145 kelime içeriyor (zürafa/cami/yılan/televizyon genişletmesi sonrası)', WORDBANK.length >= 145);
+    const newZCYTWords = ['zürafa', 'cami', 'yılan', 'televizyon'];
+    check('Yeni zürafa/cami/yılan/televizyon kelimeleri WORDBANK icinde tanimli', newZCYTWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni zürafa/cami/yılan/televizyon kelimelerinin hepsi emoji tasiyor',
+      newZCYTWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (zürafa/cami/yılan/televizyon) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);

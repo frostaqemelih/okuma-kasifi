@@ -1147,7 +1147,12 @@ const WORDBANK=[
   /* WORDBANK genişletme (rutin, önceki turlarla aynı desen — letter-count analiziyle en az temsil
      edilen sesler tespit edildi: ö/ü/ç/ş/h/v hâlâ 9'ar kelimede geçiyordu): "şoför" ş VE ö'yü,
      "üçgen" ü VE ç'yi birlikte pekiştiriyor; "vagon" v'yi, "hamburger" h'yi tek başına pekiştiriyor. */
-  {w:'şoför',e:'🚗'},{w:'üçgen',e:'🔺'},{w:'vagon',e:'🚃'},{w:'hamburger',e:'🍔'}
+  {w:'şoför',e:'🚗'},{w:'üçgen',e:'🔺'},{w:'vagon',e:'🚃'},{w:'hamburger',e:'🍔'},
+  /* WORDBANK genişletme (rutin, önceki turlarla aynı desen — letter-count analiziyle en az temsil
+     edilen sesler tespit edildi: c/ç/ğ/h/ı/j/ö/ş/ü/v/y/z hâlâ 10'ar kelimede geçiyordu, diğer tüm
+     seslerden daha az): "zürafa" z VE ü'yü, "yılan" y VE ı'yı birlikte pekiştiriyor; "cami" nadir
+     c sesini, "televizyon" ise v/z/y'yi (üçünü birden) tek kelimede pekiştiriyor. */
+  {w:'zürafa',e:'🦒'},{w:'cami',e:'🕌'},{w:'yılan',e:'🐍'},{w:'televizyon',e:'📺'}
 ];
 /* E4.7: Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik, harf havuzundan bağımsız. */
 const NUMBERS=[
