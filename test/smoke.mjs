@@ -2683,6 +2683,9 @@ const testDriver = `
     check('SYNONYMS dizisi en az 104 çift içeriyor (pahalı/değerli, taze/körpe, gururlu/onurlu, yaratıcı/hünerli genişletmesi sonrası)', SYNONYMS.length >= 104);
     check('SYNONYMS yeni eklenen çiftleri içeriyor (pahalı/değerli, taze/körpe, gururlu/onurlu, yaratıcı/hünerli)',
       ['değerli', 'körpe', 'onurlu', 'hünerli'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 108 çift içeriyor (gözde/sevilen, değişik/farklı, içten/samimi, harika/muhteşem genişletmesi sonrası)', SYNONYMS.length >= 108);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (gözde/sevilen, değişik/farklı, içten/samimi, harika/muhteşem)',
+      ['gözde', 'değişik', 'içten', 'muhteşem'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;

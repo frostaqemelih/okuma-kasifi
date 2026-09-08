@@ -2820,7 +2820,16 @@ const SYNONYMS=[
   {a:'pahalı',b:'değerli',ea:'💰',eb:'💎'},
   {a:'taze',b:'körpe',ea:'🥦',eb:'🌱'},
   {a:'gururlu',b:'onurlu',ea:'🦚',eb:'🎖️'},
-  {a:'yaratıcı',b:'hünerli',ea:'🎨',eb:'🛠️'}
+  {a:'yaratıcı',b:'hünerli',ea:'🎨',eb:'🛠️'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — letter-count
+     analiziyle ö/ğ/ç/f/h hâlâ en az temsil edilen sesler arasındaydı: gözde/sevilen (ö/g'yi birlikte,
+     "en sevilen" kavramı, ilk kez), değişik/farklı (ğ/f'yi birlikte, ilk kez), içten/samimi (ç'yi,
+     "sıcak/samimi" çiftinden ayrı bir bağlamda "samimi"nin ikinci kullanımı), harika/muhteşem (h'yi,
+     hayranlık ifadesi, PRAISE listesiyle temalı uyum) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'gözde',b:'sevilen',ea:'⭐',eb:'💗'},
+  {a:'değişik',b:'farklı',ea:'🔀',eb:'🎭'},
+  {a:'içten',b:'samimi',ea:'🫶',eb:'😊'},
+  {a:'harika',b:'muhteşem',ea:'🤩',eb:'✨'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
