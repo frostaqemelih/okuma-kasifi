@@ -2596,7 +2596,16 @@ const ANTONYMS=[
   {a:'bilgili',b:'bilgisiz',ea:'🧠',eb:'❓'},
   {a:'dikkatli',b:'dikkatsiz',ea:'🔍',eb:'🙈'},
   {a:'otur',b:'kalk',ea:'🪑',eb:'🧍'},
-  {a:'fırtınalı',b:'sakin',ea:'🌪️',eb:'😌'}
+  {a:'fırtınalı',b:'sakin',ea:'🌪️',eb:'😌'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — letter-count
+     analiziyle j/ö/p/f/v/h hâlâ en az temsil edilen sesler arasındaydı: vefalı/vefasız (v VE f'yi
+     birlikte, sadakat kavramı, ilk kez), gösterişli/sade (g/ö/ş'yi birlikte, ilk kez), huysuz/uysal
+     (h'yi, mizaç kavramı, ilk kez), önde/geride (ö/g'yi birlikte, yarış/sıra bağlamında "ilk/son"dan
+     ayrı bir kavram) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'vefalı',b:'vefasız',ea:'🤝',eb:'💔'},
+  {a:'gösterişli',b:'sade',ea:'💎',eb:'🤍'},
+  {a:'huysuz',b:'uysal',ea:'😾',eb:'😽'},
+  {a:'önde',b:'geride',ea:'🏃',eb:'🐢'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

@@ -1907,6 +1907,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 110 çift içeriyor (bilgili/bilgisiz, dikkatli/dikkatsiz, otur/kalk, fırtınalı/sakin genişletmesi sonrası)', ANTONYMS.length >= 110);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (bilgili/bilgisiz, dikkatli/dikkatsiz, otur/kalk, fırtınalı/sakin)',
       ['bilgisiz', 'dikkatsiz', 'kalk', 'fırtınalı'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 114 çift içeriyor (vefalı/vefasız, gösterişli/sade, huysuz/uysal, önde/geride genişletmesi sonrası)', ANTONYMS.length >= 114);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (vefalı/vefasız, gösterişli/sade, huysuz/uysal, önde/geride)',
+      ['vefasız', 'gösterişli', 'huysuz', 'geride'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
