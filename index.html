@@ -2669,7 +2669,15 @@ const SYNONYMS=[
   {a:'büyülü',b:'sihirli',ea:'🪄',eb:'✨'},
   {a:'konuşkan',b:'geveze',ea:'🗣️',eb:'💬'},
   {a:'şanslı',b:'talihli',ea:'🍀',eb:'🌟'},
-  {a:'yardımsever',b:'yardımcı',ea:'🤲',eb:'🤝'}
+  {a:'yardımsever',b:'yardımcı',ea:'🤲',eb:'🤝'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki SYNONYMS turlarıyla aynı desen): 4 yeni
+     eş anlamlı çift — gürbüz/sağlıklı (beden yapısı, cılız/gürbüz zıt çiftinden ayrı bir bağlamda
+     eş anlam), hareketli/canlı (enerji düzeyi, ilk kez), kalabalık/dolu (doluluk kavramı, ilk kez),
+     aç/acıkmış (açlık durumu, ilk kez) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'gürbüz',b:'sağlıklı',ea:'💪',eb:'😊'},
+  {a:'hareketli',b:'canlı',ea:'🏃',eb:'⚡'},
+  {a:'kalabalık',b:'dolu',ea:'👨‍👩‍👧‍👦',eb:'🧺'},
+  {a:'aç',b:'acıkmış',ea:'😋',eb:'🍽️'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
