@@ -1875,6 +1875,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 102 çift içeriyor (yerli/yabancı, kıvırcık/düz, gerçek/hayali, komik/sıkıcı genişletmesi sonrası)', ANTONYMS.length >= 102);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (yerli/yabancı, kıvırcık/düz, gerçek/hayali, komik/sıkıcı)',
       ['yabancı', 'kıvırcık', 'hayali', 'sıkıcı'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 106 çift içeriyor (sakin/hareketli, önemli/önemsiz, bulutlu/açık, fazla/eksik genişletmesi sonrası)', ANTONYMS.length >= 106);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (sakin/hareketli, önemli/önemsiz, bulutlu/açık, fazla/eksik)',
+      ['hareketli', 'önemsiz', 'bulutlu', 'eksik'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
