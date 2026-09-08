@@ -1866,6 +1866,8 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 41 kategori içeriyor (orman hayvanı/ağaç genişletmesi sonrası)', CATEGORY_WORDS.length >= 41);
     check('CATEGORY_WORDS yeni "orman hayvanı" ve "ağaç" kategorilerini içeriyor',
       ['bir orman hayvanı', 'bir ağaç'].every(l => CATEGORY_WORDS.some(c => c.label === l)));
+    check('CATEGORY_WORDS dizisi en az 42 kategori içeriyor (aksesuar genişletmesi sonrası)', CATEGORY_WORDS.length >= 42);
+    check('CATEGORY_WORDS yeni "aksesuar" kategorisini içeriyor', CATEGORY_WORDS.some(c => c.label === 'bir aksesuar'));
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
