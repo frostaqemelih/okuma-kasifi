@@ -2462,7 +2462,16 @@ const ANTONYMS=[
   {a:'gerçek',b:'sahte',ea:'💎',eb:'🎭'},
   {a:'tehlikeli',b:'güvenli',ea:'⚠️',eb:'✅'},
   {a:'meşgul',b:'boş',ea:'⏳',eb:'😌'},
-  {a:'yorucu',b:'dinlendirici',ea:'😓',eb:'🛀'}
+  {a:'yorucu',b:'dinlendirici',ea:'😓',eb:'🛀'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki ANTONYMS turlarıyla aynı desen): 4 yeni
+     zıt anlamlı çift — önce/sonra (genel zamansal sıralama, gece/gündüz veya sabah/akşam gibi belirli
+     bir zaman dilimi çiftinden ayrı), pürüzlü/düzgün (yüzey dokusu, yumuşak/sert'ten ayrı bir kavram),
+     taze/bayat (yiyecek tazeliği, solmuş/taze'den ayrı bir bağlam — ekmek/gıda), uslu/yaramaz (davranış
+     kavramı, çocuğa yakın bir kelime çifti) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'önce',b:'sonra',ea:'⏮️',eb:'⏭️'},
+  {a:'pürüzlü',b:'düzgün',ea:'🪨',eb:'🪞'},
+  {a:'taze',b:'bayat',ea:'🥖',eb:'🍞'},
+  {a:'uslu',b:'yaramaz',ea:'😇',eb:'😈'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
