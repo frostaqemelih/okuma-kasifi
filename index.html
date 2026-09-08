@@ -2953,7 +2953,14 @@ const SEQUENCES=[
      desen), meyve/reçel yeni bir işlenme zinciri — hiçbiri önceki çiftlerle örtüşmüyor. */
   {a:'elma',b:'komposto',ea:'🍎',eb:'🧃'},
   {a:'pamuk',b:'kumaş',ea:'🏵️',eb:'🧶'},
-  {a:'meyve',b:'reçel',ea:'🍓',eb:'🫙'}
+  {a:'meyve',b:'reçel',ea:'🍓',eb:'🫙'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod devamı, backlog sırası — önceki genişletme turlarıyla aynı
+     desen): civciv/horoz (civciv/tavuk'tan ayrı, erkek tavuğa büyüme zinciri), kuzu/koç (kuzu/koyun'dan
+     ayrı, erkek koyuna büyüme zinciri), keçi/süt (inek/süt'ten ayrı yeni bir hayvan-ürün zinciri)
+     eklendi; dedup regresyon kontrolüyle doğrulandı. */
+  {a:'civciv',b:'horoz',ea:'🐥',eb:'🐓'},
+  {a:'kuzu',b:'koç',ea:'🐑',eb:'🐏'},
+  {a:'keçi',b:'süt',ea:'🐐',eb:'🥛'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
