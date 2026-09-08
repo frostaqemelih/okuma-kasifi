@@ -1975,6 +1975,8 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 45 kategori içeriyor (sayı genişletmesi sonrası)', CATEGORY_WORDS.length >= 45);
     check('CATEGORY_WORDS yeni "bir sayı" kategorisini içeriyor',
       (() => { const say = CATEGORY_WORDS.find(c => c.label === 'bir sayı'); return say && ['bir', 'iki', 'üç', 'dört', 'beş'].every(w => say.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS "bir çiçek" kategorisine 1 yeni tür eklendi (ayçiçeği)',
+      (() => { const cicek = CATEGORY_WORDS.find(c => c.label === 'bir çiçek'); return cicek && cicek.words.some(x => x.w === 'ayçiçeği' && x.e && x.e.length); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
