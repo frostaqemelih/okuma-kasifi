@@ -3020,7 +3020,15 @@ const SEQUENCES=[
      (ağaç/kütük zincirinin bir sonraki halkası) eklendi; dedup regresyon kontrolüyle doğrulandı. */
   {a:'yün',b:'kazak',ea:'🧶',eb:'🧥'},
   {a:'deri',b:'ayakkabı',ea:'🟫',eb:'👞'},
-  {a:'kütük',b:'mobilya',ea:'🪵',eb:'🛋️'}
+  {a:'kütük',b:'mobilya',ea:'🪵',eb:'🛋️'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod, yeni oturum — önceki genişletme turlarıyla aynı desen):
+     letter-count analiziyle ö/f/g/h hâlâ en az temsil edilen sesler arasındaydı: yufka/börek (hamur
+     işi zincirinin yeni bir dalı, f VE ö'yü birlikte pekiştiriyor), buğday/un (un/hamur/ekmek
+     zincirinin bir önceki halkası — ununun hammaddesi, ğ/g'yi pekiştiriyor), süt/muhallebi (süt
+     zincirine yeni bir ürün, h'yi pekiştiriyor) eklendi; dedup regresyon kontrolüyle doğrulandı. */
+  {a:'yufka',b:'börek',ea:'🫓',eb:'🥟'},
+  {a:'buğday',b:'un',ea:'🌾',eb:'🌾'},
+  {a:'süt',b:'muhallebi',ea:'🥛',eb:'🍮'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
