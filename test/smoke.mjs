@@ -1574,6 +1574,17 @@ const testDriver = `
     check('WORDBANK genisletme (plaj/peçete/değirmen/fasulye) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: tavşan/bavul/ceviz/hokey (rutin, YOĞUN mod devamı) ---
+  try {
+    check('WORDBANK en az 165 kelime içeriyor (tavşan/bavul/ceviz/hokey genişletmesi sonrası)', WORDBANK.length >= 165);
+    const newTBCHWords = ['tavşan', 'bavul', 'ceviz', 'hokey'];
+    check('Yeni tavşan/bavul/ceviz/hokey kelimeleri WORDBANK icinde tanimli', newTBCHWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni tavşan/bavul/ceviz/hokey kelimelerinin hepsi emoji tasiyor',
+      newTBCHWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (tavşan/bavul/ceviz/hokey) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
