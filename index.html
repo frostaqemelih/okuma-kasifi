@@ -421,7 +421,7 @@
   <!-- SERBEST OYUN MENÜSÜ -->
   <section id="s-free" class="screen">
     <div class="topbar">
-      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön">🏠</button>
+      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön" data-i18n-aria="haritayaDon">🏠</button>
       <div class="stars">⭐ <span id="stars3">0</span></div>
     </div>
     <h1 style="font-size:clamp(22px,5vw,30px)">Serbest oyun</h1>
@@ -469,7 +469,7 @@
     <p class="sub" id="doneDiscover" hidden>Bu harika bir başlangıç! 2.–5. gruplarda daha da fazla ses, kelime ve oyun seni bekliyor.</p>
     <button class="btn grape tiny" id="doneDiscoverBtn" onclick="openGate(()=>openPaywall('lessonsGroup2plus','s-map'))" hidden>🔍 2. grubu keşfet</button>
     <p class="sub" id="doneBreakMsg" hidden>Bugün epey çalıştın! Kısa bir mola vermek ister misin? 🌤️</p>
-    <button class="btn ok" onclick="go('s-map')">Haritaya dön</button>
+    <button class="btn ok" onclick="go('s-map')" data-i18n="haritayaDon">Haritaya dön</button>
     <button class="btn ghost tiny" id="doneBreakBtn" onclick="acceptBreak()" hidden>☕ Mola ver, yarın devam</button>
   </section>
 
@@ -484,7 +484,7 @@
   <!-- ROZET KOLEKSİYONU (E3.6) -->
   <section id="s-collection" class="screen scroll">
     <div class="topbar">
-      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön">🏠</button>
+      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön" data-i18n-aria="haritayaDon">🏠</button>
       <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Koleksiyon</span>
       <span style="width:50px"></span>
     </div>
@@ -496,7 +496,7 @@
   <!-- KÂŞİF'İN DEFTERİ: harf ustalık galerisi (premium) -->
   <section id="s-defter" class="screen scroll">
     <div class="topbar">
-      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön">🏠</button>
+      <button class="icon-btn" onclick="go('s-map')" aria-label="Haritaya dön" data-i18n-aria="haritayaDon">🏠</button>
       <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Defter</span>
       <span style="width:50px"></span>
     </div>
@@ -508,7 +508,7 @@
   <!-- EBEVEYN İZLEME SAYFASI -->
   <section id="s-parent" class="screen scroll">
     <div class="topbar">
-      <button class="icon-btn" onclick="go(state.mode?'s-map':'s-start')" aria-label="Kapat">✕</button>
+      <button class="icon-btn" onclick="go(state.mode?'s-map':'s-start')" aria-label="Kapat" data-i18n-aria="kapat">✕</button>
       <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Ebeveyn</span>
       <span style="width:50px"></span>
     </div>
@@ -530,7 +530,7 @@
   <!-- PREMIUM PAYWALL (E8.3) — yalnız ebeveyn kapısından erişilir -->
   <section id="s-paywall" class="screen scroll">
     <div class="topbar">
-      <button class="icon-btn" onclick="closePaywall()" aria-label="Kapat">✕</button>
+      <button class="icon-btn" onclick="closePaywall()" aria-label="Kapat" data-i18n-aria="kapat">✕</button>
       <span style="font-family:var(--font-display); font-weight:800; color:var(--primary-d)">Premium</span>
       <span style="width:50px"></span>
     </div>
@@ -1355,9 +1355,18 @@ const HINT_MSGS=['Az kaldı, ipucuna bak.','Çok iyi deniyorsun, ipucuna bak.',
 const STR={
   evet:'Evet ✅', hayir:'Hayır ❌', tekrarDinle:'Tekrar dinle',
   temizle:'↺ Temizle', bitti:'Bitti',
-  yesilNoktadanBasla:'Yeşil noktadan başla 👇', goster:'👀 Göster'
+  yesilNoktadanBasla:'Yeşil noktadan başla 👇', goster:'👀 Göster',
+  haritayaDon:'Haritaya dön', kapat:'Kapat'
 };
 function T(key){ return Object.prototype.hasOwnProperty.call(STR,key) ? STR[key] : key; }
+/* E7.5b devamı: <script>'ten ÖNCEKİ statik HTML'deki metinler T() şablon literal'larıyla
+   göç edilemiyordu (yalnız script içinde çalışır). Bu küçük yardımcı, sayfa yüklenince
+   data-i18n / data-i18n-aria taşıyan öğeleri STR'den doldurur — statik metin başlangıç
+   değeri zaten aynı olduğundan görünür bir "yanıp sönme" olmaz, ama artık tek kaynaktan gelir. */
+function applyI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=T(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{ el.setAttribute('aria-label', T(el.getAttribute('data-i18n-aria'))); });
+}
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 const ALL_LETTERS=['a','e','i','ı','o','u','ö','ü','n','t','l','k','r','m','s','d','y','b','z','p','g','c','ç','ş','h','v','ğ','f','j'];
 /* E2.4(c): büyük/küçük harf eşleme için Türkçe büyük harf karşılıkları (i→İ, ı→I noktasız kuralı). */
@@ -4361,6 +4370,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http') && !IS_D
 }else if('serviceWorker' in navigator){
   navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
 }
+applyI18n();
 applySettings();
 syncStars();
 showA2HSBar();

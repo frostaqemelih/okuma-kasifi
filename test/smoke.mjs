@@ -2761,6 +2761,22 @@ pushCheck('sw.js: install olayı skipWaiting() cagirmiyor (guncelleme onaya bagl
 pushCheck('sw.js: SKIP_WAITING mesajinda skipWaiting() cagriliyor', /addEventListener\('message'/.test(swJs) && /SKIP_WAITING.*self\.skipWaiting\(\)/.test(swJs));
 pushCheck('HTML: #updateBar guncelleme cubugu tanimli', /id="updateBar"/.test(html) && /applyUpdate\(\)/.test(html));
 
+// --- E7.5b devamı: script'ten ÖNCEKİ statik HTML'deki tekrarlı metinler artık data-i18n(-aria) + applyI18n() ile STR'den geliyor ---
+pushCheck("Kaynakta en az 4 yerde data-i18n-aria=\"haritayaDon\" (icon-btn Haritaya dön düğmeleri)", (html.match(/data-i18n-aria="haritayaDon"/g) || []).length >= 3);
+pushCheck("Kaynakta data-i18n=\"haritayaDon\" (metin Haritaya dön düğmesi)", html.includes('data-i18n="haritayaDon"'));
+pushCheck("Kaynakta en az 2 yerde data-i18n-aria=\"kapat\" (Ebeveyn/Premium kapat düğmeleri)", (html.match(/data-i18n-aria="kapat"/g) || []).length >= 2);
+pushCheck('applyI18n() tanımlı ve init sırasında çağrılıyor', /function applyI18n\(\)/.test(html) && /applyI18n\(\);\s*\napplySettings\(\);/.test(html));
+try {
+  const iconBtn = window.document.querySelector('[data-i18n-aria="haritayaDon"]');
+  const textBtn = window.document.querySelector('[data-i18n="haritayaDon"]');
+  const kapatBtn = window.document.querySelector('[data-i18n-aria="kapat"]');
+  pushCheck('applyI18n() çalışınca icon-btn aria-label="Haritaya dön" (STR üzerinden) oluyor', !!iconBtn && iconBtn.getAttribute('aria-label') === 'Haritaya dön');
+  pushCheck('applyI18n() çalışınca metin düğmesinin textContent\'i "Haritaya dön" oluyor', !!textBtn && textBtn.textContent === 'Haritaya dön');
+  pushCheck('applyI18n() çalışınca kapat düğmesi aria-label="Kapat" (STR üzerinden) oluyor', !!kapatBtn && kapatBtn.getAttribute('aria-label') === 'Kapat');
+} catch (e) {
+  pushCheck('applyI18n() DOM üzerinde hatasız çalıştı (hata: ' + e.message + ')', false);
+}
+
 // --- E7.1: gerçek PWA ikonları (icon-192.png / icon-512.png) + manifest.json + sw.js önbelleği ---
 function pngDims(path) {
   const buf = readFileSync(path);
