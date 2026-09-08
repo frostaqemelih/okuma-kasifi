@@ -2445,7 +2445,15 @@ const ANTONYMS=[
   {a:'yorgun',b:'dinç',ea:'😪',eb:'⚡'},
   {a:'tek',b:'çift',ea:'👤',eb:'👫'},
   {a:'parlak',b:'mat',ea:'✨',eb:'⬛'},
-  {a:'gölgeli',b:'güneşli',ea:'🌳',eb:'☀️'}
+  {a:'gölgeli',b:'güneşli',ea:'🌳',eb:'☀️'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki ANTONYMS turlarıyla aynı desen): 4 yeni
+     zıt anlamlı çift — gerçek/sahte (doğruluk kavramı), tehlikeli/güvenli (güvenlik farkındalığı,
+     MEB okul öncesi kazanımlarıyla uyumlu), meşgul/boş (zaman durumu), yorucu/dinlendirici (etki
+     kavramı) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'gerçek',b:'sahte',ea:'💎',eb:'🎭'},
+  {a:'tehlikeli',b:'güvenli',ea:'⚠️',eb:'✅'},
+  {a:'meşgul',b:'boş',ea:'⏳',eb:'😌'},
+  {a:'yorucu',b:'dinlendirici',ea:'😓',eb:'🛀'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

@@ -1763,6 +1763,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 74 çift içeriyor (gölgeli/güneşli genişletmesi sonrası)', ANTONYMS.length >= 74);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (yorgun/dinç, tek/çift, parlak/mat, gölgeli/güneşli)',
       ['dinç', 'çift', 'mat', 'gölgeli'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 78 çift içeriyor (yorucu/dinlendirici genişletmesi sonrası)', ANTONYMS.length >= 78);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (gerçek/sahte, tehlikeli/güvenli, meşgul/boş, yorucu/dinlendirici)',
+      ['sahte', 'güvenli', 'meşgul', 'dinlendirici'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
