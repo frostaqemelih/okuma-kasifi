@@ -2615,7 +2615,16 @@ const ANTONYMS=[
   {a:'vefalı',b:'vefasız',ea:'🤝',eb:'💔'},
   {a:'gösterişli',b:'sade',ea:'💎',eb:'🤍'},
   {a:'huysuz',b:'uysal',ea:'😾',eb:'😽'},
-  {a:'önde',b:'geride',ea:'🏃',eb:'🐢'}
+  {a:'önde',b:'geride',ea:'🏃',eb:'🐢'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — letter-count
+     analiziyle p/ö/v/f hâlâ en az temsil edilen sesler arasındaydı: fısılda/bağır (f VE ğ'yi
+     birlikte, ses düzeyi kavramı, ilk kez), pişmiş/çiğ (p/ş/ç/ğ'yi dördünü birden, yiyecek durumu,
+     ilk kez), erimiş/donmuş (hâl değişimi kavramı, ilk kez), sevimli/ürkütücü (v VE ü'yü birlikte,
+     duygusal tepki kavramı, ilk kez) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'fısılda',b:'bağır',ea:'🤫',eb:'📢'},
+  {a:'pişmiş',b:'çiğ',ea:'🍳',eb:'🥚'},
+  {a:'erimiş',b:'donmuş',ea:'💧',eb:'🧊'},
+  {a:'sevimli',b:'ürkütücü',ea:'🥰',eb:'👻'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
