@@ -3089,6 +3089,14 @@ const CATEGORY_WORDS=[
      türlerini hedefliyor). Hepsi tek kelimelik gerçek Türkçe balık adları. */
   {label:'bir balık türü', words:[
     {w:'hamsi',e:'🐟'},{w:'somon',e:'🐟'},{w:'levrek',e:'🐠'},{w:'morina',e:'🐟'}
+  ]},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki kategori ekleme turlarıyla aynı desen):
+     1 yeni kategori — "bir kemirgen" (fare/sincap/hamster/kunduz; "bir hayvan"/"bir orman hayvanı"/
+     "bir çiftlik hayvanı" kategorilerinden ayrı, dişleriyle kemiren küçük hayvanları hedefliyor;
+     tavşan bilerek DIŞARIDA BIRAKILDI çünkü biyolojik olarak kemirgen değil, tavşangillerdendir —
+     kelime çakışması yok). */
+  {label:'bir kemirgen', words:[
+    {w:'fare',e:'🐭'},{w:'sincap',e:'🐿️'},{w:'hamster',e:'🐹'},{w:'kunduz',e:'🦫'}
   ]}
 ];
 function roundKategori(pool){

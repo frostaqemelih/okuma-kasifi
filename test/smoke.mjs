@@ -1921,6 +1921,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 43 kategori içeriyor (balık türü genişletmesi sonrası)', CATEGORY_WORDS.length >= 43);
     check('CATEGORY_WORDS yeni "balık türü" kategorisini içeriyor',
       (() => { const balik = CATEGORY_WORDS.find(c => c.label === 'bir balık türü'); return balik && ['hamsi', 'somon', 'levrek', 'morina'].every(w => balik.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 44 kategori içeriyor (kemirgen genişletmesi sonrası)', CATEGORY_WORDS.length >= 44);
+    check('CATEGORY_WORDS yeni "kemirgen" kategorisini içeriyor',
+      (() => { const kem = CATEGORY_WORDS.find(c => c.label === 'bir kemirgen'); return kem && ['fare', 'sincap', 'hamster', 'kunduz'].every(w => kem.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
