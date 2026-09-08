@@ -2986,7 +2986,14 @@ const SEQUENCES=[
      eklendi; dedup regresyon kontrolüyle doğrulandı. */
   {a:'civciv',b:'horoz',ea:'🐥',eb:'🐓'},
   {a:'kuzu',b:'koç',ea:'🐑',eb:'🐏'},
-  {a:'keçi',b:'süt',ea:'🐐',eb:'🥛'}
+  {a:'keçi',b:'süt',ea:'🐐',eb:'🥛'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod, yeni oturum — önceki genişletme turlarıyla aynı desen):
+     yün/kazak (koyun/yün zincirinin bir sonraki halkası, pamuk/iplik/kumaş/elbise zinciriyle aynı
+     desende yeni bir hammadde), deri/ayakkabı (yeni bir "hammadde→ürün" zinciri), kütük/mobilya
+     (ağaç/kütük zincirinin bir sonraki halkası) eklendi; dedup regresyon kontrolüyle doğrulandı. */
+  {a:'yün',b:'kazak',ea:'🧶',eb:'🧥'},
+  {a:'deri',b:'ayakkabı',ea:'🟫',eb:'👞'},
+  {a:'kütük',b:'mobilya',ea:'🪵',eb:'🛋️'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
