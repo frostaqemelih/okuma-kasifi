@@ -2575,6 +2575,11 @@ const testDriver = `
     check('SYNONYMS dizisi en az 84 çift içeriyor (gürbüz/sağlıklı, hareketli/canlı, kalabalık/dolu, aç/acıkmış genişletmesi sonrası)', SYNONYMS.length >= 84);
     check('SYNONYMS yeni eklenen çiftleri içeriyor (gürbüz/sağlıklı, hareketli/canlı, kalabalık/dolu, aç/acıkmış)',
       ['gürbüz', 'hareketli', 'kalabalık', 'acıkmış'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 88 çift içeriyor (temiz/tertemiz, yumuşak/yumuşacık, cesur/atılgan, tatlı/şirin genişletmesi sonrası)', SYNONYMS.length >= 88);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (temiz/tertemiz, yumuşak/yumuşacık, cesur/atılgan)',
+      ['tertemiz', 'yumuşacık', 'atılgan'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS "tatlı/şirin" çifti tam olarak eklendi',
+      SYNONYMS.some(p => (p.a === 'tatlı' && p.b === 'şirin') || (p.a === 'şirin' && p.b === 'tatlı')));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
