@@ -1530,6 +1530,17 @@ const testDriver = `
     check('WORDBANK genisletme (zürafa/cami/yılan/televizyon) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: öğle/ejderha/çadır/kaşık (rutin, YOĞUN mod) ---
+  try {
+    check('WORDBANK en az 149 kelime içeriyor (öğle/ejderha/çadır/kaşık genişletmesi sonrası)', WORDBANK.length >= 149);
+    const newOECKWords = ['öğle', 'ejderha', 'çadır', 'kaşık'];
+    check('Yeni öğle/ejderha/çadır/kaşık kelimeleri WORDBANK icinde tanimli', newOECKWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni öğle/ejderha/çadır/kaşık kelimelerinin hepsi emoji tasiyor',
+      newOECKWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (öğle/ejderha/çadır/kaşık) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
