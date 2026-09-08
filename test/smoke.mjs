@@ -1563,6 +1563,17 @@ const testDriver = `
     check('WORDBANK genisletme (öküz/süt/yengeç/peynir) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: plaj/peçete/değirmen/fasulye (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 161 kelime içeriyor (plaj/peçete/değirmen/fasulye genişletmesi sonrası)', WORDBANK.length >= 161);
+    const newPPDFWords = ['plaj', 'peçete', 'değirmen', 'fasulye'];
+    check('Yeni plaj/peçete/değirmen/fasulye kelimeleri WORDBANK icinde tanimli', newPPDFWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni plaj/peçete/değirmen/fasulye kelimelerinin hepsi emoji tasiyor',
+      newPPDFWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (plaj/peçete/değirmen/fasulye) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
