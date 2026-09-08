@@ -2010,6 +2010,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 46 kategori içeriyor (masal yaratığı genişletmesi sonrası)', CATEGORY_WORDS.length >= 46);
     check('CATEGORY_WORDS yeni "bir masal yaratığı" kategorisini içeriyor',
       (() => { const masal = CATEGORY_WORDS.find(c => c.label === 'bir masal yaratığı'); return masal && ['ejderha', 'cadı', 'peri', 'dev'].every(w => masal.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 47 kategori içeriyor (ev hayvanı genişletmesi sonrası)', CATEGORY_WORDS.length >= 47);
+    check('CATEGORY_WORDS yeni "bir ev hayvanı" kategorisini içeriyor',
+      (() => { const evh = CATEGORY_WORDS.find(c => c.label === 'bir ev hayvanı'); return evh && ['kedi', 'köpek', 'tavşan', 'kuş'].every(w => evh.words.some(x => x.w === w)); })());
     check('CATEGORY_WORDS "bir çiçek" kategorisine 1 yeni tür eklendi (ayçiçeği)',
       (() => { const cicek = CATEGORY_WORDS.find(c => c.label === 'bir çiçek'); return cicek && cicek.words.some(x => x.w === 'ayçiçeği' && x.e && x.e.length); })());
 
