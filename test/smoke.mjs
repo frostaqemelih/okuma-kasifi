@@ -1956,6 +1956,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 44 kategori içeriyor (kemirgen genişletmesi sonrası)', CATEGORY_WORDS.length >= 44);
     check('CATEGORY_WORDS yeni "kemirgen" kategorisini içeriyor',
       (() => { const kem = CATEGORY_WORDS.find(c => c.label === 'bir kemirgen'); return kem && ['fare', 'sincap', 'hamster', 'kunduz'].every(w => kem.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 45 kategori içeriyor (sayı genişletmesi sonrası)', CATEGORY_WORDS.length >= 45);
+    check('CATEGORY_WORDS yeni "bir sayı" kategorisini içeriyor',
+      (() => { const say = CATEGORY_WORDS.find(c => c.label === 'bir sayı'); return say && ['bir', 'iki', 'üç', 'dört', 'beş'].every(w => say.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
