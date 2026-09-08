@@ -2578,7 +2578,16 @@ const ANTONYMS=[
   {a:'sakin',b:'hareketli',ea:'😌',eb:'🏃'},
   {a:'önemli',b:'önemsiz',ea:'⭐',eb:'🤷'},
   {a:'bulutlu',b:'açık',ea:'☁️',eb:'🌤️'},
-  {a:'fazla',b:'eksik',ea:'➕',eb:'➖'}
+  {a:'fazla',b:'eksik',ea:'➕',eb:'➖'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — bilgili/bilgisiz
+     (bilgi kavramı, "Kâşif" öğrenme temasıyla uyumlu, ilk kez), dikkatli/dikkatsiz (dikkat kavramı,
+     ilk kez), otur/kalk ("gel/git"ten sonra ikinci fiil tabanlı zıt çift), fırtınalı/sakin (hava
+     durumu, "sakin" kelimesinin sakin/hareketli çiftinden ayrı bir bağlamda ikinci kullanımı) —
+     hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'bilgili',b:'bilgisiz',ea:'🧠',eb:'❓'},
+  {a:'dikkatli',b:'dikkatsiz',ea:'🔍',eb:'🙈'},
+  {a:'otur',b:'kalk',ea:'🪑',eb:'🧍'},
+  {a:'fırtınalı',b:'sakin',ea:'🌪️',eb:'😌'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
