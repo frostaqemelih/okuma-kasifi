@@ -2817,6 +2817,11 @@ const testDriver = `
     check('SEQUENCES dizisi en az 68 çift içeriyor (yufka/börek, buğday/un, süt/muhallebi genişletmesi sonrası)', SEQUENCES.length >= 68);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (yufka/börek, buğday/un, süt/muhallebi — tam çift eşleşmesi)',
       [['yufka', 'börek'], ['buğday', 'un'], ['süt', 'muhallebi']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SEQUENCES dizisi en az 71 çift içeriyor (patates/püre, fide/sebze, kar/kartopu genişletmesi sonrası)', SEQUENCES.length >= 71);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (patates/püre, fide/sebze, kar/kartopu — tam çift eşleşmesi)',
+      [['patates', 'püre'], ['fide', 'sebze'], ['kar', 'kartopu']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SEQUENCES regresyon koruması: hiçbir a/b değeri boşluk içermiyor (pool.includes(c) karakter karakter denetlediğinden boşluklu değer asla eşleşmez)',
+      SEQUENCES.every(p => !p.a.includes(' ') && !p.b.includes(' ')));
     check('SEQUENCES içindeki hiçbir değer boşluk karakteri içermiyor (roundSira() havuz eşleşmesi tek kelime gerektirir)',
       SEQUENCES.every(p => !p.a.includes(' ') && !p.b.includes(' ')));
 

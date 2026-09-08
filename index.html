@@ -3057,7 +3057,19 @@ const SEQUENCES=[
      zincirine yeni bir ürün, h'yi pekiştiriyor) eklendi; dedup regresyon kontrolüyle doğrulandı. */
   {a:'yufka',b:'börek',ea:'🫓',eb:'🥟'},
   {a:'buğday',b:'un',ea:'🌾',eb:'🌾'},
-  {a:'süt',b:'muhallebi',ea:'🥛',eb:'🍮'}
+  {a:'süt',b:'muhallebi',ea:'🥛',eb:'🍮'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod, yeni oturum — önceki genişletme turlarıyla aynı desen):
+     letter-count analiziyle ö/f/g/v/p hâlâ en az temsil edilen sesler arasındaydı: patates/püre
+     (patates/cips zincirinden ayrı yeni bir dönüşüm — p'yi iki kez pekiştiriyor), fide/sebze (bitki
+     büyümesi zincirine yeni bir dal — sebze bağlamı, önceki tohum/fidan/ağaç zincirlerinden ayrı,
+     f'yi pekiştiriyor), kar/kartopu (kar/su zincirinden ayrı, kışın oyun bağlamında yeni bir
+     dönüşüm, p'yi pekiştiriyor) eklendi — SEQUENCES tüm kelimeleri (a/b alanları) boşluksuz tek
+     kelime olmalı, çünkü roundSeq() `pool.includes(c)` ile her karakteri tek tek harf havuzuna
+     karşı denetliyor ve boşluk hiçbir zaman pool'da olmadığından çift kelimeli bir değer eşleşmeyi
+     sonsuza dek imkânsız kılardı; dedup regresyon kontrolüyle doğrulandı. */
+  {a:'patates',b:'püre',ea:'🥔',eb:'🍽️'},
+  {a:'fide',b:'sebze',ea:'🌱',eb:'🥕'},
+  {a:'kar',b:'kartopu',ea:'❄️',eb:'⛄'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
