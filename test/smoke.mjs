@@ -2776,6 +2776,20 @@ try {
 } catch (e) {
   pushCheck('applyI18n() DOM üzerinde hatasız çalıştı (hata: ' + e.message + ')', false);
 }
+// --- E7.5b devamı: statik HTML'de kalan "Vazgeç" (2 yer) ve "Harika!" (2 yer) tekrarları da STR'ye taşındı ---
+pushCheck('Kaynakta en az 2 yerde data-i18n="vazgec" (ebeveyn kapısı + test ödeme "Vazgeç" düğmeleri)', (html.match(/data-i18n="vazgec"/g) || []).length >= 2);
+pushCheck('Kaynakta en az 2 yerde data-i18n="harika" (ödül başlığı + satın alma "Harika!" düğmesi)', (html.match(/data-i18n="harika"/g) || []).length >= 2);
+try {
+  const vazgecEls = window.document.querySelectorAll('[data-i18n="vazgec"]');
+  // #rewardTitle de data-i18n="harika" taşıyor ama award() akışı (testDriver içinde zaten tetiklendi)
+  // onu bilerek rastgele bir kutlama cümlesiyle ÜZERİNE YAZAR — o yüzden burada hariç tutulup yalnız
+  // hiçbir oyun mantığının dokunmadığı satın alma "Harika!" düğmesi applyI18n() sonucu için kontrol edilir.
+  const harikaBtn = window.document.querySelector('button[onclick="finishPurchaseFlow()"][data-i18n="harika"]');
+  pushCheck('applyI18n() sonrası tüm "Vazgeç" düğmelerinin textContent\'i STR.vazgec ile eşleşiyor', vazgecEls.length >= 2 && Array.from(vazgecEls).every(el => el.textContent === 'Vazgeç'));
+  pushCheck('applyI18n() sonrası satın alma "Harika!" düğmesinin textContent\'i STR.harika ile eşleşiyor', !!harikaBtn && harikaBtn.textContent === 'Harika!');
+} catch (e) {
+  pushCheck('Vazgeç/Harika applyI18n() DOM üzerinde hatasız çalıştı (hata: ' + e.message + ')', false);
+}
 
 // --- E7.1: gerçek PWA ikonları (icon-192.png / icon-512.png) + manifest.json + sw.js önbelleği ---
 function pngDims(path) {
