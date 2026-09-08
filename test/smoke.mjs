@@ -1618,6 +1618,17 @@ const testDriver = `
     check('WORDBANK genisletme (hastane/sabun/ördek/yağ) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: yazı/pazar/şişe/duvar (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 181 kelime içeriyor (yazı/pazar/şişe/duvar genişletmesi sonrası)', WORDBANK.length >= 181);
+    const newYPSDWords = ['yazı', 'pazar', 'şişe', 'duvar'];
+    check('Yeni yazı/pazar/şişe/duvar kelimeleri WORDBANK icinde tanimli', newYPSDWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni yazı/pazar/şişe/duvar kelimelerinin hepsi emoji tasiyor',
+      newYPSDWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (yazı/pazar/şişe/duvar) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
