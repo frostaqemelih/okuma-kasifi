@@ -1902,6 +1902,9 @@ const testDriver = `
     check('CATEGORY_WORDS yeni "aksesuar" kategorisini içeriyor', CATEGORY_WORDS.some(c => c.label === 'bir aksesuar'));
     check('CATEGORY_WORDS "bir kuş" kategorisine 2 yeni tür eklendi (flamingo/tavus)',
       (() => { const kus = CATEGORY_WORDS.find(c => c.label === 'bir kuş'); return kus && ['flamingo', 'tavus'].every(w => kus.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 43 kategori içeriyor (balık türü genişletmesi sonrası)', CATEGORY_WORDS.length >= 43);
+    check('CATEGORY_WORDS yeni "balık türü" kategorisini içeriyor',
+      (() => { const balik = CATEGORY_WORDS.find(c => c.label === 'bir balık türü'); return balik && ['hamsi', 'somon', 'levrek', 'morina'].every(w => balik.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
