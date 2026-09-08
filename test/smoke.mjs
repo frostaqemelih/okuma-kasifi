@@ -1607,6 +1607,17 @@ const testDriver = `
     check('WORDBANK genisletme (çiftlik/fırça/halı/jokey) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: hastane/sabun/ördek/yağ (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 177 kelime içeriyor (hastane/sabun/ördek/yağ genişletmesi sonrası)', WORDBANK.length >= 177);
+    const newHSOYWords = ['hastane', 'sabun', 'ördek', 'yağ'];
+    check('Yeni hastane/sabun/ördek/yağ kelimeleri WORDBANK icinde tanimli', newHSOYWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni hastane/sabun/ördek/yağ kelimelerinin hepsi emoji tasiyor',
+      newHSOYWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (hastane/sabun/ördek/yağ) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
