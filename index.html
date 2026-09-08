@@ -2789,7 +2789,15 @@ const SEQUENCES=[
      bir sonraki halkası (pamuk→iplik→kumaş), kum/cam yine yeni bir işlenme zinciri. */
   {a:'ağaç',b:'kağıt',ea:'🌳',eb:'📄'},
   {a:'iplik',b:'kumaş',ea:'🧵',eb:'🧶'},
-  {a:'kum',b:'cam',ea:'🏖️',eb:'🪟'}
+  {a:'kum',b:'cam',ea:'🏖️',eb:'🪟'},
+  /* İçerik genişletme (rutin, YOĞUN mod devamı — önceki SEQUENCES turlarıyla aynı desen): 3 yeni
+     zamansal/nedensel sıra çifti — üzüm/pekmez yeni bir "hammadde→işlenmiş ürün" zinciri (zeytin/
+     zeytinyağı ile aynı tür, farklı meyve), kuzu/koyun dana/inek ve civciv/tavuk ile aynı "yavru
+     hayvan→yetişkin hayvan" türü (koyun/yün'den ayrı bir bağlam), domates/salça yeni bir işlenme
+     zinciri. */
+  {a:'üzüm',b:'pekmez',ea:'🍇',eb:'🫙'},
+  {a:'kuzu',b:'koyun',ea:'🐑',eb:'🐑'},
+  {a:'domates',b:'salça',ea:'🍅',eb:'🥫'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;

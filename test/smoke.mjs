@@ -2616,6 +2616,9 @@ const testDriver = `
     check('SEQUENCES dizisi en az 44 çift içeriyor (kum/cam genişletmesi sonrası)', SEQUENCES.length >= 44);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (ağaç/kağıt, iplik/kumaş, kum/cam)',
       ['kağıt', 'kumaş', 'cam'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 47 çift içeriyor (domates/salça genişletmesi sonrası)', SEQUENCES.length >= 47);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (üzüm/pekmez, kuzu/koyun, domates/salça)',
+      ['pekmez', 'kuzu', 'salça'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
     check('SEQUENCES yeni eklenen çiftleri içeriyor (sabah/gündüz, akşam/gece — tam çift eşleşmesi)',
       [['sabah', 'gündüz'], ['akşam', 'gece']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
 
