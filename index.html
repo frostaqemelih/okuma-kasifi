@@ -2725,7 +2725,15 @@ const SEQUENCES=[
      yön olarak ayrı — orada yumurtadan civciv çıkışı, burada tavuğun yumurtlaması anlatılıyor). */
   {a:'patates',b:'cips',ea:'🥔',eb:'🍟'},
   {a:'örümcek',b:'ağ',ea:'🕷️',eb:'🕸️'},
-  {a:'tavuk',b:'yumurta',ea:'🐓',eb:'🥚'}
+  {a:'tavuk',b:'yumurta',ea:'🐓',eb:'🥚'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki SEQUENCES turlarıyla aynı desen): 3 yeni
+     zamansal/nedensel sıra çifti — sabah/gündüz ve akşam/gece gün döngüsündeki eksik iki geçişi
+     tamamlıyor (gündüz→gece, gece→sabah, gündüz→akşam zaten vardı; sabah→gündüz ve akşam→gece
+     ÖNCEKİ ÇİFTLERİN TERSİ DEĞİL, döngüdeki yeni bağlantılar), ders/teneffüs daha önce olmayan bir
+     okul günü nedenselliği getiriyor. */
+  {a:'sabah',b:'gündüz',ea:'🌅',eb:'☀️'},
+  {a:'akşam',b:'gece',ea:'🌆',eb:'🌙'},
+  {a:'ders',b:'teneffüs',ea:'📚',eb:'🏃'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;

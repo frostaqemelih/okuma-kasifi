@@ -2568,6 +2568,11 @@ const testDriver = `
     check('SEQUENCES dizisi en az 38 çift içeriyor (tavuk/yumurta genişletmesi sonrası)', SEQUENCES.length >= 38);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (patates/cips, örümcek/ağ, tavuk/yumurta)',
       ['cips', 'örümcek', 'yumurta'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 41 çift içeriyor (ders/teneffüs genişletmesi sonrası)', SEQUENCES.length >= 41);
+    check('SEQUENCES yeni eklenen çifti içeriyor (ders/teneffüs)',
+      SEQUENCES.some(p => (p.a === 'ders' && p.b === 'teneffüs') || (p.a === 'teneffüs' && p.b === 'ders')));
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (sabah/gündüz, akşam/gece — tam çift eşleşmesi)',
+      [['sabah', 'gündüz'], ['akşam', 'gece']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
