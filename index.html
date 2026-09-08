@@ -2495,7 +2495,16 @@ const ANTONYMS=[
   {a:'akıllı',b:'aptal',ea:'🧠',eb:'🤪'},
   {a:'güzel',b:'çirkin',ea:'🌸',eb:'👹'},
   {a:'konuşkan',b:'suskun',ea:'🗣️',eb:'🤐'},
-  {a:'dürüst',b:'yalancı',ea:'👍',eb:'🤥'}
+  {a:'dürüst',b:'yalancı',ea:'👍',eb:'🤥'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki ANTONYMS turlarıyla aynı desen): 4 yeni
+     zıt anlamlı çift — sıvı/katı (madde hâli kavramı, ilk kez), tatlı/tuzlu (tatlı'nın 3. zıttı —
+     acı/ekşi'den sonra, farklı bağlamda geçerli bir zıtlık, aynı desenle daha önce de kabul edildi),
+     uyanık/uykulu (günlük ritim kavramı, ilk kez), gel/git (yön/hareket fiili, dizideki ilk fiil
+     tabanlı zıt çift) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'sıvı',b:'katı',ea:'💧',eb:'🧊'},
+  {a:'tatlı',b:'tuzlu',ea:'🍬',eb:'🧂'},
+  {a:'uyanık',b:'uykulu',ea:'😃',eb:'😴'},
+  {a:'gel',b:'git',ea:'🙋',eb:'🚶'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
