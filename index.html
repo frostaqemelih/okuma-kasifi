@@ -2885,7 +2885,15 @@ const SEQUENCES=[
      zincirinden ayrı bir bağlam) — hiçbiri önceki çiftlerle örtüşmüyor. */
   {a:'un',b:'hamur',ea:'🌾',eb:'🥟'},
   {a:'hamur',b:'ekmek',ea:'🥟',eb:'🍞'},
-  {a:'yumurta',b:'omlet',ea:'🥚',eb:'🍳'}
+  {a:'yumurta',b:'omlet',ea:'🥚',eb:'🍳'},
+  /* İçerik genişletme (rutin, YOĞUN mod devamı, backlog sırası — önceki SEQUENCES genişletme turlarıyla
+     aynı desen): pirinç/pilav (yeni bir "hammadde→işlenmiş yemek" zinciri, un/ekmek ve patates/cips ile
+     aynı tür), odun/kömür (yeni bir yanma/dönüşüm zinciri, ateş/duman'dan ayrı bir bağlam), süt/tereyağı
+     (süt/peynir ve süt/yoğurt ile aynı "hammadde→süt ürünü" dalına üçüncü bir paralel ürün) — hiçbiri
+     önceki çiftlerle örtüşmüyor. */
+  {a:'pirinç',b:'pilav',ea:'🌾',eb:'🍚'},
+  {a:'odun',b:'kömür',ea:'🪵',eb:'⚫'},
+  {a:'süt',b:'tereyağı',ea:'🥛',eb:'🧈'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
