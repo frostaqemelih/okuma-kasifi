@@ -2637,6 +2637,9 @@ const testDriver = `
       ['pekmez', 'kuzu', 'salça'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
     check('SEQUENCES yeni eklenen çiftleri içeriyor (sabah/gündüz, akşam/gece — tam çift eşleşmesi)',
       [['sabah', 'gündüz'], ['akşam', 'gece']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SEQUENCES dizisi en az 50 çift içeriyor (süt/yoğurt, kumaş/elbise, kağıt/kitap genişletmesi sonrası)', SEQUENCES.length >= 50);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (süt/yoğurt, kumaş/elbise, kağıt/kitap — tam çift eşleşmesi)',
+      [['süt', 'yoğurt'], ['kumaş', 'elbise'], ['kağıt', 'kitap']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;

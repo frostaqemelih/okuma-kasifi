@@ -2805,7 +2805,14 @@ const SEQUENCES=[
      zinciri. */
   {a:'üzüm',b:'pekmez',ea:'🍇',eb:'🫙'},
   {a:'kuzu',b:'koyun',ea:'🐑',eb:'🐑'},
-  {a:'domates',b:'salça',ea:'🍅',eb:'🥫'}
+  {a:'domates',b:'salça',ea:'🍅',eb:'🥫'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki SEQUENCES turlarıyla aynı desen): 3 yeni
+     zamansal/nedensel sıra çifti — süt/yoğurt süt/peynir'e paralel yeni bir süt ürünü dalı (aynı
+     hammaddeden farklı bir ürün, çakışmıyor), kumaş/elbise pamuk→iplik→kumaş zincirinin bir sonraki
+     halkası, kağıt/kitap ağaç→kağıt zincirinin bir sonraki halkası. */
+  {a:'süt',b:'yoğurt',ea:'🥛',eb:'🥣'},
+  {a:'kumaş',b:'elbise',ea:'🧶',eb:'👗'},
+  {a:'kağıt',b:'kitap',ea:'📄',eb:'📖'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
