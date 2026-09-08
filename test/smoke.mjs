@@ -1508,6 +1508,17 @@ const testDriver = `
     check('WORDBANK genisletme (papağan/sincap/ejder/fıstık) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: ö/ü/ç/ş/h/v sesleri (rutin) ---
+  try {
+    check('WORDBANK en az 141 kelime içeriyor (şoför/üçgen/vagon/hamburger genişletmesi sonrası)', WORDBANK.length >= 141);
+    const newOUCSHVWords = ['şoför', 'üçgen', 'vagon', 'hamburger'];
+    check('Yeni şoför/üçgen/vagon/hamburger kelimeleri WORDBANK icinde tanimli', newOUCSHVWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni şoför/üçgen/vagon/hamburger kelimelerinin hepsi emoji tasiyor',
+      newOUCSHVWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (şoför/üçgen/vagon/hamburger) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
