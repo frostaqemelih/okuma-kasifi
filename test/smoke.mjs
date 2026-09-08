@@ -2596,6 +2596,9 @@ const testDriver = `
       ['tertemiz', 'yumuşacık', 'atılgan'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
     check('SYNONYMS "tatlı/şirin" çifti tam olarak eklendi',
       SYNONYMS.some(p => (p.a === 'tatlı' && p.b === 'şirin') || (p.a === 'şirin' && p.b === 'tatlı')));
+    check('SYNONYMS dizisi en az 92 çift içeriyor (dost/arkadaş, uslu/terbiyeli, sadık/vefalı, misafirperver/konuksever genişletmesi sonrası)', SYNONYMS.length >= 92);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (dost/arkadaş, uslu/terbiyeli, sadık/vefalı, misafirperver/konuksever)',
+      ['arkadaş', 'terbiyeli', 'vefalı', 'konuksever'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
