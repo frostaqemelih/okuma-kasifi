@@ -2758,7 +2758,14 @@ const SEQUENCES=[
      okul günü nedenselliği getiriyor. */
   {a:'sabah',b:'gündüz',ea:'🌅',eb:'☀️'},
   {a:'akşam',b:'gece',ea:'🌆',eb:'🌙'},
-  {a:'ders',b:'teneffüs',ea:'📚',eb:'🏃'}
+  {a:'ders',b:'teneffüs',ea:'📚',eb:'🏃'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki SEQUENCES turlarıyla aynı desen): 3 yeni
+     zamansal/nedensel sıra çifti — ağaç/kağıt daha önce olmayan bir "doğal kaynak→üretilmiş ürün"
+     zinciri (un/ekmek, pamuk/iplik ile aynı tür ama farklı bağlam), iplik/kumaş pamuk/iplik zincirinin
+     bir sonraki halkası (pamuk→iplik→kumaş), kum/cam yine yeni bir işlenme zinciri. */
+  {a:'ağaç',b:'kağıt',ea:'🌳',eb:'📄'},
+  {a:'iplik',b:'kumaş',ea:'🧵',eb:'🧶'},
+  {a:'kum',b:'cam',ea:'🏖️',eb:'🪟'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
