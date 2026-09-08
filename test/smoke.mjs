@@ -2618,6 +2618,9 @@ const testDriver = `
     check('SYNONYMS dizisi en az 92 çift içeriyor (dost/arkadaş, uslu/terbiyeli, sadık/vefalı, misafirperver/konuksever genişletmesi sonrası)', SYNONYMS.length >= 92);
     check('SYNONYMS yeni eklenen çiftleri içeriyor (dost/arkadaş, uslu/terbiyeli, sadık/vefalı, misafirperver/konuksever)',
       ['arkadaş', 'terbiyeli', 'vefalı', 'konuksever'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 96 çift içeriyor (güvenilir/emin, sevecen/şefkatli, titiz/dikkatli, dinç/zinde genişletmesi sonrası)', SYNONYMS.length >= 96);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (güvenilir/emin, sevecen/şefkatli, titiz/dikkatli, dinç/zinde)',
+      ['emin', 'şefkatli', 'titiz', 'dinç'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
