@@ -2510,6 +2510,9 @@ const testDriver = `
       ['başarılı', 'yiğit'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
     check('SYNONYMS yeni eklenen çiftleri içeriyor (minik/ufak, sakin/rahat — tam çift eşleşmesi)',
       [['minik', 'ufak'], ['sakin', 'rahat']].every(([x, y]) => SYNONYMS.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SYNONYMS dizisi en az 76 çift içeriyor (meraklı/araştırmacı genişletmesi sonrası)', SYNONYMS.length >= 76);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (zor/güç, çalışkan/gayretli, aydınlık/ışıklı, meraklı/araştırmacı)',
+      ['güç', 'gayretli', 'ışıklı', 'araştırmacı'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;
