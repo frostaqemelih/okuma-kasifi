@@ -3323,6 +3323,13 @@ const CATEGORY_WORDS=[
      kategorisinden ayrı, evde beslenen/yakın canlı sınıflandırması; kelime çakışması yok). */
   {label:'bir ev hayvanı', words:[
     {w:'kedi',e:'🐱'},{w:'köpek',e:'🐶'},{w:'tavşan',e:'🐰'},{w:'kuş',e:'🐦'}
+  ]},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki kategori ekleme turlarıyla aynı desen):
+     1 yeni kategori — "bir okul dersi" (matematik/resim/müzik/beden/fen; "Kâşif" öğrenme/okul temasıyla
+     uyumlu, hiçbir mevcut kategoriyle kelime çakışması yok — "okul eşyası" kategorisi eşyaları listeler,
+     bu kategori ise dersleri). */
+  {label:'bir okul dersi', words:[
+    {w:'matematik',e:'🔢'},{w:'resim',e:'🎨'},{w:'müzik',e:'🎵'},{w:'beden',e:'🏃'},{w:'fen',e:'🔬'}
   ]}
 ];
 function roundKategori(pool){
