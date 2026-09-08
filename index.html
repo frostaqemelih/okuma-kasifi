@@ -2793,7 +2793,16 @@ const SYNONYMS=[
   {a:'düzenli',b:'tertipli',ea:'🗂️',eb:'📐'},
   {a:'ürkek',b:'çekingen',ea:'🙈',eb:'🫣'},
   {a:'bitkin',b:'tükenmiş',ea:'😩',eb:'🔋'},
-  {a:'keyifli',b:'hoşnut',ea:'😊',eb:'🙂'}
+  {a:'keyifli',b:'hoşnut',ea:'😊',eb:'🙂'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — pahalı/değerli
+     (değer kavramı, ilk kez), taze/körpe ("yeni/taze"deki taze'nin ayrı bir bağlamda — yiyecek
+     tazeliği — ikinci eş anlamlısı), gururlu/onurlu (gurur kavramı, ilk kez, rozet/başarı temasıyla
+     uyumlu), yaratıcı/hünerli (yaratıcılık kavramı, ilk kez, "Kendi Hikayeni Kur" oyunuyla uyumlu) —
+     hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'pahalı',b:'değerli',ea:'💰',eb:'💎'},
+  {a:'taze',b:'körpe',ea:'🥦',eb:'🌱'},
+  {a:'gururlu',b:'onurlu',ea:'🦚',eb:'🎖️'},
+  {a:'yaratıcı',b:'hünerli',ea:'🎨',eb:'🛠️'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
