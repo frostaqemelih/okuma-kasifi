@@ -1541,6 +1541,17 @@ const testDriver = `
     check('WORDBANK genisletme (öğle/ejderha/çadır/kaşık) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: böğürtlen/cips/şahin/kravat (rutin, YOĞUN mod devamı) ---
+  try {
+    check('WORDBANK en az 153 kelime içeriyor (böğürtlen/cips/şahin/kravat genişletmesi sonrası)', WORDBANK.length >= 153);
+    const newBCSKWords = ['böğürtlen', 'cips', 'şahin', 'kravat'];
+    check('Yeni böğürtlen/cips/şahin/kravat kelimeleri WORDBANK icinde tanimli', newBCSKWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni böğürtlen/cips/şahin/kravat kelimelerinin hepsi emoji tasiyor',
+      newBCSKWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (böğürtlen/cips/şahin/kravat) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
