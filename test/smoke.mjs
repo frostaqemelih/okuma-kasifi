@@ -2706,6 +2706,9 @@ const testDriver = `
     check('SYNONYMS dizisi en az 108 çift içeriyor (gözde/sevilen, değişik/farklı, içten/samimi, harika/muhteşem genişletmesi sonrası)', SYNONYMS.length >= 108);
     check('SYNONYMS yeni eklenen çiftleri içeriyor (gözde/sevilen, değişik/farklı, içten/samimi, harika/muhteşem)',
       ['gözde', 'değişik', 'içten', 'muhteşem'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
+    check('SYNONYMS dizisi en az 112 çift içeriyor (ödül/mükafat, gülünç/komik, pratik/kolay, bağlı/sadık genişletmesi sonrası)', SYNONYMS.length >= 112);
+    check('SYNONYMS yeni eklenen çiftleri içeriyor (ödül/mükafat, gülünç/komik, pratik/kolay, bağlı/sadık)',
+      ['mükafat', 'gülünç', 'pratik', 'bağlı'].every(w => SYNONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPoolEs = ALL_LETTERS;
     const origRandomEs = Math.random;

@@ -2848,7 +2848,17 @@ const SYNONYMS=[
   {a:'gözde',b:'sevilen',ea:'⭐',eb:'💗'},
   {a:'değişik',b:'farklı',ea:'🔀',eb:'🎭'},
   {a:'içten',b:'samimi',ea:'🫶',eb:'😊'},
-  {a:'harika',b:'muhteşem',ea:'🤩',eb:'✨'}
+  {a:'harika',b:'muhteşem',ea:'🤩',eb:'✨'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — letter-count
+     analiziyle ö/p/ğ/ç hâlâ en az temsil edilen sesler arasındaydı: ödül/mükafat (ö/f'yi birlikte,
+     uygulamanın rozet/ödül temasıyla uyumlu), gülünç/komik (ç/ü'yü birlikte, "komik"in ikinci
+     kullanımı, eğlenceli'den ayrı bağlam), pratik/kolay (p'yi, "kolay"ın ikinci kullanımı, basit'ten
+     ayrı bağlam), bağlı/sadık (ğ'yi, "sadık"ın ikinci kullanımı, vefalı'dan ayrı bağlam) — hiçbiri
+     önceki çiftlerle örtüşmüyor. */
+  {a:'ödül',b:'mükafat',ea:'🏆',eb:'🏅'},
+  {a:'gülünç',b:'komik',ea:'😄',eb:'😆'},
+  {a:'pratik',b:'kolay',ea:'🔧',eb:'✅'},
+  {a:'bağlı',b:'sadık',ea:'🔗',eb:'🐾'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
