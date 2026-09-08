@@ -1190,7 +1190,12 @@ const WORDBANK=[
      temsil edilen sesler, 14'er kelimede geçiyordu): "yazı" ve "pazar" z'yi (okuma-yazma temasıyla
      uyumlu "yazı" ilk kez), "şişe" ş'yi (tekrar eden ş yerine yeni bir çift ş içeriyor), "duvar" ise
      d/u/v'yi pekiştiriyor. */
-  {w:'yazı',e:'✍️'},{w:'pazar',e:'🛍️'},{w:'şişe',e:'🍼'},{w:'duvar',e:'🧱'}
+  {w:'yazı',e:'✍️'},{w:'pazar',e:'🛍️'},{w:'şişe',e:'🍼'},{w:'duvar',e:'🧱'},
+  /* WORDBANK genişletme (rutin, YOĞUN mod, yeni oturum — letter-count analiziyle ü/g/j hâlâ en az
+     temsil edilen sesler, 14'er kelimede geçiyordu): "bugün" tek başına b/g/ü'yü (üçünü birden)
+     pekiştiriyor; "çamaşır" ç VE ş'yi birlikte, "ağaçkakan" ğ VE ç'yi birlikte pekiştiriyor;
+     "fok" nadir f sesini tek başına pekiştiriyor. */
+  {w:'bugün',e:'📅'},{w:'çamaşır',e:'👕'},{w:'fok',e:'🦭'},{w:'ağaçkakan',e:'🐦'}
 ];
 /* E4.7: Rakam ve sayı sesleri mini-modülü (1–10) — okuma-yazmaya bitişik, harf havuzundan bağımsız. */
 const NUMBERS=[

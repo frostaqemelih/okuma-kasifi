@@ -1629,6 +1629,18 @@ const testDriver = `
     check('WORDBANK genisletme (yazı/pazar/şişe/duvar) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: bugün/çamaşır/fok/ağaçkakan (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 185 kelime içeriyor (bugün/çamaşır/fok/ağaçkakan genişletmesi sonrası)', WORDBANK.length >= 185);
+    const newBCFAWords = ['bugün', 'çamaşır', 'fok', 'ağaçkakan'];
+    check('Yeni bugün/çamaşır/fok/ağaçkakan kelimeleri WORDBANK icinde tanimli', newBCFAWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni bugün/çamaşır/fok/ağaçkakan kelimelerinin hepsi emoji tasiyor',
+      newBCFAWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+    check('WORDBANK icinde birebir tekrar eden kelime yok (dedup regresyon)', new Set(WORDBANK.map(it => it.w)).size === WORDBANK.length);
+  } catch (e) {
+    check('WORDBANK genisletme (bugün/çamaşır/fok/ağaçkakan) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
