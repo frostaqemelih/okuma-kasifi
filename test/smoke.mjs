@@ -1747,6 +1747,8 @@ const testDriver = `
     check('PROPER_NAMES yeni isimleri (beşir/çakır) içeriyor', ['beşir', 'çakır'].every(n => PROPER_NAMES.some(p => p.name === n)));
     check('PROPER_NAMES en az 58 isim içeriyor (gönül/buğra genişletmesi sonrası)', PROPER_NAMES.length >= 58);
     check('PROPER_NAMES yeni isimleri (gönül/buğra) içeriyor', ['gönül', 'buğra'].every(n => PROPER_NAMES.some(p => p.name === n)));
+    check('PROPER_NAMES en az 60 isim içeriyor (fatih/coşku genişletmesi sonrası)', PROPER_NAMES.length >= 60);
+    check('PROPER_NAMES yeni isimleri (fatih/coşku) içeriyor', ['fatih', 'coşku'].every(n => PROPER_NAMES.some(p => p.name === n)));
 
     const fullPool2 = ['a', 'n', 'e', 't', 'i', 'l', 'o', 'k', 'u', 'r', 'ı', 'm'];
     state = fresh();
