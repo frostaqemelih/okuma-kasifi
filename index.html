@@ -2685,7 +2685,15 @@ const SEQUENCES=[
      dana/inek hayvan büyümesinde önceki inek/süt'ten ayrı bir erken evreyi (yavru→yetişkin) ekliyor. */
   {a:'yetişkin',b:'yaşlı',ea:'🧑',eb:'👴'},
   {a:'kozalak',b:'çam',ea:'🌰',eb:'🌲'},
-  {a:'dana',b:'inek',ea:'🐮',eb:'🐄'}
+  {a:'dana',b:'inek',ea:'🐮',eb:'🐄'},
+  /* İçerik genişletme (rutin, önceki SEQUENCES turlarıyla aynı desen): 3 yeni zamansal/nedensel sıra
+     çifti — patates/cips ekmek/tost'a benzer ama farklı bir "hammadde→işlenmiş atıştırmalık" zinciri,
+     örümcek/ağ daha önce olmayan bir "canlı→yaptığı şey" nedenselliği, tavuk/yumurta inek/süt ve
+     koyun/yün ile aynı "yetişkin hayvan→ürettiği şey" türünü tamamlıyor (yumurta/civciv çiftinden
+     yön olarak ayrı — orada yumurtadan civciv çıkışı, burada tavuğun yumurtlaması anlatılıyor). */
+  {a:'patates',b:'cips',ea:'🥔',eb:'🍟'},
+  {a:'örümcek',b:'ağ',ea:'🕷️',eb:'🕸️'},
+  {a:'tavuk',b:'yumurta',ea:'🐓',eb:'🥚'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;

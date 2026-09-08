@@ -2531,6 +2531,9 @@ const testDriver = `
     check('SEQUENCES dizisi en az 35 çift içeriyor (yetişkin/yaşlı genişletmesi sonrası)', SEQUENCES.length >= 35);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (yetişkin/yaşlı, kozalak/çam, dana/inek)',
       ['yaşlı', 'kozalak', 'dana'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
+    check('SEQUENCES dizisi en az 38 çift içeriyor (tavuk/yumurta genişletmesi sonrası)', SEQUENCES.length >= 38);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (patates/cips, örümcek/ağ, tavuk/yumurta)',
+      ['cips', 'örümcek', 'yumurta'].every(w => SEQUENCES.some(p => p.a === w || p.b === w)));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
