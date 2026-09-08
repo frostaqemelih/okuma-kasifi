@@ -3371,6 +3371,14 @@ const CATEGORY_WORDS=[
      bu kategori ise dersleri). */
   {label:'bir okul dersi', words:[
     {w:'matematik',e:'🔢'},{w:'resim',e:'🎨'},{w:'müzik',e:'🎵'},{w:'beden',e:'🏃'},{w:'fen',e:'🔬'}
+  ]},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki kategori ekleme turlarıyla aynı desen):
+     1 yeni kategori — "bir yapı malzemesi" (tuğla/tahta/taş/cam; bina yapımında kullanılan somut
+     malzemeler, "bir bina" kategorisinden ayrı — o binaların TÜRLERİNİ listeler, bu kategori ise
+     binaların YAPILDIĞI malzemeleri; kelime çakışması yok — "cam" WORDBANK'te ayrı bir dizide zaten
+     var ama CATEGORY_WORDS içindeki hiçbir kategoride geçmiyordu). */
+  {label:'bir yapı malzemesi', words:[
+    {w:'tuğla',e:'🧱'},{w:'tahta',e:'🪵'},{w:'taş',e:'🪨'},{w:'cam',e:'🪟'}
   ]}
 ];
 function roundKategori(pool){

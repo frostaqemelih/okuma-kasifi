@@ -2051,6 +2051,9 @@ const testDriver = `
       (() => { const ders = CATEGORY_WORDS.find(c => c.label === 'bir okul dersi'); return ders && ['matematik', 'resim', 'müzik', 'beden', 'fen'].every(w => ders.words.some(x => x.w === w)); })());
     check('CATEGORY_WORDS "bir çiçek" kategorisine 1 yeni tür eklendi (ayçiçeği)',
       (() => { const cicek = CATEGORY_WORDS.find(c => c.label === 'bir çiçek'); return cicek && cicek.words.some(x => x.w === 'ayçiçeği' && x.e && x.e.length); })());
+    check('CATEGORY_WORDS dizisi en az 49 kategori içeriyor (yapı malzemesi genişletmesi sonrası)', CATEGORY_WORDS.length >= 49);
+    check('CATEGORY_WORDS yeni "bir yapı malzemesi" kategorisini içeriyor',
+      (() => { const yapi = CATEGORY_WORDS.find(c => c.label === 'bir yapı malzemesi'); return yapi && ['tuğla', 'tahta', 'taş', 'cam'].every(w => yapi.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
