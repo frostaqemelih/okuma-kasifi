@@ -2545,7 +2545,15 @@ const ANTONYMS=[
   {a:'yuvarlak',b:'köşeli',ea:'🔵',eb:'⬛'},
   {a:'meraklı',b:'ilgisiz',ea:'🧐',eb:'😐'},
   {a:'renkli',b:'soluk',ea:'🌈',eb:'⚪'},
-  {a:'başarılı',b:'başarısız',ea:'🏆',eb:'😞'}
+  {a:'başarılı',b:'başarısız',ea:'🏆',eb:'😞'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum, backlog sırası): 4 yeni zıt anlamlı çift —
+     yerli/yabancı (köken kavramı, ilk kez), kıvırcık/düz (saç dokusu kavramı, somut/görsel, ilk kez),
+     gerçek/hayali (gerçeklik/hayal kavramı, gerçek/sahte'den ayrı bir bağlam, "Kâşif" temasıyla uyumlu),
+     komik/sıkıcı (eğlence kavramı, ilk kez) eklendi — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'yerli',b:'yabancı',ea:'🏠',eb:'🌍'},
+  {a:'kıvırcık',b:'düz',ea:'🦱',eb:'➖'},
+  {a:'gerçek',b:'hayali',ea:'🌍',eb:'🦄'},
+  {a:'komik',b:'sıkıcı',ea:'😂',eb:'😴'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
