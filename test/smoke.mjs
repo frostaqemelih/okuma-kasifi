@@ -1552,6 +1552,17 @@ const testDriver = `
     check('WORDBANK genisletme (böğürtlen/cips/şahin/kravat) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: öküz/süt/yengeç/peynir (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 157 kelime içeriyor (öküz/süt/yengeç/peynir genişletmesi sonrası)', WORDBANK.length >= 157);
+    const newOSYPWords = ['öküz', 'süt', 'yengeç', 'peynir'];
+    check('Yeni öküz/süt/yengeç/peynir kelimeleri WORDBANK icinde tanimli', newOSYPWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni öküz/süt/yengeç/peynir kelimelerinin hepsi emoji tasiyor',
+      newOSYPWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+  } catch (e) {
+    check('WORDBANK genisletme (öküz/süt/yengeç/peynir) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
