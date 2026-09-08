@@ -2479,7 +2479,15 @@ const ANTONYMS=[
   {a:'önce',b:'sonra',ea:'⏮️',eb:'⏭️'},
   {a:'pürüzlü',b:'düzgün',ea:'🪨',eb:'🪞'},
   {a:'taze',b:'bayat',ea:'🥖',eb:'🍞'},
-  {a:'uslu',b:'yaramaz',ea:'😇',eb:'😈'}
+  {a:'uslu',b:'yaramaz',ea:'😇',eb:'😈'},
+  /* İçerik genişletme (rutin, YOĞUN mod devamı — önceki ANTONYMS turlarıyla aynı desen): 4 yeni
+     zıt anlamlı çift — akıllı/aptal (zekâ kavramı), güzel/çirkin (görünüş, ilk kez), konuşkan/suskun
+     (konuşkanlık, ilk kez), dürüst/yalancı (doğruculuk, gerçek/sahte ve doğru/yanlış çiftlerinden
+     ayrı bir karakter özelliği) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'akıllı',b:'aptal',ea:'🧠',eb:'🤪'},
+  {a:'güzel',b:'çirkin',ea:'🌸',eb:'👹'},
+  {a:'konuşkan',b:'suskun',ea:'🗣️',eb:'🤐'},
+  {a:'dürüst',b:'yalancı',ea:'👍',eb:'🤥'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

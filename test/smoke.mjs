@@ -1795,6 +1795,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 82 çift içeriyor (uslu/yaramaz genişletmesi sonrası)', ANTONYMS.length >= 82);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (önce/sonra, pürüzlü/düzgün, taze/bayat, uslu/yaramaz)',
       ['sonra', 'düzgün', 'bayat', 'yaramaz'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 86 çift içeriyor (dürüst/yalancı genişletmesi sonrası)', ANTONYMS.length >= 86);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (akıllı/aptal, güzel/çirkin, konuşkan/suskun, dürüst/yalancı)',
+      ['aptal', 'çirkin', 'suskun', 'yalancı'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
