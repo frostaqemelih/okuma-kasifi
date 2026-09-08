@@ -2717,6 +2717,11 @@ const testDriver = `
     check('SEQUENCES dizisi en az 56 çift içeriyor (pirinç/pilav, odun/kömür, süt/tereyağı genişletmesi sonrası)', SEQUENCES.length >= 56);
     check('SEQUENCES yeni eklenen çiftleri içeriyor (pirinç/pilav, odun/kömür, süt/tereyağı — tam çift eşleşmesi)',
       [['pirinç', 'pilav'], ['odun', 'kömür'], ['süt', 'tereyağı']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SEQUENCES dizisi en az 59 çift içeriyor (elma/komposto, pamuk/kumaş, meyve/reçel genişletmesi sonrası)', SEQUENCES.length >= 59);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (elma/komposto, pamuk/kumaş, meyve/reçel — tam çift eşleşmesi)',
+      [['elma', 'komposto'], ['pamuk', 'kumaş'], ['meyve', 'reçel']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
+    check('SEQUENCES içindeki hiçbir değer boşluk karakteri içermiyor (roundSira() havuz eşleşmesi tek kelime gerektirir)',
+      SEQUENCES.every(p => !p.a.includes(' ') && !p.b.includes(' ')));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;

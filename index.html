@@ -2917,7 +2917,17 @@ const SEQUENCES=[
      önceki çiftlerle örtüşmüyor. */
   {a:'pirinç',b:'pilav',ea:'🌾',eb:'🍚'},
   {a:'odun',b:'kömür',ea:'🪵',eb:'⚫'},
-  {a:'süt',b:'tereyağı',ea:'🥛',eb:'🧈'}
+  {a:'süt',b:'tereyağı',ea:'🥛',eb:'🧈'},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum, backlog sırası — önceki SEQUENCES genişletme
+     turlarıyla aynı desen): elma/komposto yeni bir "meyve→işlenmiş tatlı" zinciri (üzüm/pekmez ve
+     zeytin/zeytinyağı ile aynı tür ama farklı ürün; tek kelimelik değer tercih edildi — roundSira()'nın
+     havuz eşleşmesi boşluk karakterini havuzda bulamayacağından çok kelimeli bir değer hiç seçilemezdi,
+     bkz. CATEGORY_WORDS'teki "bir kuş" turundaki aynı risk notu), pamuk/kumaş pamuk→iplik→kumaş
+     zincirinin ara adımı atlanmış kısa hâli (un/ekmek'in un→hamur→ekmek yanında da bulunması gibi aynı
+     desen), meyve/reçel yeni bir işlenme zinciri — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'elma',b:'komposto',ea:'🍎',eb:'🧃'},
+  {a:'pamuk',b:'kumaş',ea:'🏵️',eb:'🧶'},
+  {a:'meyve',b:'reçel',ea:'🍓',eb:'🫙'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
