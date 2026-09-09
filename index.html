@@ -3499,6 +3499,14 @@ const CATEGORY_WORDS=[
      sesini "jüpiter" ile pekiştiriyor; kelime çakışması yok). */
   {label:'bir gezegen', words:[
     {w:'dünya',e:'🌍'},{w:'mars',e:'🔴'},{w:'jüpiter',e:'🟤'},{w:'satürn',e:'🪐'}
+  ]},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki kategori ekleme turlarıyla aynı desen):
+     1 yeni kategori — "bir hafta günü" (pazartesi/salı/çarşamba/perşembe — takvim haftasının ilk dört
+     günü, "bir zaman dilimi" kategorisinden ayrı — o kategori sabah/akşam/mevsim gibi genel zaman
+     birimlerini listeler, bu kategori haftanın 7 gününden dördünü, her birini sıra numarasıyla
+     (1️⃣-4️⃣) eşleştirerek; p/ç/ş/c/b gibi az temsil edilen sesleri de pekiştiriyor; kelime çakışması yok). */
+  {label:'bir hafta günü', words:[
+    {w:'pazartesi',e:'1️⃣'},{w:'salı',e:'2️⃣'},{w:'çarşamba',e:'3️⃣'},{w:'perşembe',e:'4️⃣'}
   ]}
 ];
 function roundKategori(pool){

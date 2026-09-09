@@ -2111,6 +2111,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 51 kategori içeriyor (gezegen genişletmesi sonrası)', CATEGORY_WORDS.length >= 51);
     check('CATEGORY_WORDS yeni "bir gezegen" kategorisini içeriyor',
       (() => { const gz = CATEGORY_WORDS.find(c => c.label === 'bir gezegen'); return gz && ['dünya', 'mars', 'jüpiter', 'satürn'].every(w => gz.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 52 kategori içeriyor (hafta günü genişletmesi sonrası)', CATEGORY_WORDS.length >= 52);
+    check('CATEGORY_WORDS yeni "bir hafta günü" kategorisini içeriyor',
+      (() => { const hg = CATEGORY_WORDS.find(c => c.label === 'bir hafta günü'); return hg && ['pazartesi', 'salı', 'çarşamba', 'perşembe'].every(w => hg.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
