@@ -3132,7 +3132,15 @@ const SEQUENCES=[
      kontrolüyle doğrulandı. */
   {a:'proje',b:'bina',ea:'📐',eb:'🏠'},
   {a:'çocuk',b:'öğrenci',ea:'🧒',eb:'🎒'},
-  {a:'çekirdek',b:'kavun',ea:'🌰',eb:'🍈'}
+  {a:'çekirdek',b:'kavun',ea:'🌰',eb:'🍈'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 3 yeni içerik çifti —
+     letter-count analiziyle j (1 çift) ve f/ö hâlâ en az temsil edilen sesler tespit edildi:
+     tohum/fide (f'yi, tohum/çiçek zincirinin bir önceki halkası — filizlenme aşaması), jeton/asansör
+     (j'yi ikinci kez, jetonla çalışan asansör bağlamında bir "önce/sonra" ilişkisi), yumurta/ördek
+     (ö'yü, yumurta/civciv zincirinden ayrı bir hayvan — kuluçka/büyüme aşaması) eklendi. */
+  {a:'tohum',b:'fide',ea:'🌱',eb:'🌿'},
+  {a:'jeton',b:'asansör',ea:'🪙',eb:'🛗'},
+  {a:'yumurta',b:'ördek',ea:'🥚',eb:'🦆'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
