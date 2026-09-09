@@ -2899,6 +2899,9 @@ const testDriver = `
       SEQUENCES.every(p => !p.a.includes(' ') && !p.b.includes(' ')));
     check('SEQUENCES içindeki hiçbir değer boşluk karakteri içermiyor (roundSira() havuz eşleşmesi tek kelime gerektirir)',
       SEQUENCES.every(p => !p.a.includes(' ') && !p.b.includes(' ')));
+    check('SEQUENCES dizisi en az 80 çift içeriyor (fırın/ekmek, güneş/buhar, iribaş/kurbağa genişletmesi sonrası)', SEQUENCES.length >= 80);
+    check('SEQUENCES yeni eklenen çiftleri içeriyor (fırın/ekmek, güneş/buhar, iribaş/kurbağa — tam çift eşleşmesi)',
+      [['fırın', 'ekmek'], ['güneş', 'buhar'], ['iribaş', 'kurbağa']].every(([x, y]) => SEQUENCES.some(p => (p.a === x && p.b === y) || (p.a === y && p.b === x))));
 
     const fullPoolSira = ALL_LETTERS;
     const origRandomSira = Math.random;
