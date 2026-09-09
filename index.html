@@ -2634,7 +2634,16 @@ const ANTONYMS=[
   {a:'fısılda',b:'bağır',ea:'🤫',eb:'📢'},
   {a:'pişmiş',b:'çiğ',ea:'🍳',eb:'🥚'},
   {a:'erimiş',b:'donmuş',ea:'💧',eb:'🧊'},
-  {a:'sevimli',b:'ürkütücü',ea:'🥰',eb:'👻'}
+  {a:'sevimli',b:'ürkütücü',ea:'🥰',eb:'👻'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift, hepsi önceki
+     çiftlerle örtüşmeyen kavramlar: artı/eksi (matematik kavramı, ilk kez, E4.7 rakam modülüyle
+     uyumlu), kızgın/huzurlu (duygu kavramı, "sakin" kelimesini tekrar kullanmadan yeni bir nüans),
+     ödül/ceza (uygulamanın rozet/ödül temasıyla uyumlu, ilk kez), erkek/dişi (hayvan cinsiyeti —
+     "erkek/kız" insan cinsiyetinden ayrı bir bağlamda "erkek"in ikinci kullanımı). */
+  {a:'artı',b:'eksi',ea:'➕',eb:'➖'},
+  {a:'kızgın',b:'huzurlu',ea:'😠',eb:'😌'},
+  {a:'ödül',b:'ceza',ea:'🏆',eb:'😢'},
+  {a:'erkek',b:'dişi',ea:'🚹',eb:'🚺'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;
