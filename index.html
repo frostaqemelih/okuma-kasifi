@@ -2877,7 +2877,16 @@ const SYNONYMS=[
   {a:'ödül',b:'mükafat',ea:'🏆',eb:'🏅'},
   {a:'gülünç',b:'komik',ea:'😄',eb:'😆'},
   {a:'pratik',b:'kolay',ea:'🔧',eb:'✅'},
-  {a:'bağlı',b:'sadık',ea:'🔗',eb:'🐾'}
+  {a:'bağlı',b:'sadık',ea:'🔗',eb:'🐾'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni çift — letter-count
+     analiziyle j SYNONYMS'te hiç geçmiyordu (0 kelime), ö/p/ğ de en az temsil edilenlerdi: proje/tasarı
+     (j'yi ilk kez getiriyor), öykü/hikaye (ö VE h'yi, "Kendi Hikayeni Kur" oyununun temasıyla uyumlu),
+     parça/kısım (p'yi), değerli/kıymetli (ğ VE v'yi, "değerli"nin ikinci kullanımı, pahalı/değerli'den
+     ayrı bağlam) — hiçbiri önceki çiftlerle örtüşmüyor. */
+  {a:'proje',b:'tasarı',ea:'📐',eb:'📝'},
+  {a:'öykü',b:'hikaye',ea:'📖',eb:'📚'},
+  {a:'parça',b:'kısım',ea:'🧩',eb:'📦'},
+  {a:'değerli',b:'kıymetli',ea:'💎',eb:'✨'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
