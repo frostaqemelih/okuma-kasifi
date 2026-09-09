@@ -1665,6 +1665,18 @@ const testDriver = `
     check('WORDBANK genisletme (kahverengi/dağcı/sözlük/eşarp) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: cambaz/büyükbaba/gofret/çöp (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 197 kelime içeriyor (cambaz/büyükbaba/gofret/çöp genişletmesi sonrası)', WORDBANK.length >= 197);
+    const newCBGCWords = ['cambaz', 'büyükbaba', 'gofret', 'çöp'];
+    check('Yeni cambaz/büyükbaba/gofret/çöp kelimeleri WORDBANK icinde tanimli', newCBGCWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni cambaz/büyükbaba/gofret/çöp kelimelerinin hepsi emoji tasiyor',
+      newCBGCWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+    check('WORDBANK icinde birebir tekrar eden kelime yok (dedup regresyon)', new Set(WORDBANK.map(it => it.w)).size === WORDBANK.length);
+  } catch (e) {
+    check('WORDBANK genisletme (cambaz/büyükbaba/gofret/çöp) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
