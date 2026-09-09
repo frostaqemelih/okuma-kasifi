@@ -2091,6 +2091,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 50 kategori içeriyor (ay adı genişletmesi sonrası)', CATEGORY_WORDS.length >= 50);
     check('CATEGORY_WORDS yeni "bir ay adı" kategorisini içeriyor',
       (() => { const ay = CATEGORY_WORDS.find(c => c.label === 'bir ay adı'); return ay && ['ocak', 'nisan', 'temmuz', 'ekim'].every(w => ay.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 51 kategori içeriyor (gezegen genişletmesi sonrası)', CATEGORY_WORDS.length >= 51);
+    check('CATEGORY_WORDS yeni "bir gezegen" kategorisini içeriyor',
+      (() => { const gz = CATEGORY_WORDS.find(c => c.label === 'bir gezegen'); return gz && ['dünya', 'mars', 'jüpiter', 'satürn'].every(w => gz.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;
