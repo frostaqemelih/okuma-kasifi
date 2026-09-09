@@ -2652,7 +2652,15 @@ const ANTONYMS=[
   {a:'artı',b:'eksi',ea:'➕',eb:'➖'},
   {a:'kızgın',b:'huzurlu',ea:'😠',eb:'😌'},
   {a:'ödül',b:'ceza',ea:'🏆',eb:'😢'},
-  {a:'erkek',b:'dişi',ea:'🚹',eb:'🚺'}
+  {a:'erkek',b:'dişi',ea:'🚹',eb:'🚺'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni içerik çifti —
+     letter-count analiziyle j (0 çift, hiç geçmiyordu) ve p/f/ö/v hâlâ en az temsil edilen sesler
+     arasındaydı: "dijital/analog" j'yi ilk kez getiriyor (modern teknoloji kavramı), "pis/temiz" p'yi,
+     "farklı/aynı" f'yi, "övgü/yergi" ö VE v'yi birlikte pekiştiriyor. */
+  {a:'dijital',b:'analog',ea:'📱',eb:'⏰'},
+  {a:'pis',b:'temiz',ea:'🤢',eb:'✨'},
+  {a:'farklı',b:'aynı',ea:'🔀',eb:'👯'},
+  {a:'övgü',b:'yergi',ea:'👏',eb:'👎'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

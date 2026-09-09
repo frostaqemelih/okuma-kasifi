@@ -1958,6 +1958,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 122 çift içeriyor (artı/eksi, kızgın/huzurlu, ödül/ceza, erkek/dişi genişletmesi sonrası)', ANTONYMS.length >= 122);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (artı/eksi, kızgın/huzurlu, ödül/ceza, erkek/dişi)',
       ['eksi', 'huzurlu', 'ceza', 'dişi'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 126 çift içeriyor (dijital/analog, pis/temiz, farklı/aynı, övgü/yergi genişletmesi sonrası)', ANTONYMS.length >= 126);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (dijital/analog, pis/temiz, farklı/aynı, övgü/yergi)',
+      ['analog', 'pis', 'aynı', 'yergi'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
