@@ -2903,7 +2903,15 @@ const SYNONYMS=[
   {a:'proje',b:'tasarı',ea:'📐',eb:'📝'},
   {a:'öykü',b:'hikaye',ea:'📖',eb:'📚'},
   {a:'parça',b:'kısım',ea:'🧩',eb:'📦'},
-  {a:'değerli',b:'kıymetli',ea:'💎',eb:'✨'}
+  {a:'değerli',b:'kıymetli',ea:'💎',eb:'✨'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni içerik çifti —
+     letter-count analiziyle j (1 çift) ve ö/ğ/p hâlâ en az temsil edilen sesler tespit edildi:
+     öğüt/nasihat ö/ğ/h'yi (üçünü birden) birlikte, jest/tavır j VE v'yi birlikte, pofuduk/tüylü
+     p/f/ü'yü (üçünü birden) birlikte, bereketli/bol b'yi pekiştiriyor. */
+  {a:'öğüt',b:'nasihat',ea:'💡',eb:'🗣️'},
+  {a:'jest',b:'tavır',ea:'🙋',eb:'😊'},
+  {a:'pofuduk',b:'tüylü',ea:'🧸',eb:'🐈'},
+  {a:'bereketli',b:'bol',ea:'🌾',eb:'📦'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
