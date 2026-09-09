@@ -2928,7 +2928,15 @@ const SYNONYMS=[
   {a:'öğüt',b:'nasihat',ea:'💡',eb:'🗣️'},
   {a:'jest',b:'tavır',ea:'🙋',eb:'😊'},
   {a:'pofuduk',b:'tüylü',ea:'🧸',eb:'🐈'},
-  {a:'bereketli',b:'bol',ea:'🌾',eb:'📦'}
+  {a:'bereketli',b:'bol',ea:'🌾',eb:'📦'},
+  /* SYNONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni içerik çifti —
+     letter-count analiziyle j/ö/ğ/ç/f hâlâ en az temsil edilen sesler arasındaydı: "orijinal/özgün"
+     j VE ö'yü birlikte, "doğal/tabii" ğ'yi, "açık/net" ç'yi, "fiyakalı/gösterişli" f/y/ş'yi
+     (üçünü birden) pekiştiriyor. */
+  {a:'orijinal',b:'özgün',ea:'🎨',eb:'✨'},
+  {a:'doğal',b:'tabii',ea:'🌿',eb:'🍃'},
+  {a:'açık',b:'net',ea:'🔎',eb:'✅'},
+  {a:'fiyakalı',b:'gösterişli',ea:'💅',eb:'💎'}
 ];
 function roundEsanlam(pool){
   locked=false; curWrongCount=0;
