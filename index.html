@@ -3097,7 +3097,17 @@ const SEQUENCES=[
      sonsuza dek imkânsız kılardı; dedup regresyon kontrolüyle doğrulandı. */
   {a:'patates',b:'püre',ea:'🥔',eb:'🍽️'},
   {a:'fide',b:'sebze',ea:'🌱',eb:'🥕'},
-  {a:'kar',b:'kartopu',ea:'❄️',eb:'⛄'}
+  {a:'kar',b:'kartopu',ea:'❄️',eb:'⛄'},
+  /* SEQUENCES genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 3 yeni çift — letter-count
+     analiziyle j (0 çift, hiç geçmiyordu) ve ö/f/g hâlâ en az temsil edilen sesler arasındaydı:
+     proje/bina (j'yi ilk kez getiriyor — bir plan/tasarımın gerçek bir yapıya dönüşümü),
+     çocuk/öğrenci (ö VE ğ'yi birlikte, okula başlama gelişim aşaması, çocuk/yetişkin zincirinden ayrı
+     bir bağlam), çekirdek/kavun (v'yi, çekirdek/fidan zincirinden ayrı — bu kez tohumun meyveye
+     dönüşümü, üzüm/pekmez tarzı meyveye-özgü zincirlerle aynı desen) eklendi; dedup regresyon
+     kontrolüyle doğrulandı. */
+  {a:'proje',b:'bina',ea:'📐',eb:'🏠'},
+  {a:'çocuk',b:'öğrenci',ea:'🧒',eb:'🎒'},
+  {a:'çekirdek',b:'kavun',ea:'🌰',eb:'🍈'}
 ];
 function roundSira(pool){
   locked=false; curWrongCount=0;
