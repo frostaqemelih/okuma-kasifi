@@ -2071,6 +2071,9 @@ const testDriver = `
     check('CATEGORY_WORDS dizisi en az 49 kategori içeriyor (yapı malzemesi genişletmesi sonrası)', CATEGORY_WORDS.length >= 49);
     check('CATEGORY_WORDS yeni "bir yapı malzemesi" kategorisini içeriyor',
       (() => { const yapi = CATEGORY_WORDS.find(c => c.label === 'bir yapı malzemesi'); return yapi && ['tuğla', 'tahta', 'taş', 'cam'].every(w => yapi.words.some(x => x.w === w)); })());
+    check('CATEGORY_WORDS dizisi en az 50 kategori içeriyor (ay adı genişletmesi sonrası)', CATEGORY_WORDS.length >= 50);
+    check('CATEGORY_WORDS yeni "bir ay adı" kategorisini içeriyor',
+      (() => { const ay = CATEGORY_WORDS.find(c => c.label === 'bir ay adı'); return ay && ['ocak', 'nisan', 'temmuz', 'ekim'].every(w => ay.words.some(x => x.w === w)); })());
 
     const fullPoolKat = ALL_LETTERS;
     const origRandomKat = Math.random;

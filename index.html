@@ -3417,6 +3417,14 @@ const CATEGORY_WORDS=[
      var ama CATEGORY_WORDS içindeki hiçbir kategoride geçmiyordu). */
   {label:'bir yapı malzemesi', words:[
     {w:'tuğla',e:'🧱'},{w:'tahta',e:'🪵'},{w:'taş',e:'🪨'},{w:'cam',e:'🪟'}
+  ]},
+  /* İçerik genişletme (rutin, YOĞUN mod, yeni oturum — önceki kategori ekleme turlarıyla aynı desen):
+     1 yeni kategori — "bir ay adı" (ocak/nisan/temmuz/ekim — takvim yılı kavramı, "bir zaman dilimi"
+     kategorisinden ayrı — o kategori sabah/akşam/mevsim gibi genel zaman birimlerini listeler, bu
+     kategori ise takvimdeki 12 aydan dördünü; her ay o mevsime özgü bir emoji ile temsil ediliyor;
+     kelime çakışması yok). */
+  {label:'bir ay adı', words:[
+    {w:'ocak',e:'❄️'},{w:'nisan',e:'🌷'},{w:'temmuz',e:'☀️'},{w:'ekim',e:'🍂'}
   ]}
 ];
 function roundKategori(pool){
