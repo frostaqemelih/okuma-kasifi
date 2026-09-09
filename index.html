@@ -2669,7 +2669,15 @@ const ANTONYMS=[
   {a:'dijital',b:'analog',ea:'📱',eb:'⏰'},
   {a:'pis',b:'temiz',ea:'🤢',eb:'✨'},
   {a:'farklı',b:'aynı',ea:'🔀',eb:'👯'},
-  {a:'övgü',b:'yergi',ea:'👏',eb:'👎'}
+  {a:'övgü',b:'yergi',ea:'👏',eb:'👎'},
+  /* ANTONYMS genişletme (rutin, YOĞUN mod, yeni oturum — aynı desen): 4 yeni içerik çifti —
+     letter-count analiziyle p/f/ö/v/h hâlâ en az temsil edilen sesler arasındaydı: "ver/al" v'yi,
+     "havada/yerde" h VE v'yi birlikte, "öfkeli/sakin" ö VE f'yi birlikte, "parça/bütün" p/ç/b/ü'yü
+     (dördünü birden) pekiştiriyor. */
+  {a:'ver',b:'al',ea:'🎁',eb:'🤲'},
+  {a:'havada',b:'yerde',ea:'✈️',eb:'🚗'},
+  {a:'öfkeli',b:'sakin',ea:'😡',eb:'😌'},
+  {a:'parça',b:'bütün',ea:'🧩',eb:'🔵'}
 ];
 function roundZit(pool){
   locked=false; curWrongCount=0;

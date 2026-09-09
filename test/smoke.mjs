@@ -1975,6 +1975,9 @@ const testDriver = `
     check('ANTONYMS dizisi en az 126 çift içeriyor (dijital/analog, pis/temiz, farklı/aynı, övgü/yergi genişletmesi sonrası)', ANTONYMS.length >= 126);
     check('ANTONYMS yeni eklenen çiftleri içeriyor (dijital/analog, pis/temiz, farklı/aynı, övgü/yergi)',
       ['analog', 'pis', 'aynı', 'yergi'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
+    check('ANTONYMS dizisi en az 130 çift içeriyor (ver/al, havada/yerde, öfkeli/sakin, parça/bütün genişletmesi sonrası)', ANTONYMS.length >= 130);
+    check('ANTONYMS yeni eklenen çiftleri içeriyor (ver/al, havada/yerde, öfkeli/sakin, parça/bütün)',
+      ['ver', 'havada', 'öfkeli', 'parça'].every(w => ANTONYMS.some(p => p.a === w || p.b === w)));
 
     const fullPool = ALL_LETTERS;
     const origRandomZit = Math.random;
