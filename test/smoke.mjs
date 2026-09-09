@@ -1641,6 +1641,18 @@ const testDriver = `
     check('WORDBANK genisletme (bugün/çamaşır/fok/ağaçkakan) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
   }
 
+  // --- WORDBANK genişletme: banjo/güvercin/fıskiye/hoparlör (rutin, YOĞUN mod, yeni oturum) ---
+  try {
+    check('WORDBANK en az 189 kelime içeriyor (banjo/güvercin/fıskiye/hoparlör genişletmesi sonrası)', WORDBANK.length >= 189);
+    const newBGFHWords = ['banjo', 'güvercin', 'fıskiye', 'hoparlör'];
+    check('Yeni banjo/güvercin/fıskiye/hoparlör kelimeleri WORDBANK icinde tanimli', newBGFHWords.every(w => WORDBANK.some(it => it.w === w)));
+    check('Yeni banjo/güvercin/fıskiye/hoparlör kelimelerinin hepsi emoji tasiyor',
+      newBGFHWords.every(w => { const it = WORDBANK.find(x => x.w === w); return it && it.e && it.e.length; }));
+    check('WORDBANK icinde birebir tekrar eden kelime yok (dedup regresyon)', new Set(WORDBANK.map(it => it.w)).size === WORDBANK.length);
+  } catch (e) {
+    check('WORDBANK genisletme (banjo/güvercin/fıskiye/hoparlör) hatasiz kontrol edildi (hata: ' + e.message + ')', false);
+  }
+
   // --- E4.7: Rakam ve sayı sesleri mini-modülü (1-10) ---
   try {
     check('NUMBERS 10 sayı içeriyor (1-10)', Array.isArray(NUMBERS) && NUMBERS.length === 10);
